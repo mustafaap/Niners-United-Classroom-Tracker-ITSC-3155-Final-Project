@@ -6,9 +6,11 @@
 }
 
 .sidebar {
+    border-right: 1px solid grey;
+}
+
+.basic-column {
     display: flex;
     flex-direction: column;
     align-items: center;
-
-    border-right: 1px solid grey;
 }
