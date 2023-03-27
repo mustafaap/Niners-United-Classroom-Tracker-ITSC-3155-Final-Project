@@ -9,3 +9,7 @@ def index():
 @app.get('/new')
 def create_restroom_form():
     return render_template('create_restroom.html')
+
+@app.get('/login')
+def login():
+    return render_template('login.html')
