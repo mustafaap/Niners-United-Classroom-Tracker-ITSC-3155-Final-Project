@@ -13,3 +13,8 @@ def create_restroom_form():
 @app.get('/signup')
 def display_sign_up_page():
     return render_template("signup.html")
+
+@app.get('/login')
+def login():
+    return render_template('login.html')
+    
