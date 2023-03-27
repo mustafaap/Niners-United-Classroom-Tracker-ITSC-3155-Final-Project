@@ -2,52 +2,200 @@
 {% block title %} NUTT | Home {% endblock %}
 
 {% block body %}
-<div class="container">
-  <div class="card mx-auto mb-4" style="width: 50%;">
-    <!-- <img class="card-img-top" src="..." alt="Card image cap"> -->
-    <div class="card-body">
-      <h5 class="card-title">Student Union 1st Floor (Elevator)</h5>
-      <p class="card-text">Overall not a bad bathroom, considering how often it gets used. Toilets aren't the best, but urinals and sinks are great. Paper towel dispensers sometimes don't work, though.</p>
+<div class="container-fluid">
+  <div class="row">
+
+    <div class="col-2 d-flex flex-column align-items-center" style="background-color: azure;">
+      <p>Sort By:</p>
+      <form>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="sort-by" value="Cleanliness">
+          <label class="form-check-label" for="sort-by">Cleanliness</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="sort-by" value="Handicap">
+          <label class="form-check-label" for="sort-by">Handicap</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="sort-by" value="Functionality">
+          <label class="form-check-label" for="sort-by">Functionality</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="sort-by" value="Faculty only">
+          <label class="form-check-label" for="sort-by">Faculty Only</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="sort-by" value="Overall experience">
+          <label class="form-check-label" for="sort-by">Overall Experience</label>
+        </div>
+      </form>
     </div>
-    <ul class="list-group list-group-flush">
-      <li class="list-group-item">Cleanliness: 3.5/5</li>
-      <li class="list-group-item">Handicap: N/A</li>
-      <li class="list-group-item">Functionality: Open (not under renovations)</li>
-      <li class="list-group-item">Faculty only: False</li>
-      <li class="list-group-item">Overall experience: 4/5</li>
-    </ul>
-    <!-- <div class="card-body">
-      <a href="#" class="card-link">Card link</a>
-      <a href="#" class="card-link">Another link</a>
-    </div> -->
-  </div>
+    
+    <div class="col-7" style="background-color: silver;">
 
-  <div class="card mx-auto mb-4" style="width: 50%;">
-      <div class="card-body">
-        <h5 class="card-title">Woodward 1st Floor (Elevator)</h5>
-        <p class="card-text">Not worth my time. Small, cramped, constantly smells bad, and looks very old and run-down.</p>
+      <div class="card mx-auto mb-4">
+        <div class="row">
+          <div class="col-1 sidebar">
+            <button type="button" class="btn"><i class="fas fa-arrow-up"></i></button>
+            <span class="total-votes">123</span>
+            <button type="button" class="btn"><i class="fas fa-arrow-down"></i></button>
+          </div>
+          <div class="col-11">
+            <!-- <img class="card-img-top" src="..." alt="Card image cap"> -->
+            <div class="card-body">
+              <h5 class="card-title">Student Union 1st Floor (Elevator)</h5>
+              <p class="card-text">Overall not a bad bathroom, considering how often it gets used. Toilets aren't the best, but urinals and sinks are great. Paper towel dispensers sometimes don't work, though.</p>
+            </div>
+            <ul class="list-group list-group-horizontal text-center">
+              <li class="list-group-item">Cleanliness: 3.5/5</li>
+              <li class="list-group-item">Handicap: N/A</li>
+              <li class="list-group-item">Functionality: Open (not under renovations)</li>
+              <li class="list-group-item">Faculty only: False</li>
+              <li class="list-group-item">Overall experience: 4/5</li>
+            </ul>
+            <!-- <div class="card-body">
+              <a href="#" class="card-link">Card link</a>
+              <a href="#" class="card-link">Another link</a>
+            </div> -->
+          </div>
+        </div>
       </div>
-      <ul class="list-group list-group-flush">
-        <li class="list-group-item">Cleanliness: 2/5</li>
-        <li class="list-group-item">Handicap: N/A</li>
-        <li class="list-group-item">Functionality: Open (not under renovations)</li>
-        <li class="list-group-item">Faculty only: False</li>
-        <li class="list-group-item">Overall experience: 1.5/5</li>
-      </ul>
-  </div>
 
-  <div class="card mx-auto mb-4" style="width: 50%;">
-      <div class="card-body">
-        <h5 class="card-title">Student Union 3rd Floor (All)</h5>
-        <p class="card-text">Like shining white thrones fit for kings and queens!</p>
+      <div class="card mx-auto mb-4">
+        <div class="row">
+          <div class="col-1 sidebar">
+            <button type="button" class="btn"><i class="fas fa-arrow-up"></i></button>
+            <span class="total-votes">123</span>
+            <button type="button" class="btn"><i class="fas fa-arrow-down"></i></button>
+          </div>
+          <div class="col-11">
+            <div class="card-body">
+              <h5 class="card-title">Woodward 1st Floor (Elevator)</h5>
+              <p class="card-text">Not worth my derierre. Small, cramped, constantly smells bad, and looks very old and run-down.</p>
+            </div>
+            <ul class="list-group list-group-horizontal text-center">
+              <li class="list-group-item">Cleanliness: 2/5</li>
+              <li class="list-group-item">Handicap: N/A</li>
+              <li class="list-group-item">Functionality: Open (not under renovations)</li>
+              <li class="list-group-item">Faculty only: False</li>
+              <li class="list-group-item">Overall experience: 1.5/5</li>
+            </ul>
+          </div>
+        </div>
       </div>
-      <ul class="list-group list-group-flush">
-        <li class="list-group-item">Cleanliness: 5/5</li>
-        <li class="list-group-item">Handicap: N/A</li>
-        <li class="list-group-item">Functionality: Open (not under renovations)</li>
-        <li class="list-group-item">Faculty only: False</li>
-        <li class="list-group-item">Overall experience: 5/5</li>
-      </ul>
+
+      <div class="card mx-auto mb-4">
+        <div class="row">
+          <div class="col-1 sidebar">
+            <button type="button" class="btn"><i class="fas fa-arrow-up"></i></button>
+            <span class="total-votes">123</span>
+            <button type="button" class="btn"><i class="fas fa-arrow-down"></i></button>
+          </div>
+          <div class="col-11">
+            <div class="card-body">
+              <h5 class="card-title">Student Union 3rd Floor (All)</h5>
+              <p class="card-text">Like shining white thrones fit for kings and queens!</p>
+            </div>
+            <ul class="list-group list-group-horizontal text-center">
+              <li class="list-group-item">Cleanliness: 5/5</li>
+              <li class="list-group-item">Handicap: N/A</li>
+              <li class="list-group-item">Functionality: Open (not under renovations)</li>
+              <li class="list-group-item">Faculty only: False</li>
+              <li class="list-group-item">Overall experience: 5/5</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mx-auto mb-4">
+        <div class="row">
+          <div class="col-1 sidebar">
+            <button type="button" class="btn"><i class="fas fa-arrow-up"></i></button>
+            <span class="total-votes">123</span>
+            <button type="button" class="btn"><i class="fas fa-arrow-down"></i></button>
+          </div>
+          <div class="col-11">
+            <div class="card-body">
+              <h5 class="card-title">Woodward 1st Floor (Elevator)</h5>
+              <p class="card-text">Not worth my derierre. Small, cramped, constantly smells bad, and looks very old and run-down.</p>
+            </div>
+            <ul class="list-group list-group-horizontal text-center">
+              <li class="list-group-item">Cleanliness: 2/5</li>
+              <li class="list-group-item">Handicap: N/A</li>
+              <li class="list-group-item">Functionality: Open (not under renovations)</li>
+              <li class="list-group-item">Faculty only: False</li>
+              <li class="list-group-item">Overall experience: 1.5/5</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mx-auto mb-4">
+        <div class="row">
+          <div class="col-1 sidebar">
+            <button type="button" class="btn"><i class="fas fa-arrow-up"></i></button>
+            <span class="total-votes">123</span>
+            <button type="button" class="btn"><i class="fas fa-arrow-down"></i></button>
+          </div>
+          <div class="col-11">
+            <div class="card-body">
+              <h5 class="card-title">Woodward 1st Floor (Elevator)</h5>
+              <p class="card-text">Not worth my derierre. Small, cramped, constantly smells bad, and looks very old and run-down.</p>
+            </div>
+            <ul class="list-group list-group-horizontal text-center">
+              <li class="list-group-item">Cleanliness: 2/5</li>
+              <li class="list-group-item">Handicap: N/A</li>
+              <li class="list-group-item">Functionality: Open (not under renovations)</li>
+              <li class="list-group-item">Faculty only: False</li>
+              <li class="list-group-item">Overall experience: 1.5/5</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-3 d-flex flex-column align-items-center fixed-stay" style="background-color: antiquewhite;">
+      <p>Leave a Rating!</p>
+      <form>
+        <div class="form-group">
+          <label for="location">Location</label>
+          <input type="text" class="form-control" placeholder="Woodward 1st Floor (Elevator)">
+        </div>
+
+        <div class="form-group">
+          <label for="comments">Comments</label>
+          <textarea class="form-control" rows="5"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="cleanliness">Cleanliness</label>
+          <select class="form-control">
+            <option>5</option>
+            <option>4</option>
+            <option>3</option>
+            <option>2</option>
+            <option>1</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="overall-experience">Overall Experience</label>
+          <select class="form-control">
+            <option>5</option>
+            <option>4</option>
+            <option>3</option>
+            <option>2</option>
+            <option>1</option>
+          </select>
+        </div>
+
+        <div class="form-group mt-4">
+          <button type="button" class="btn btn-info">Add More Info</button>
+          <button type="button" class="btn btn-success">Submit Rating</button>
+        </div>
+      </form>
+    </div>
+
   </div>
 </div>
 {% endblock %}
