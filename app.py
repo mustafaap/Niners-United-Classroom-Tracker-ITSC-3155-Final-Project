@@ -17,4 +17,8 @@ def display_sign_up_page():
 @app.get('/login')
 def login():
     return render_template('login.html')
+
+@app.get('/about')
+def about():
+    return render_template('about.html')
     
