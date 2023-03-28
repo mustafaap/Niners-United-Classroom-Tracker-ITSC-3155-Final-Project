@@ -1,0 +1,17 @@
+{% extends '_layout.html' %}
+{% block title %} NNTT | Sign Up Page {% endblock %}
+
+{% block body %}
+<!--Sign Up Form-->
+<div style="display: flex; align-items: center; justify-content: center; height: 100vh; background-color: white; padding: 0 20px;">
+    <form style="background-color: gray; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; max-width: 400px; padding: 20px; margin-top: -50px;">
+        <h2 style="color: black; font-size: 24px;">Sign Up</h2>
+        <input type="email" id="email" name="email" placeholder="Email" required style="font-size: 18px; padding: 10px;">
+        <input type="text" id="username" name="username" placeholder="Username" required style="font-size: 18px; padding: 10px;">
+        <input type="password" id="password" name="password" placeholder="Password" required style="font-size: 18px; padding: 10px;">
+        <input type="password" id="repassword" name="repassword" placeholder="Re-enter Password" required style="font-size: 18px; padding: 10px;">
+        <button type="submit" style="background-color: teal; color: white; font-size: 18px; padding: 8px 20px;">Create Account</button>
+    </form>
+</div>
+
+{% endblock %}

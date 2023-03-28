@@ -10,7 +10,14 @@ def index():
 def create_restroom_form():
     return render_template('create_restroom.html')
 
-@app.get('/<int:restroom_id>')
-def single_restroom_form(restroom_id: int):
-    restroom = db.get_restroom(restroom_id)
-    return render_template('single_restroom.html', restroom=restroom)
+@app.get('/singlerestroom')
+def view_single_restroom():
+    return render_template('single_restroom.html')
+
+@app.get('/signup')
+def display_sign_up_page():
+    return render_template("signup.html")
+
+@app.get('/login')
+def login():
+    return render_template('login.html')
