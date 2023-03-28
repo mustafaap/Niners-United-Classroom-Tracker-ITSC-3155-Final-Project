@@ -1,23 +1,27 @@
 {% extends '_layout.html' %}
-{% block title %} login page {% endblock %}
+{% block title %} NUTT | Login {% endblock %}
 
 {% block body %}
-<div  class ="text-center" style="text-align: center; background-color:lightgray; margin: auto; margin-top: 50px; margin-bottom: 50px; width: 30%; padding: 70px; padding-top: 35px; padding-bottom: 35px; border-radius: 25px;">
-    <form>
-        <h1>LOGIN</h1>
-        <br>
-        <div class="mb-3">
-            <input type="text" class="form-control" id="username"  placeholder="Username" required>
+<div class="container-fluid">
+    <div class="row justify-content-center align-items-center">
+        <div class="col-4 mt-3">
+            <form action="#" class="login-form bg-body-secondary my-5 p-5" style="border-radius: 4rem;">
+                <h1 class="d-flex justify-content-center">Login</h1>
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="username"  placeholder="Username" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="text" class="form-control" id="username"  placeholder="Password" required>
+                </div>
+                <div class="d-flex flex-column align-items-center">
+                    <button type="submit" class="btn btn-secondary">Login</button>
+                    <p class="mt-3">Don't have an account? <a href="/signup">Sign up here!</a></p>
+                </div>
+                
+            </form>
         </div>
-        <div class="mb-3">
-            <input type="text" class="form-control" id="username"  placeholder="Password" required>
-        </div>
-        <br>
-        <div>
-        <button type="submit" class="btn btn-info" style="color: white;">Login</button>
-        </div>
-        <br>
-        <a href="/signup" style="text-decoration: none; color:#0dcaf0;">Click here to create an account</a>
-    </form>
+    </div>
 </div>
 {% endblock %}
