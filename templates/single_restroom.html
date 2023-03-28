@@ -1,0 +1,34 @@
+{% extends '_layout.html' %}
+{% block title %} NUTT | View Single Restroom {% endblock %}
+
+<h1 class="m-5">View Single Restroom</h1>
+
+<div class="container">
+    <ul class="list-group">
+        <h2> Restroom location:</h2>
+        <li class="list-group-item">{{restroom.name}}</li>
+        <h2> Picture</h2>
+        <li class="list-group-item">{{restroom.image}}</li>
+        <button type="file" class="btn btn-primary">browse</button>
+        <h2>Cleanliness</h2>
+        <li class="list-group-item">{{restroom.rating}}</li>
+        <h2>Accessibility</h2>
+        <li class="list-group-item">{{restroom.accessibility}}</li>
+        <h2>Functionality</h2>
+        <li class="list-group-item">{{restroom.functionality}}</li>
+        <h2>Overall experience</h2>
+        <li class="list-group-item">{{restroom.number}}</li>
+    </ul>
+
+    <form action="/restroom/{{ restroom_id }}/edit" method="GET">
+        <button type="submit" class="btn btn-primary">Edit</button>
+    </form> 
+    
+    <form action="/restroom/{{ restroom_id }}/delete" method="POST">
+        <button type="submit" class="btn btn-primary">Delete</button>
+    </form>
+    
+</div>
+
+
+{% block body %}
