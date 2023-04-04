@@ -1,5 +1,5 @@
 from flask import Flask, render_template, url_for
-from models import db, Rating
+from src.models import db, Rating
 from dotenv import load_dotenv
 import os
 
