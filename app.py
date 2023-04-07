@@ -17,11 +17,11 @@ db.init_app(app)
 @app.get('/')
 def index():
     ratings = Rating.query.all()
-    return render_template('index.html', ratings=ratings)
+    return render_template('index.html', index_active=True, ratings=ratings)
 
 @app.get('/new')
 def create_restroom_form():
-    return render_template('create_restroom.html')
+    return render_template('create_restroom.html', create_restroom_active=True)
 
 @app.get('/singlerestroom')
 def view_single_restroom():
@@ -29,12 +29,12 @@ def view_single_restroom():
 
 @app.get('/signup')
 def display_sign_up_page():
-    return render_template("signup.html")
+    return render_template("signup.html", signup_active=True)
 
 @app.get('/login')
 def login():
-    return render_template('login.html')
+    return render_template('login.html', login_active=True)
 
 @app.get('/about')
 def about():
-    return render_template('about.html')
+    return render_template('about.html', about_active=True)
