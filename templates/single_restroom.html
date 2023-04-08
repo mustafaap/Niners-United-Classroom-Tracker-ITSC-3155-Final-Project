@@ -7,21 +7,20 @@
 <div class="container">
   <div class="row">
     <div class="col-md-6">
-      <h2>Restroom location: Student union</h2>
+      <h2>{{ rating.restroom_name }}</h2>
       <div class="row mt-4">
         <div class="col-md-5">
           <img src="#" alt="restroom_img" class="img-fluid">
         </div>
         <div class="col-md-7">
             <div class="mb-3">
-                <label for="#" class="form-label">Comments:</label>
-                <textarea readonly class="form-control list-group-item">Display comment</textarea>
             </div>
           <ul class="list-group">
-            <li class="list-group-item">Cleanliness: 5</li>
-            <li class="list-group-item">Accessibility: handicapped</li>
-            <li class="list-group-item">Functionality: open</li>
-            <li class="list-group-item">Overall Experience: 3</li>
+            <li for="#" class="form-control list-group-item">Comments: {{ rating.comments }}</li>
+            <li class="list-group-item">Cleanliness rating: {{ rating.cleanliness }}</li>
+            <li class="list-group-item">Accessibility: {{ rating.accessibility }}</li>
+            <li class="list-group-item">Functionality: {% if rating.functionality %}Open{% else %}Closed{% endif %}</li>
+            <li class="list-group-item">Overall experience: {{ rating.overall }}</li>
           </ul>
           <div class="mt-4 float-left">
             <form action="" method="GET" class="d-inline-block">

@@ -52,9 +52,10 @@ def create_restroom():
     return redirect('/')
 
 
-@app.get('/singlerestroom')
-def view_single_restroom():
-    return render_template('single_restroom.html')
+@app.get('/singlerestroom/<int:rating_id>')
+def view_single_restroom(rating_id):
+    rating = Rating.query.get(rating_id)
+    return render_template('single_restroom.html', rating=rating)
 
 @app.get('/signup')
 def display_sign_up_page():
