@@ -20,19 +20,19 @@
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="/">Home</a>
+                <a class="nav-link {% if index_active %} active{% endif %}" aria-current="page" href="/">Home</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/new">Create</a>
+                <a class="nav-link {% if create_restroom_active %} active{% endif %}" href="/new">Create</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/login">Log-In</a>
+                <a class="nav-link {% if login_active %} active{% endif %}" href="/login">Log-In</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/signup">Sign Up</a>
+                <a class="nav-link {% if signup_active %} active{% endif %}" href="/signup">Sign Up</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/about">About</a>
+                <a class="nav-link {% if about_active %} active{% endif %}" href="/about">About</a>
               </li>
             </ul>
             <form class="d-flex" role="search">

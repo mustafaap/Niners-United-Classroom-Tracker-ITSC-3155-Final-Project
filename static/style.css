@@ -20,5 +20,20 @@
     background-color: #f5f5f5;
     border: none;
     border-radius: 5px;
-  }
-  
+}
+
+#index-sort-by {
+    -webkit-box-shadow: 5px -5px 15px 0px rgba(98,241,210,0.5); 
+    box-shadow: 5px -5px 15px 0px rgba(98,241,210,0.5);
+
+    border-radius: 2rem;
+    padding: 1rem 2rem;
+}
+
+#index-leave-rating {
+    -webkit-box-shadow: inset 5px -5px 15px 0px rgba(98,241,210,0.5); 
+    box-shadow: inset 5px -5px 15px 0px rgba(98,241,210,0.5);
+
+    border-radius: 2rem;
+    padding: 1rem 2rem 2rem 2rem;
+}
