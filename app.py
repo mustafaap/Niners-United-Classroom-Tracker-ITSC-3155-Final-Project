@@ -24,19 +24,12 @@ def index():
 def create_restroom_form():
     return render_template('create_restroom.html', create_restroom_active=True)
 
-@app.get('/maps')
-def load_maps():
-    return render_template('maps.html', maps_active=True, api_key=api_key)
-
 @app.post('/')
 def create_restroom():
     restroom_name = request.form.get('restroom')
     cleanliness = request.form.get('clean_rating')
-    #accessibility
     accessibility = request.form.getlist('accessibility')
-    #functionality
     functionality = request.form['func']
-    print(functionality)
 
     if functionality == 'Open':
         functionality = True
@@ -46,24 +39,27 @@ def create_restroom():
     overall = request.form.get('overall_rating')
     comments = request.form.get('comment')
 
-    new_restroom = Rating(restroom_name = restroom_name, cleanliness = cleanliness, accessibility = accessibility, functionality = functionality, overall = overall, comments = comments)
+    new_restroom = Rating(restroom_name=restroom_name, cleanliness=cleanliness, accessibility=accessibility, functionality=functionality, overall=overall, comments=comments)
     db.session.add(new_restroom)
     db.session.commit()
     return redirect('/')
 
-
-@app.get('/singlerestroom')
-def view_single_restroom():
-    return render_template('single_restroom.html')
-
-@app.get('/signup')
-def display_sign_up_page():
-    return render_template("signup.html", signup_active=True)
+@app.get('/maps')
+def load_maps():
+    return render_template('maps.html', maps_active=True, api_key=api_key)
 
 @app.get('/login')
 def login():
     return render_template('login.html', login_active=True)
 
+@app.get('/signup')
+def display_sign_up_page():
+    return render_template("signup.html", signup_active=True)
+
 @app.get('/about')
 def about():
     return render_template('about.html', about_active=True)
+
+@app.get('/singlerestroom')
+def view_single_restroom():
+    return render_template('single_restroom.html')
