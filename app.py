@@ -13,6 +13,7 @@ db_port = os.getenv('DB_PORT')
 db_name = os.getenv('DB_NAME')
 app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{db_user}:{db_pass}@{db_host}:{db_port}/{db_name}'
 db.init_app(app)
+api_key = os.getenv('API_KEY')
 
 @app.get('/')
 def index():
@@ -22,6 +23,10 @@ def index():
 @app.get('/new')
 def create_restroom_form():
     return render_template('create_restroom.html', create_restroom_active=True)
+
+@app.get('/maps')
+def load_maps():
+    return render_template('maps.html', maps_active=True, api_key=api_key)
 
 @app.get('/singlerestroom')
 def view_single_restroom():
