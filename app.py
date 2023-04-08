@@ -64,7 +64,3 @@ def display_sign_up_page():
 @app.get('/about')
 def about():
     return render_template('about.html', about_active=True)
-
-@app.get('/singlerestroom')
-def view_single_restroom():
-    return render_template('single_restroom.html')
