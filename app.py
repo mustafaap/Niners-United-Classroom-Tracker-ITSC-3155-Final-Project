@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for
+from flask import Flask, render_template, url_for, request, redirect
 from src.models import db, Rating
 from dotenv import load_dotenv
 import os
@@ -22,6 +22,30 @@ def index():
 @app.get('/new')
 def create_restroom_form():
     return render_template('create_restroom.html')
+
+@app.post('/')
+def create_restroom():
+    restroom_name = request.form.get('restroom')
+    cleanliness = request.form.get('clean_rating')
+    #accessibility
+    accessibility = request.form.getlist('accessibility')
+    #functionality
+    functionality = request.form['func']
+    print(functionality)
+
+    if functionality == 'Open':
+        functionality = True
+    else:
+        functionality = False
+
+    overall = request.form.get('overall_rating')
+    comments = request.form.get('comment')
+
+    new_restroom = Rating(restroom_name = restroom_name, cleanliness = cleanliness, accessibility = accessibility, functionality = functionality, overall = overall, comments = comments)
+    db.session.add(new_restroom)
+    db.session.commit()
+    return redirect('/')
+
 
 @app.get('/singlerestroom')
 def view_single_restroom():

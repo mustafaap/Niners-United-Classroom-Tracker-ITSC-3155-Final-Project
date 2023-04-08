@@ -6,7 +6,7 @@
 <h1 class="m-5">Create A Restroom</h1>
 
 <div class="container rounded" style="background-color: silver">
-    <form action="" class="w-50">
+    <form action="/" method="post" class="w-50">
         <div class="mb-3 pt-3">
             <label for="restroom" class="form-label fw-bold">Restroom name</label>
             <input type="text" name = "restroom" class="form-control" id="restroom" placeholder="Enter restroom name/location" required>
@@ -20,25 +20,25 @@
         </div>
     
         <div class="mb-3">
-            <label for="rating" class="form-label fw-bold">Cleanliness</label>
-            <input type="number" name = "rating" class="form-control" id="rating" min="1" max="5" placeholder="1-5" required>
+            <label for="clean_rating" class="form-label fw-bold">Cleanliness</label>
+            <input type="number" name = "clean_rating" class="form-control" id="clean_rating" min="1" max="5" placeholder="1-5" required>
         </div>
 
         <p class="fw-bold">Accessibility</p>
         <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="Accessibility1">
+            <input class="form-check-input" type="checkbox" name="accessibility" value="faculty" id="Accessibility1">
             <label class="form-check-label" for="Accessibility1">
               Faculty Only
             </label>
         </div>
         <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="Accessibility2">
+            <input class="form-check-input" type="checkbox" name="accessibility" value="student" id="Accessibility2">
             <label class="form-check-label" for="Accessibility2">
               Student
             </label>
         </div>
         <div class="form-check mb-3">
-            <input class="form-check-input" type="checkbox" value="" id="Accessibility3">
+            <input class="form-check-input" type="checkbox" name="accessibility" value="Handicapped" id="Accessibility3">
             <label class="form-check-label" for="Accessibility3">
               Handicapped
             </label>
@@ -46,21 +46,26 @@
     
         <p class="fw-bold">Functionality</p>
         <div class="form-check">
-            <input class="form-check-input" type="radio" name="flexRadioDefault" id="functionality1" checked>
+            <input class="form-check-input" type="radio" name="func" id="functionality1" value="Open" checked>
             <label class="form-check-label" for="functionality1">
               Open
             </label>
         </div>
         <div class="form-check mb-3">
-            <input class="form-check-input" type="radio" name="flexRadioDefault" id="functionality2">
+            <input class="form-check-input" type="radio" name="func" id="functionality2" value="Closed">
             <label class="form-check-label" for="functionality2">
               Closed
             </label>
         </div>
     
         <div class="mb-3">
-            <label for="rating" class="form-label fw-bold">Overall Rating</label>
-            <input type="number" name = "rating" class="form-control" id="rating" min="1" max="5" placeholder="1-5" required>
+            <label for="overall_rating" class="form-label fw-bold">Overall Rating</label>
+            <input type="number" name = "overall_rating" class="form-control" id="overall_rating" min="1" max="5" placeholder="1-5" required>
+        </div>
+
+        <div class="mb-3 pt-3">
+            <label for="comment" class="form-label fw-bold">Comment</label>
+            <input type="text" name = "comment" class="form-control" id="comment" placeholder="Enter a comment" required>
         </div>
 
         <button type="submit" class = "btn btn-primary ml-1 mt-2 mb-3 w-100">Submit</button>
