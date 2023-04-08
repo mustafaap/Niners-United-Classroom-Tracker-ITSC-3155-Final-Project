@@ -1,0 +1,9 @@
+{% extends '_layout.html' %}
+{% block title %} NUTT | Home {% endblock %}
+
+{% block body %}
+<div id="map" style="width: 100%; height: 50vh;"></div>
+
+<script src="https://maps.googleapis.com/maps/api/js?key={{ api_key }}&callback=initMap" async defer></script>
+<script src="{{ url_for('static', filename='script.js') }}" defer></script>
+{% endblock %}
