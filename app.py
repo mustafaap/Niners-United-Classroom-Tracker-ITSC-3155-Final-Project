@@ -48,6 +48,11 @@ def create_restroom():
 def load_maps():
     return render_template('maps.html', maps_active=True, api_key=api_key)
 
+@app.get('/singlerestroom/<int:rating_id>')
+def view_single_restroom(rating_id):
+    rating = Rating.query.get(rating_id)
+    return render_template('single_restroom.html', rating=rating)
+
 @app.get('/login')
 def login():
     return render_template('login.html', login_active=True)
