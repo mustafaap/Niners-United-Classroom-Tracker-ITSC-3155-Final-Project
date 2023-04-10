@@ -1,0 +1,24 @@
+{% extends '_layout.html' %}
+{% block title %} NUTT | Edit {% endblock %}
+
+{% block body %}
+<h1>Edit Restroom</h1>
+<form method="post" action="/restroom/{{ rating.rating_id }}">
+    <label for="restroom">Restroom Name</label>
+    <input type="text" name="restroom" value="{{ rating.restroom_name }}" required><br>
+    <label for="clean_rating">Cleanliness</label>
+    <input type="number" name="clean_rating" min="1" max="5" value="{{ rating.cleanliness }}" required><br>
+    <label for="accessibility">Accessibility</label><br>
+    <input type="checkbox" name="accessibility" value="faculty" {% if "faculty" in rating.accessibility %}checked{% endif %}> Faculty<br>
+    <input type="checkbox" name="accessibility" value="student" {% if "student" in rating.accessibility %}checked{% endif %}> Student<br>
+    <input type="checkbox" name="accessibility" value="handicapped" {% if "handicapped" in rating.accessibility %}checked{% endif %}> Handicapped<br>
+    <label for="func">Functionality</label><br>
+    <input type="radio" name="func" value="Open" {% if rating.functionality %}checked{% endif %}> Open<br>
+    <input type="radio" name="func" value="Closed" {% if not rating.functionality %}checked{% endif %}> Closed<br>
+    <label for="overall_rating">Overall Rating</label>
+    <input type="number" name="overall_rating" min="1" max="5" value="{{ rating.overall }}" required><br>
+    <label for="comment">Comments</label><br>
+    <textarea name="comment">{{ rating.comments }}</textarea><br>
+    <input type="submit" value="Update">
+</form>
+{% endblock %}
