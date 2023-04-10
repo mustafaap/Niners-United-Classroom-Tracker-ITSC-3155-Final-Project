@@ -23,7 +23,7 @@
             <li class="list-group-item">Overall experience: {{ rating.overall }}</li>
           </ul>
           <div class="mt-4 float-left">
-            <form action="" method="GET" class="d-inline-block">
+            <form action="/restroom/{{ rating.rating_id }}/edit" method="GET" class="d-inline-block">
               <button type="submit" class="btn btn-primary">Edit</button>
             </form> 
             <span class="mx-4"></span>
