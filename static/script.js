@@ -1,20 +1,25 @@
+let currentLocation;
+let map;
+let marker;
+
 function initMap() {
-    if (navigator.geolocation) {
+    if (navigator && navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
-            let currentLocation = {
+            currentLocation = {
                 lat: position.coords.latitude,
                 lng: position.coords.longitude
             };
 
-            let map = new google.maps.Map(
+            map = new google.maps.Map(
                 document.getElementById('map'),
-                {center: currentLocation, zoom: 15}
+                {center: currentLocation, zoom: 17}
             );
 
-            let marker = new google.maps.Marker(
-                {position: currentLocation, map: map, title: "Temp"}
+            marker = new google.maps.Marker(
+                {position: currentLocation, map: map, title: "Current location"}
             );
-        }, function() {
+        }, function(error) {
+            console.error(error);
             alert("Can't access location :(");
         });
     }
