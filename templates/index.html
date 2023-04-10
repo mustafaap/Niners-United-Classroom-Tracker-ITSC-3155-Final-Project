@@ -34,6 +34,7 @@
     </div>
     
     <div class="col-sm-7 pt-4" style="background-color: silver;">
+    {% if(ratings | length > 0) %}
       {% for rating in ratings %}
       <div class="card mx-auto mb-4">
         <div class="row">
@@ -52,6 +53,9 @@
         </div>
       </div>
       {% endfor %}
+    {%else%}
+      <div class="alert alert-danger" role="alert">No restrooms found!</div>
+    {%endif%}
     </div>
 
     <div class="col-sm-3 p-0">
