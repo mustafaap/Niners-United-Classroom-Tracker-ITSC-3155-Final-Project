@@ -1,3 +1,8 @@
+/* Theme: Silver, white, blue, maybe cream. Representation of cleanliness */
+:root {
+    --light-blue-1: rgba(98,241,210,0.5);
+}
+
 .fixed-stay {
     position: fixed;
     top: 0;
@@ -22,17 +27,24 @@
     border-radius: 5px;
 }
 
+.to-post {
+    text-decoration: none;
+    color: inherit;
+    width: 100%;
+    height: 100%;
+}
+
 #index-sort-by {
-    -webkit-box-shadow: 5px -5px 15px 0px rgba(98,241,210,0.5); 
-    box-shadow: 5px -5px 15px 0px rgba(98,241,210,0.5);
+    -webkit-box-shadow: 5px -5px 15px 0px var(--light-blue-1); 
+    box-shadow: 5px -5px 15px 0px var(--light-blue-1);
 
     border-radius: 2rem;
     padding: 1rem 2rem;
 }
 
 #index-leave-rating {
-    -webkit-box-shadow: inset 5px -5px 15px 0px rgba(98,241,210,0.5); 
-    box-shadow: inset 5px -5px 15px 0px rgba(98,241,210,0.5);
+    -webkit-box-shadow: inset 5px -5px 15px 0px var(--light-blue-1); 
+    box-shadow: inset 5px -5px 15px 0px var(--light-blue-1);
 
     border-radius: 2rem;
     padding: 1rem 2rem 2rem 2rem;

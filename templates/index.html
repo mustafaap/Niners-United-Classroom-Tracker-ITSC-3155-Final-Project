@@ -6,8 +6,8 @@
   <div class="row">
 
     <div class="col-sm-2 p-0">
-      <div class="basic-column">
-        <form class="bg-body-secondary mt-5" id="index-sort-by">
+      <div class="basic-column my-5">
+        <form class="bg-body-secondary" id="index-sort-by">
           <h4>Sort By:</h4>
           <div class="form-check">
             <input class="form-check-input" type="radio" name="sort-by" value="Cleanliness">
@@ -33,25 +33,29 @@
       </div>
     </div>
     
-    <div class="col-sm-7 pt-4" style="background-color: silver;">
-      {% for rating in ratings %}
-      <div class="card mx-auto mb-4">
-        <div class="row">
-          <div class="col-1 basic-column sidebar">
-            <button type="button" class="btn"><i class="fas fa-arrow-up"></i></button>
-            <span class="total-votes">123</span>
-            <button type="button" class="btn"><i class="fas fa-arrow-down"></i></button>
-          </div>
-          <div class="col-11">
-            <!-- <img class="card-img-top" src="..." alt="Card image cap"> -->
-            <div class="card-body">
-              <h5 class="card-title"><a href="{{ url_for('view_single_restroom', rating_id=rating.rating_id) }}">{{ rating.restroom_name }}</a></h5>
-              <p class="card-text">{{ rating.comments }}</p>
+    <div class="col-sm-7 p-0">
+      <div class="mx-4 mt-4">
+        {% for rating in ratings %}
+        <div class="card mb-4 p-0">
+          <div class="row m-0">
+            <div class="col-sm-1 sidebar">
+              <div class="basic-column">
+                <button type="button" class="btn"><i class="fas fa-arrow-up"></i></button>
+                <span class="total-votes">123</span>
+                <button type="button" class="btn"><i class="fas fa-arrow-down"></i></button>
+              </div>
             </div>
+            <div class="col-sm-11 p-0"><a href="{{ url_for('view_single_restroom', rating_id=rating.rating_id) }}" class="to-post">
+              <!-- <img class="card-img-top" src="..." alt="Card image cap"> -->
+              <div class="card-body">
+                <h5 class="card-title">{{ rating.restroom_name }}</h5>
+                <p class="card-text">{{ rating.comments }}</p>
+              </div>
+            </div></a>
           </div>
         </div>
+        {% endfor %}
       </div>
-      {% endfor %}
     </div>
 
     <div class="col-sm-3 p-0">
