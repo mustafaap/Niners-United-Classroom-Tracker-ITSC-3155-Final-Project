@@ -65,9 +65,43 @@ def display_sign_up_page():
 def about():
     return render_template('about.html', about_active=True)
 
+
 @app.get('/search')
 def search():
     term = (request.args.get('searchbox'))
     ratings = db.session.query(Rating).filter(Rating.restroom_name.ilike('%' + term + '%')).all()
     print(ratings)
     return render_template('index.html',ratings=ratings)
+
+@app.get('/restroom/<int:rating_id>/edit')
+def get_edit_restroom_page(rating_id: int):
+    rating = Rating.query.get(rating_id)
+    return render_template('edit_restroom.html', rating=rating)
+
+
+@app.post('/restroom/<int:rating_id>')
+def update_restroom(rating_id: int):
+    rating = Rating.query.get(rating_id)
+    restroom_name = request.form.get('restroom')
+    cleanliness = request.form.get('clean_rating')
+    accessibility = request.form.getlist('accessibility')
+    functionality = request.form.get('func')
+
+    if functionality == 'Open':
+        functionality = True
+    else:
+        functionality = False
+
+    overall = request.form.get('overall_rating')
+    comments = request.form.get('comment')
+
+    rating.restroom_name = restroom_name
+    rating.cleanliness = cleanliness
+    rating.accessibility = accessibility
+    rating.functionality = functionality
+    rating.overall = overall
+    rating.comments = comments
+
+    db.session.commit()
+
+    return redirect(url_for('view_single_restroom', rating_id=rating_id))

@@ -46,7 +46,7 @@
           <div class="col-11">
             <!-- <img class="card-img-top" src="..." alt="Card image cap"> -->
             <div class="card-body">
-              <h5 class="card-title">{{ rating.restroom_name }}</h5>
+              <h5 class="card-title"><a href="{{ url_for('view_single_restroom', rating_id=rating.rating_id) }}">{{ rating.restroom_name }}</a></h5>
               <p class="card-text">{{ rating.comments }}</p>
             </div>
           </div>
