@@ -65,6 +65,14 @@ def display_sign_up_page():
 def about():
     return render_template('about.html', about_active=True)
 
+
+@app.get('/search')
+def search():
+    term = (request.args.get('searchbox'))
+    ratings = db.session.query(Rating).filter(Rating.restroom_name.ilike('%' + term + '%')).all()
+    print(ratings)
+    return render_template('index.html',ratings=ratings)
+
 @app.get('/restroom/<int:rating_id>/edit')
 def get_edit_restroom_page(rating_id: int):
     rating = Rating.query.get(rating_id)

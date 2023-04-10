@@ -35,7 +35,8 @@
     
     <div class="col-sm-7 p-0">
       <div class="mx-4 mt-4">
-        {% for rating in ratings %}
+      {% if(ratings | length > 0) %}
+      {% for rating in ratings %}
         <div class="card mb-4 p-0">
           <div class="row m-0">
             <div class="col-sm-1 sidebar">
@@ -54,8 +55,11 @@
             </div></a>
           </div>
         </div>
-        {% endfor %}
+      {% endfor %}
       </div>
+    {%else%}
+      <div class="alert alert-danger" role="alert">No restrooms found!</div>
+    {%endif%}
     </div>
 
     <div class="col-sm-3 p-0">
