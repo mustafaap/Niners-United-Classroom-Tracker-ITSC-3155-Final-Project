@@ -36,30 +36,30 @@
     <div class="col-sm-7 p-0">
       <div class="mx-4 mt-4">
       {% if(ratings | length > 0) %}
-      {% for rating in ratings %}
-        <div class="card mb-4 p-0">
-          <div class="row m-0">
-            <div class="col-sm-1 sidebar">
-              <div class="basic-column">
-                <button type="button" class="btn"><i class="fas fa-arrow-up"></i></button>
-                <span class="total-votes">123</span>
-                <button type="button" class="btn"><i class="fas fa-arrow-down"></i></button>
+        {% for rating in ratings %}
+          <div class="card mb-4 p-0">
+            <div class="row m-0">
+              <div class="col-sm-1 sidebar">
+                <div class="basic-column">
+                  <button type="button" class="btn"><i class="fas fa-arrow-up"></i></button>
+                  <span class="total-votes">123</span>
+                  <button type="button" class="btn"><i class="fas fa-arrow-down"></i></button>
+                </div>
               </div>
+              <div class="col-sm-11 p-0"><a href="{{ url_for('view_single_restroom', rating_id=rating.rating_id) }}" class="to-post">
+                <!-- <img class="card-img-top" src="..." alt="Card image cap"> -->
+                <div class="card-body">
+                  <h5 class="card-title">{{ rating.restroom_name }}</h5>
+                  <p class="card-text">{{ rating.comments }}</p>
+                </div>
+              </div></a>
             </div>
-            <div class="col-sm-11 p-0"><a href="{{ url_for('view_single_restroom', rating_id=rating.rating_id) }}" class="to-post">
-              <!-- <img class="card-img-top" src="..." alt="Card image cap"> -->
-              <div class="card-body">
-                <h5 class="card-title">{{ rating.restroom_name }}</h5>
-                <p class="card-text">{{ rating.comments }}</p>
-              </div>
-            </div></a>
           </div>
-        </div>
-      {% endfor %}
+        {% endfor %}
+      {% else %}
+        <div class="alert alert-danger" role="alert">No restrooms found!</div>
+      {% endif %}
       </div>
-    {%else%}
-      <div class="alert alert-danger" role="alert">No restrooms found!</div>
-    {%endif%}
     </div>
 
     <div class="col-sm-3 p-0">
