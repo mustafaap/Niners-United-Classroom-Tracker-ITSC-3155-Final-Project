@@ -15,14 +15,17 @@ app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{db_user}:{db_pass}@{db_h
 db.init_app(app)
 api_key = os.getenv('API_KEY')
 
+
 @app.get('/')
 def index():
     ratings = Rating.query.all()
     return render_template('index.html', index_active=True, ratings=ratings)
 
+
 @app.get('/new')
 def create_restroom_form():
     return render_template('create_restroom.html', create_restroom_active=True)
+
 
 @app.post('/')
 def create_restroom():
@@ -44,22 +47,27 @@ def create_restroom():
     db.session.commit()
     return redirect('/')
 
+
 @app.get('/maps')
 def load_maps():
     return render_template('maps.html', maps_active=True, api_key=api_key)
+
 
 @app.get('/singlerestroom/<int:rating_id>')
 def view_single_restroom(rating_id):
     rating = Rating.query.get(rating_id)
     return render_template('single_restroom.html', rating=rating)
 
+
 @app.get('/login')
 def login():
     return render_template('login.html', login_active=True)
 
+
 @app.get('/signup')
 def display_sign_up_page():
     return render_template("signup.html", signup_active=True)
+
 
 @app.get('/about')
 def about():
@@ -70,8 +78,9 @@ def about():
 def search():
     term = (request.args.get('searchbox'))
     ratings = db.session.query(Rating).filter(Rating.restroom_name.ilike('%' + term + '%')).all()
-    print(ratings)
-    return render_template('index.html',ratings=ratings)
+    # print(ratings)
+    return render_template('index.html', ratings=ratings)
+
 
 @app.get('/restroom/<int:rating_id>/edit')
 def get_edit_restroom_page(rating_id: int):
