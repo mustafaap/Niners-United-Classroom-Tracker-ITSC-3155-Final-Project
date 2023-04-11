@@ -49,3 +49,8 @@
     border-radius: 2rem;
     padding: 1rem 2rem 2rem 2rem;
 }
+
+.box-shadow {
+    -webkit-box-shadow: 5px -5px 15px 0px var(--light-blue-1); 
+    box-shadow: 5px -5px 15px 0px var(--light-blue-1);
+}
