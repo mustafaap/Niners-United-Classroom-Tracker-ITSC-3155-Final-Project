@@ -114,3 +114,10 @@ def update_restroom(rating_id: int):
     db.session.commit()
 
     return redirect(url_for('view_single_restroom', rating_id=rating_id))
+
+@app.post('/<int:rating_id>/delete')
+def delete_rating(rating_id: int):
+    rating = Rating.query.get(rating_id)
+    db.session.delete(rating)
+    db.session.commit()
+    return redirect('/')
