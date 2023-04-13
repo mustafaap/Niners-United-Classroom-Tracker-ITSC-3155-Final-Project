@@ -19,19 +19,19 @@
     <div class="mb-3">
     <label for="flexCheck1" class="form-label fw-bold">Accessibility</label>
      <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="faculty" id="flexCheck1" {% if "faculty" in rating.accessibility %}checked{% endif %}>
+        <input class="form-check-input" type="checkbox" value="faculty" id="flexCheck1" name="accessibility" {% if "faculty" in rating.accessibility %}checked{% endif %}>
         <label class="form-check-label" for="flexCheck1">
             Faculty
         </label>
       </div>
       <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="student" id="flexCheck2" {% if "student" in rating.accessibility %}checked{% endif %}>
+        <input class="form-check-input" type="checkbox" value="student" id="flexCheck2" name="accessibility" {% if "student" in rating.accessibility %}checked{% endif %}>
         <label class="form-check-label" for="flexCheck2">
             Student
         </label>
       </div>
       <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="handicapped" id="flexCheck3" {% if "handicapped" in rating.accessibility %}checked{% endif %}>
+        <input class="form-check-input" type="checkbox" value="handicapped" id="flexCheck3" name="accessibility" {% if "handicapped" in rating.accessibility %}checked{% endif %}>
         <label class="form-check-label" for="flexCheck3">
             Handicapped
         </label>
