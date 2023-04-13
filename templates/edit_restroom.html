@@ -2,23 +2,71 @@
 {% block title %} NUTT | Edit {% endblock %}
 
 {% block body %}
-<h1>Edit Restroom</h1>
+<h1 class="text-center m-5 fw-bold">Edit Restroom</h1>
+
+<div class="container rounded w-50 box-shadow" style="background-color: #f5f5f5">
 <form method="post" action="/restroom/{{ rating.rating_id }}">
-    <label for="restroom">Restroom Name</label>
-    <input type="text" name="restroom" value="{{ rating.restroom_name }}" required><br>
-    <label for="clean_rating">Cleanliness</label>
-    <input type="number" name="clean_rating" min="1" max="5" value="{{ rating.cleanliness }}" required><br>
-    <label for="accessibility">Accessibility</label><br>
-    <input type="checkbox" name="accessibility" value="faculty" {% if "faculty" in rating.accessibility %}checked{% endif %}> Faculty<br>
-    <input type="checkbox" name="accessibility" value="student" {% if "student" in rating.accessibility %}checked{% endif %}> Student<br>
-    <input type="checkbox" name="accessibility" value="handicapped" {% if "handicapped" in rating.accessibility %}checked{% endif %}> Handicapped<br>
-    <label for="func">Functionality</label><br>
-    <input type="radio" name="func" value="Open" {% if rating.functionality %}checked{% endif %}> Open<br>
-    <input type="radio" name="func" value="Closed" {% if not rating.functionality %}checked{% endif %}> Closed<br>
-    <label for="overall_rating">Overall Rating</label>
-    <input type="number" name="overall_rating" min="1" max="5" value="{{ rating.overall }}" required><br>
-    <label for="comment">Comments</label><br>
-    <textarea name="comment">{{ rating.comments }}</textarea><br>
-    <input type="submit" value="Update">
+    <div class="mb-3 pt-3">
+        <label for="restroom" class="form-label fw-bold">Restroom Name</label>
+        <input type="text" name="restroom" value="{{ rating.restroom_name }}" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+        <label for="clean_rating" class="form-label fw-bold">Cleanliness</label>
+        <input type="number" name="clean_rating" min="1" max="5" value="{{ rating.cleanliness }}" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+    <label for="flexCheck1" class="form-label fw-bold">Accessibility</label>
+     <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="faculty" id="flexCheck1" {% if "faculty" in rating.accessibility %}checked{% endif %}>
+        <label class="form-check-label" for="flexCheck1">
+            Faculty
+        </label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="student" id="flexCheck2" {% if "student" in rating.accessibility %}checked{% endif %}>
+        <label class="form-check-label" for="flexCheck2">
+            Student
+        </label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="handicapped" id="flexCheck3" {% if "handicapped" in rating.accessibility %}checked{% endif %}>
+        <label class="form-check-label" for="flexCheck3">
+            Handicapped
+        </label>
+      </div>
+    </div>
+
+    <div class="mb-3">
+        <label for="functionality1" class="form-label fw-bold">Functionality</label>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="func" id="functionality1" value="Open" {% if rating.functionality %}checked{% endif %}>
+                <label class="form-check-label" for="functionality1">
+                    Open
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="func" id="functionality2" value="Closed" {% if not rating.functionality %}checked{% endif %}>
+                <label class="form-check-label" for="functionality2">
+                    Closed
+                </label>
+            </div>
+    </div>
+
+    <div class="mb-3">
+        <label for="overall_rating" class="form-label fw-bold">Overall Rating</label>
+        <input type="number" name="overall_rating" min="1" max="5" value="{{ rating.overall }}"  class="form-control" required>
+    </div>
+    
+    <div class="mb-3">
+        <label for="comment" class="form-label fw-bold">Comments</label>
+        <textarea class="form-control" name="comment">{{ rating.comments }}</textarea>
+    </div>
+
+    <div class="mb-3 pb-3">
+    <button type="submit" class = "btn w-100" style="background-color: rgba(98,241,210,0.5);">Update</button>
+    </div>
+</div>
 </form>
 {% endblock %}
