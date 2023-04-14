@@ -44,6 +44,20 @@ def sortby():
     return render_template('index.html', index_active=True, ratings=ratings)
 
 
+@app.post('/leaverating')
+def indexrating():
+    location = request.form.get('location')
+    comments = request.form.get('comments')
+    cleanliness = request.form.get('cleanliness')
+    overall = request.form.get('overall')
+
+    new_rating = Rating(restroom_name=location, cleanliness=cleanliness, accessibility="temp", functionality=True, overall=overall, comments=comments)
+    db.session.add(new_rating)
+    db.session.commit()
+
+    return redirect('/')
+
+
 @app.get('/new')
 def create_restroom_form():
     return render_template('create_restroom.html', create_restroom_active=True)
