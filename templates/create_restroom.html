@@ -3,73 +3,65 @@
 
 {% block body %}
 
-<h1 class="m-5 text-center fw-bold">Create A Restroom</h1>
-
-<div class="container rounded w-50 box-shadow" style="background-color: #f5f5f5">
-        <form action="/" method="post" class="w-100">
-            <div class="mb-3 pt-3">
-                <label for="restroom" class="form-label fw-bold">Restroom name</label>
-                <input type="text" name = "restroom" class="form-control" id="restroom" placeholder="Enter restroom name/location" required>
+<div class="container-fluid w-50 bg-body-secondary box-shadow" style="border-radius: 4rem;">
+    <h1 class="m-5 text-center fw-bold pt-5">Create A Restroom</h1>
+    <form action="/create" method="post" class="w-100">
+        <div class="mb-3 pt-3">
+            <label for="restroom" class="form-label fw-bold">Restroom name</label>
+            <input type="text" name="restroom" class="form-control" id="restroom" placeholder="Enter restroom name/location" required>
+        </div>
+        <div class="mb-3">
+            <label for="image" class="form-label fw-bold">Upload an Image</label>
+            <div class="input-group mb-3">
+                <input type="file" class="form-control" id="image">
             </div>
-        
-            <div class="mb-3">
-                <label for="image" class="form-label fw-bold">Upload an Image</label>
-                <div class="input-group mb-3">
-                    <input type="file" class="form-control" id="image">
-                </div>
-            </div>
-        
-            <div class="mb-3">
-                <label for="clean_rating" class="form-label fw-bold">Cleanliness</label>
-                <input type="number" name = "clean_rating" class="form-control" id="clean_rating" min="1" max="5" placeholder="1-5" required>
-            </div>
-    
-            <p class="fw-bold">Accessibility</p>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="accessibility" value="faculty" id="Accessibility1">
-                <label class="form-check-label" for="Accessibility1">
-                  Faculty
-                </label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="accessibility" value="student" id="Accessibility2">
-                <label class="form-check-label" for="Accessibility2">
-                  Student
-                </label>
-            </div>
-            <div class="form-check mb-3">
-                <input class="form-check-input" type="checkbox" name="accessibility" value="handicapped" id="Accessibility3">
-                <label class="form-check-label" for="Accessibility3">
-                  Handicapped
-                </label>
-            </div>
-        
-            <p class="fw-bold">Functionality</p>
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="func" id="functionality1" value="Open" checked>
-                <label class="form-check-label" for="functionality1">
-                  Open
-                </label>
-            </div>
-            <div class="form-check mb-3">
-                <input class="form-check-input" type="radio" name="func" id="functionality2" value="Closed">
-                <label class="form-check-label" for="functionality2">
-                  Closed
-                </label>
-            </div>
-        
-            <div class="mb-3">
-                <label for="overall_rating" class="form-label fw-bold">Overall Rating</label>
-                <input type="number" name = "overall_rating" class="form-control" id="overall_rating" min="1" max="5" placeholder="1-5" required>
-            </div>
-    
-            <div class="mb-3 pt-3">
-                <label for="comment" class="form-label fw-bold">Comment</label>
-                <input type="text" name = "comment" class="form-control" id="comment" placeholder="Enter a comment" required>
-            </div>
-    
-            <button type="submit" class = "btn ml-1 mt-2 mb-3 w-100" style="background-color: rgba(98,241,210,0.5);">Submit</button>
-        </form>
+        </div>
+        <div class="mb-3">
+            <label for="clean_rating" class="form-label fw-bold">Cleanliness</label>
+            <input type="number" name="clean_rating" class="form-control" id="clean_rating" min="1" max="5" placeholder="1-5" required>
+        </div>
+        <p class="fw-bold">Accessibility</p>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" name="accessibility" value="faculty" id="Accessibility1">
+            <label class="form-check-label" for="Accessibility1">
+                Faculty
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" name="accessibility" value="student" id="Accessibility2">
+            <label class="form-check-label" for="Accessibility2">
+                Student
+            </label>
+        </div>
+        <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" name="accessibility" value="handicapped" id="Accessibility3">
+            <label class="form-check-label" for="Accessibility3">
+                Handicapped
+            </label>
+        </div>
+        <p class="fw-bold">Functionality</p>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="func" id="functionality1" value="Open" checked>
+            <label class="form-check-label" for="functionality1">
+                Open
+            </label>
+        </div>
+        <div class="form-check mb-3">
+            <input class="form-check-input" type="radio" name="func" id="functionality2" value="Closed">
+            <label class="form-check-label" for="functionality2">
+                Closed
+            </label>
+        </div>
+        <div class="mb-3">
+            <label for="overall_rating" class="form-label fw-bold">Overall Rating</label>
+            <input type="number" name="overall_rating" class="form-control" id="overall_rating" min="1" max="5" placeholder="1-5" required>
+        </div>
+        <div class="mb-3 pt-3">
+            <label for="comment" class="form-label fw-bold">Comment</label>
+            <input type="text" name="comment" class="form-control" id="comment" placeholder="Enter a comment" required>
+        </div>
+        <button type="submit" class="btn ml-1 mt-2 mb-5 w-100" style="background-color: rgba(98,241,210,0.5);">Submit</button>
+    </form>
 </div>
 <br>
 

@@ -18,8 +18,44 @@ api_key = os.getenv('API_KEY')
 
 @app.get('/')
 def index():
-    ratings = Rating.query.all()
+    # Default sort is most recent
+    ratings = Rating.query.order_by(Rating.rating_id.desc()).all()
     return render_template('index.html', index_active=True, ratings=ratings)
+
+
+@app.post('/')
+def sortby():
+    sort_by = request.form.get('sort-by', 'Most Recent')
+    if sort_by == 'Most Recent':
+        ratings = Rating.query.order_by(Rating.rating_id.desc()).all()
+    elif sort_by == 'Cleanliness':
+        ratings = Rating.query.order_by(Rating.cleanliness.desc()).all()
+    elif sort_by == 'Handicap':
+        ratings = Rating.query.filter(Rating.accessibility.ilike('%handicap%')).all()
+    elif sort_by == 'Functionality':
+        ratings = Rating.query.filter(Rating.functionality == True).all()
+    elif sort_by == 'Faculty Only':
+        ratings = Rating.query.filter(Rating.accessibility.ilike('%faculty%'), ~Rating.accessibility.ilike('%student%')).all()
+    elif sort_by == 'Overall':
+        ratings = Rating.query.order_by(Rating.overall.desc()).all()
+    else:
+        ratings = Rating.query.all()
+    
+    return render_template('index.html', index_active=True, ratings=ratings)
+
+
+@app.post('/leaverating')
+def indexrating():
+    location = request.form.get('location')
+    comments = request.form.get('comments')
+    cleanliness = request.form.get('cleanliness')
+    overall = request.form.get('overall')
+
+    new_rating = Rating(restroom_name=location, cleanliness=cleanliness, accessibility="temp", functionality=True, overall=overall, comments=comments)
+    db.session.add(new_rating)
+    db.session.commit()
+
+    return redirect('/')
 
 
 @app.get('/new')
@@ -27,7 +63,7 @@ def create_restroom_form():
     return render_template('create_restroom.html', create_restroom_active=True)
 
 
-@app.post('/')
+@app.post('/create')
 def create_restroom():
     restroom_name = request.form.get('restroom')
     cleanliness = request.form.get('clean_rating')
