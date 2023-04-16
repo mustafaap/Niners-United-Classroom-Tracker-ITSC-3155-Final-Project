@@ -2,8 +2,12 @@
 {% block title %} NUTT | Maps {% endblock %}
 
 {% block body %}
+<h3 class="d-flex justify-content-center my-3">NUTT Map</h3>
 <div id="map" style="width: 100%; height: 50vh;"></div>
 
+<h3 class="d-flex justify-content-center my-3">NUTT Map says:</h3>
+<p id="closest" class="d-flex justify-content-center my-3"></p>
+
 <script src="{{ url_for('static', filename='script.js') }}"></script>
-<script src="https://maps.googleapis.com/maps/api/js?key={{ api_key }}&callback=initMap" async defer></script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{ api_key }}&callback=initMap&libraries=geometry" async defer></script>
 {% endblock %}
