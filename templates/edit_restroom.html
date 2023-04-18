@@ -2,9 +2,9 @@
 {% block title %} NUTT | Edit {% endblock %}
 
 {% block body %}
-<h1 class="text-center m-5 fw-bold">Edit Restroom</h1>
 
-<div class="container rounded w-50 box-shadow" style="background-color: #f5f5f5">
+<div class="container-fluid w-50 bg-body-secondary box-shadow" style="border-radius: 4rem;">
+<h1 class="m-5 text-center fw-bold pt-5">Edit Restroom</h1>
 <form method="post" action="/restroom/{{ rating.rating_id }}">
     <div class="mb-3 pt-3">
         <label for="restroom" class="form-label fw-bold">Restroom Name</label>
