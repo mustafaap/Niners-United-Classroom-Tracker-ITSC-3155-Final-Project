@@ -12,12 +12,12 @@ class Rating(db.Model):
     overall = db.Column(db.Numeric(2,1))
     map_tag = db.Column(db.String(255))
     votes = db.Column(db.Integer)
-    rater_id = db.Column(db.Integer, db.ForeignKey('Users.user_id'), nullable=True)
+    rater_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=True)
     rater = db.relationship('Users', backref='rating_user')
 
 
 class Users(db.Model):
-    user_id = db.Coumn(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(255))
     password = db.Column(db.String(255))
     first_name = db.Column(db.String(255))
@@ -29,25 +29,27 @@ class Users(db.Model):
 class Comments(db.Model):
     comment_id = db.Column(db.Integer, primary_key=True)
     comment_body = db.Column(db.Text)
-    user_id = db.Column(db.Integer, db.ForeignKey('Users.user_id'), nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=True)
     user = db.relationship('Users', backref='user_comment')
-    rating_id = db.Column(db.Integer, db.ForeignKey('Rating.rating_id'), nullable=True)
+    rating_id = db.Column(db.Integer, db.ForeignKey('rating.rating_id'), nullable=True)
     rating = db.relationship('Rating', backref='rating_comment')
     total_votes = db.Column(db.Integer)
 
 class Rating_votes(db.Model):
+    rating_id = db.Column(db.Integer, primary_key=True)
     upvotes = db.Column(db.Integer)
     downvotes = db.Column(db.Integer)
-    user_id = db.Column(db.Integer, db.ForeignKey('Users.user_id'), nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=True)
     user = db.relationship('Users', backref='user_rating_votes')
-    rating_id = db.Column(db.Integer, db.ForeignKey('Rating.rating_id'), nullable=True)
+    rating_id_vote = db.Column(db.Integer, db.ForeignKey('rating.rating_id'), nullable=True)
     rating = db.relationship('Rating', backref='rating_votes')
 
 class Comment_votes(db.Model):
+    comment_id = db.Column(db.Integer, primary_key=True)
     upvotes = db.Column(db.Integer)
     downvotes = db.Column(db.Integer)
-    user_id = db.Column(db.Integer, db.ForeignKey('Users.user_id'), nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=True)
     user = db.relationship('Users', backref='user_comment_votes')
-    comment_id = db.Column(db.Integer, db.ForeignKey('Comments.comment_id'), nullable=True)
+    comment_id_vote = db.Column(db.Integer, db.ForeignKey('comments.comment_id'), nullable=True)
     comment = db.relationship('Comments', backref='comment_votes')
 
