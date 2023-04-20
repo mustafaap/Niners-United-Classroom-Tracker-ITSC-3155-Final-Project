@@ -76,9 +76,9 @@ def create_restroom():
         functionality = False
 
     overall = request.form.get('overall_rating')
-    comments = request.form.get('comment')
+    rating_body = request.form.get('comment')
 
-    new_restroom = Rating(restroom_name=restroom_name, cleanliness=cleanliness, accessibility=accessibility, functionality=functionality, overall=overall, comments=comments)
+    new_restroom = Rating(restroom_name=restroom_name, cleanliness=cleanliness, accessibility=accessibility, functionality=functionality, overall=overall, rating_body=rating_body)
     db.session.add(new_restroom)
     db.session.commit()
     return redirect('/')
