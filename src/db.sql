@@ -1,5 +1,8 @@
 DROP TABLE IF EXISTS rating;
 DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS comments;
+DROP TABLE IF EXISTS rating_votes;
+DROP TABLE IF EXISTS comment_votes;
 
 CREATE TABLE IF NOT EXISTS rating(
     rating_id SERIAL PRIMARY KEY,
@@ -12,8 +15,7 @@ CREATE TABLE IF NOT EXISTS rating(
     map_tag VARCHAR(255),
     votes INTEGER,
     rater_id INTEGER,
-    FOREIGN KEY (rater_id) REFERENCES users(user_id)
-    --When votes table is created, add FK
+    FOREIGN KEY (rater_id) REFERENCES users(user_id) ON DELETE CASCADE;
 );
 
 CREATE TABLE IF NOT EXISTS users(
@@ -25,4 +27,32 @@ CREATE TABLE IF NOT EXISTS users(
     email VARCHAR(255),
     favorite VARCHAR(255),
     picture VARCHAR(255)
+);
+
+CREATE TABLE IF NOT EXISTS comments(
+    comment_id SERIAL PRIMARY KEY,
+    comment_body TEXT,
+    user_id INT,
+    rating_id INT,
+    total_votes INT,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (rating_id) REFERENCES rating(rating_id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS rating_votes(
+    upvotes INT,
+    downvotes INT,
+    rating_id INT,
+    user_id INT,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (rating_id) REFERENCES rating(rating_id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS comment_votes(
+    upvotes INT,
+    downvotes INT,
+    comment_id INT,
+    user_id INT,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (comment_id) REFERENCES comments(comment_id) ON DELETE CASCADE
 );
