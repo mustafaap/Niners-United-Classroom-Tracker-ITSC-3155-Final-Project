@@ -47,11 +47,11 @@ def sortby():
 @app.post('/leaverating')
 def indexrating():
     location = request.form.get('location')
-    comments = request.form.get('comments')
+    rating_body = request.form.get('rating_body')
     cleanliness = request.form.get('cleanliness')
     overall = request.form.get('overall')
 
-    new_rating = Rating(restroom_name=location, cleanliness=cleanliness, accessibility="temp", functionality=True, overall=overall, comments=comments)
+    new_rating = Rating(restroom_name=location, cleanliness=cleanliness, overall=overall, rating_body=rating_body)
     db.session.add(new_rating)
     db.session.commit()
 
