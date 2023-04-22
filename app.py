@@ -114,7 +114,6 @@ def about():
 def search():
     term = (request.args.get('searchbox'))
     ratings = db.session.query(Rating).filter(Rating.restroom_name.ilike('%' + term + '%')).all()
-    # print(ratings)
     return render_template('index.html', ratings=ratings)
 
 

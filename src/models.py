@@ -28,6 +28,7 @@ class Rating(db.Model):
         self.votes = votes
         self.rater_id = rater_id
 
+
 class Users(db.Model):
     __tablename__ = 'users'
 
