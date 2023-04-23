@@ -57,7 +57,7 @@
                 <!-- <img class="card-img-top" src="..." alt="Card image cap"> -->
                 <div class="card-body">
                   <h5 class="card-title">{{ rating.restroom_name }}</h5>
-                  <p class="card-text">{{ rating.comments }}</p>
+                  <p class="card-text">{{ rating.rating_body }}</p>
                 </div>
               </div></a>
             </div>
@@ -79,28 +79,30 @@
               <input type="text" class="form-control" name="location" placeholder="Woodward 1st Floor (Elevator)">
             </div>
             <div class="form-group">
-              <label for="comments">Comments</label>
-              <textarea class="form-control" rows="5" name="comments"></textarea>
+              <label for="rating_body">Feedback</label>
+              <textarea class="form-control" rows="5" name="rating_body"></textarea>
             </div>
             <div class="form-group">
               <label for="cleanliness">Cleanliness</label>
-              <select class="form-control" name="cleanliness">
-                <option>5</option>
-                <option>4</option>
-                <option>3</option>
-                <option>2</option>
-                <option>1</option>
-              </select>
+              <div class="row">
+                <div class="col-md-10">
+                  <input type="range" class="form-range clean-range" min="1" max="5" step="0.5" name="cleanliness">
+                </div>
+                <div class="col-md-2">
+                  <div class="clean-value"></div>
+                </div>
+              </div>
             </div>
             <div class="form-group">
               <label for="overall">Overall Experience</label>
-              <select class="form-control" name="overall">
-                <option>5</option>
-                <option>4</option>
-                <option>3</option>
-                <option>2</option>
-                <option>1</option>
-              </select>
+              <div class="row">
+                <div class="col-md-10">
+                  <input type="range" class="form-range overall-range" min="1" max="5" step="0.5" name="overall">
+                </div>
+                <div class="col-md-2">
+                  <div class="overall-value"></div>
+                </div>
+              </div>
             </div>
             <div class="form-group mt-4">
               <button type="button" class="btn btn-info">Add More Info</button>
@@ -113,4 +115,16 @@
 
   </div>
 </div>
+
+<script>
+  let cleanSlider = document.querySelector('.clean-range');
+  let cleanValue = document.querySelector('.clean-value');
+  cleanValue.textContent = cleanSlider.value;
+  cleanSlider.oninput = function() {cleanValue.textContent = this.value;}
+
+  let overallSlider = document.querySelector('.overall-range');
+  let overallValue = document.querySelector('.overall-value');
+  overallValue.textContent = overallSlider.value;
+  overallSlider.oninput = function() {overallValue.textContent = this.value;}
+</script>
 {% endblock %}
