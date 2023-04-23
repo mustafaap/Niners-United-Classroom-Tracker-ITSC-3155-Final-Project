@@ -1,6 +1,7 @@
-from flask import Flask, render_template, url_for, request, redirect
-from src.models import db, Rating
+from flask import Flask, render_template, url_for, request, redirect, abort
+from src.models import db, Rating, Users
 from dotenv import load_dotenv
+from security import bcrypt
 import os
 
 load_dotenv()
@@ -15,6 +16,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{db_user}:{db_pass}@{db_h
 db.init_app(app)
 api_key = os.getenv('API_KEY')
 
+bcrypt.init_app(app)
 
 @app.get('/')
 def index():
@@ -156,3 +158,20 @@ def delete_rating(rating_id: int):
     db.session.delete(rating)
     db.session.commit()
     return redirect('/')
+
+@app.post('/register')
+def register():
+    username = request.form.get('username')
+    password = request.form.get('password')
+
+    if not username or not password:
+        abort(400)
+
+    hashed_password = bcrypt.generate_password_hash(password).decode()
+
+    new_user = Users(username, hashed_password)
+    db.session.add(new_user)
+    db.session.commit()
+
+    return redirect('/signup')
+

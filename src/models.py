@@ -41,6 +41,10 @@ class Users(db.Model):
     favorite = db.Column(db.String(255))
     picture = db.Column(db.String(255))
 
+    def __init__(self, username: str, password: str):
+        self.username = username
+        self.password = password
+
     def __init__(self, username, password, first_name, last_name, email, favorite, picture):
         self.username = username
         self.password = password
