@@ -45,15 +45,6 @@ class Users(db.Model):
         self.username = username
         self.password = password
 
-    def __init__(self, username, password, first_name, last_name, email, favorite, picture):
-        self.username = username
-        self.password = password
-        self.first_name = first_name
-        self.last_name = last_name
-        self.email = email
-        self.favorite = favorite
-        self.picture = picture
-
 
 class Comments(db.Model):
     __tablename__ = 'comments'
