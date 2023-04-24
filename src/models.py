@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import ARRAY
+from sqlalchemy.ext.mutable import MutableList
 
 db = SQLAlchemy()
 
@@ -17,7 +18,7 @@ class Rating(db.Model):
     votes = db.Column(db.Integer)
     rater_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=True)
     rater = db.relationship('Users', backref='rating_user')
-    comments = db.Column(ARRAY(db.Integer), default=[])
+    comments = db.Column(MutableList.as_mutable(db.ARRAY(db.Integer)), default=[])
 
     def __init__(self, restroom_name, cleanliness, overall, rating_body=None, accessibility=None, functionality=None, map_tag=None, votes=None, rater_id=None, comments=None):
         self.restroom_name = restroom_name
@@ -73,7 +74,7 @@ class Comments(db.Model):
 class Rating_votes(db.Model):
     __tablename__ = 'rating_votes'
     vote_id = db.Column(db.Integer, primary_key=True)  # New primary key
-    rating_id = db.Column(db.Integer)  # Remove primary_key=True
+    rating_id = db.Column(db.Integer)  # Removed primary_key=True
     upvotes = db.Column(db.Integer)
     downvotes = db.Column(db.Integer)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=True)
