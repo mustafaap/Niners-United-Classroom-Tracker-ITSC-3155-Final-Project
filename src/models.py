@@ -69,8 +69,8 @@ class Comments(db.Model):
 
 class Rating_votes(db.Model):
     __tablename__ = 'rating_votes'
-
-    rating_id = db.Column(db.Integer, primary_key=True)
+    vote_id = db.Column(db.Integer, primary_key=True)  # New primary key
+    rating_id = db.Column(db.Integer)  # Remove primary_key=True
     upvotes = db.Column(db.Integer)
     downvotes = db.Column(db.Integer)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=True)
@@ -78,7 +78,8 @@ class Rating_votes(db.Model):
     rating_id_vote = db.Column(db.Integer, db.ForeignKey('rating.rating_id'), nullable=True)
     rating = db.relationship('Rating', backref='rating_votes')
 
-    def __init__(self, rating_id, upvotes, downvotes, user_id, rating_id_vote):
+    def __init__(self,vote_id , rating_id, upvotes, downvotes, user_id, rating_id_vote):
+        self.vote_id = vote_id
         self.rating_id = rating_id
         self.upvotes = upvotes
         self.downvotes = downvotes
