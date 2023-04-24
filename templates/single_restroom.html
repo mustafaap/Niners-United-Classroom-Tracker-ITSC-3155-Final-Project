@@ -9,9 +9,6 @@
     <div class="col-md-6">
       <h2>{{ rating.restroom_name }}</h2>
       <div class="row mt-4">
-        <div class="col-md-5">
-          <img src="#" alt="restroom_img" class="img-fluid">
-        </div>
         <div class="col-md-7">
             <div class="mb-3 pb-3">
             </div>
@@ -27,7 +24,7 @@
               <button type="submit" class="btn" style="background-color: rgba(98,241,210,0.5)";>Edit</button>
             </form> 
             <span class="mx-4"></span>
-            <form action="/{{ rating.rating_id }}/delete" method="POST" class="d-inline-block">
+            <form action="/restroom/{{ rating.rating_id }}/delete" method="POST" class="d-inline-block">
               <button type="submit" class="btn btn-danger">Delete</button>
             </form>
           </div>
