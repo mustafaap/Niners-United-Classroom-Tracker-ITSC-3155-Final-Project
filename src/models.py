@@ -44,14 +44,12 @@ class Users(db.Model):
     favorite = db.Column(db.String(255))
     picture = db.Column(db.String(255))
 
-    def __init__(self, username, password, first_name, last_name, email, favorite, picture):
+    def __init__(self, username: str, password: str, first_name: str, last_name: str, email: str):
         self.username = username
         self.password = password
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
-        self.favorite = favorite
-        self.picture = picture
 
 
 class Comments(db.Model):
