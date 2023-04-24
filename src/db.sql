@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS rating(
     map_tag VARCHAR(255),
     votes INTEGER,
     rater_id INTEGER,
+    comments INTEGER[] DEFAULT '{}',
     FOREIGN KEY (rater_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 

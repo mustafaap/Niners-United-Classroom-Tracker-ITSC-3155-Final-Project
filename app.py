@@ -1,5 +1,6 @@
 from flask import Flask, render_template, url_for, request, redirect
-from src.models import db, Rating
+from src.models import db, Rating, Users, Comments, Rating_votes, Comment_votes
+# from sqlalchemy import ARRAY
 from dotenv import load_dotenv
 import os
 
@@ -92,7 +93,26 @@ def load_maps():
 @app.get('/singlerestroom/<int:rating_id>')
 def view_single_restroom(rating_id):
     rating = Rating.query.get(rating_id)
-    return render_template('single_restroom.html', rating=rating)
+    comments = Comments.query.filter(Comments.comment_id.in_(rating.comments)).all()
+    return render_template('single_restroom.html', rating=rating, comments=comments)
+
+
+@app.post('/restroom/<int:rating_id>')
+def addcomment(rating_id):
+    rating = Rating.query.get(rating_id)
+    comment_body = request.form.get('comment')
+    new_comment = Comments(comment_body=comment_body)
+    db.session.add(new_comment)
+    db.session.commit()
+
+    rating.comments.append(new_comment.comment_id)
+    setattr(rating, 'comments', rating.comments)
+    db.session.commit()
+
+    rating = Rating.query.get(rating_id)
+    # comments = Comments.query.filter(Comments.comment_id.in_(rating.comments)).all()
+
+    return redirect(url_for('view_single_restroom', rating_id=rating_id))
 
 
 @app.get('/login')
@@ -149,6 +169,7 @@ def update_restroom(rating_id: int):
     db.session.commit()
 
     return redirect(url_for('view_single_restroom', rating_id=rating_id))
+
 
 @app.post('/<int:rating_id>/delete')
 def delete_rating(rating_id: int):

@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import ARRAY
 
 db = SQLAlchemy()
 
@@ -16,8 +17,9 @@ class Rating(db.Model):
     votes = db.Column(db.Integer)
     rater_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=True)
     rater = db.relationship('Users', backref='rating_user')
+    comments = db.Column(ARRAY(db.Integer), default=[])
 
-    def __init__(self, restroom_name, cleanliness, overall, rating_body=None, accessibility=None, functionality=None, map_tag=None, votes=None, rater_id=None):
+    def __init__(self, restroom_name, cleanliness, overall, rating_body=None, accessibility=None, functionality=None, map_tag=None, votes=None, rater_id=None, comments=None):
         self.restroom_name = restroom_name
         self.rating_body = rating_body
         self.cleanliness = cleanliness
@@ -27,6 +29,7 @@ class Rating(db.Model):
         self.map_tag = map_tag
         self.votes = votes
         self.rater_id = rater_id
+        self.comments = comments if comments is not None else []
 
 
 class Users(db.Model):
@@ -62,7 +65,7 @@ class Comments(db.Model):
     rating = db.relationship('Rating', backref='rating_comment')
     total_votes = db.Column(db.Integer)
 
-    def __init__(self, comment_body, user_id, rating_id, total_votes):
+    def __init__(self, comment_body=None, user_id=None, rating_id=None, total_votes=None):
         self.comment_body = comment_body
         self.user_id = user_id
         self.rating_id = rating_id

@@ -20,12 +20,12 @@
     align-items: center;
 }
 
-.list-group-item {
+/* .list-group-item {
     margin-bottom: 10px;
     background-color: #f5f5f5;
     border: none;
     border-radius: 5px;
-}
+} */
 
 .to-post {
     text-decoration: none;
