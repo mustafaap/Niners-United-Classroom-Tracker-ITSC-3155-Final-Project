@@ -163,15 +163,18 @@ def delete_rating(rating_id: int):
 def register():
     username = request.form.get('username')
     password = request.form.get('password')
+    fname = request.form.get('fname')
+    lname = request.form.get('lname')
+    email = request.form.get('email')
 
-    if not username or not password:
+    if not username or not password or not fname or not lname or not email:
         abort(400)
 
     hashed_password = bcrypt.generate_password_hash(password).decode()
 
-    new_user = Users(username, hashed_password)
+    new_user = Users(username, hashed_password, fname, lname, email)
     db.session.add(new_user)
     db.session.commit()
 
-    return redirect('/signup')
+    return redirect('/login')
 

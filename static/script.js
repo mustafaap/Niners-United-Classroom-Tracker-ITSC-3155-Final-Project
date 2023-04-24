@@ -53,3 +53,16 @@ function initMap() {
       alert('Please enable location!');
     }
 }
+
+function checkPasswordMatch() {
+  var password = document.getElementById("password").value;
+  var repassword = document.getElementById("repassword").value;
+  var error = document.getElementById("passwordMatchError");
+  if (password != repassword) {
+      error.style.display = "block";
+      return false;
+  } else {
+      error.style.display = "none";
+      return true;
+  }
+}
