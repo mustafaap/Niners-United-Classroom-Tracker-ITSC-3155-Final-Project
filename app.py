@@ -1,5 +1,5 @@
 from flask import Flask, render_template, url_for, request, redirect, abort
-from src.models import Comments, Rating_votes, db, Rating, Users
+from src.models import db, Rating, Users, Comments, Rating_votes, Comment_votes
 from dotenv import load_dotenv
 from security import bcrypt
 import os
@@ -94,7 +94,24 @@ def load_maps():
 @app.get('/singlerestroom/<int:rating_id>')
 def view_single_restroom(rating_id):
     rating = Rating.query.get(rating_id)
-    return render_template('single_restroom.html', rating=rating)
+    comments = Comments.query.filter(Comments.comment_id.in_(rating.comments)).all()
+    return render_template('single_restroom.html', rating=rating, comments=comments)
+
+
+@app.post('/restroom/<int:rating_id>/comment')
+def addcomment(rating_id):
+    rating = Rating.query.get(rating_id)
+    comment_body = request.form.get('comment')
+    new_comment = Comments(comment_body=comment_body, rating_id=rating_id)
+    db.session.add(new_comment)
+    db.session.commit()
+
+    rating.comments.append(new_comment.comment_id)
+    db.session.commit()
+
+    rating = Rating.query.get(rating_id)
+
+    return redirect(url_for('view_single_restroom', rating_id=rating_id))
 
 
 @app.get('/login')
@@ -139,18 +156,19 @@ def update_restroom(rating_id: int):
         functionality = False
 
     overall = request.form.get('overall_rating')
-    comments = request.form.get('comment')
+    # comments = request.form.get('comment')
 
     rating.restroom_name = restroom_name
     rating.cleanliness = cleanliness
     rating.accessibility = accessibility
     rating.functionality = functionality
     rating.overall = overall
-    rating.comments = comments
+    # rating.comments = comments
 
     db.session.commit()
 
     return redirect(url_for('view_single_restroom', rating_id=rating_id))
+
 
 @app.post('/restroom/<int:rating_id>/delete')
 def delete_rating(rating_id: int):
