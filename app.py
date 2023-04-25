@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, request, redirect, abort
+from flask import Flask, render_template, session, url_for, request, redirect, abort
 from src.models import db, Rating, Users, Comments, Rating_votes, Comment_votes
 from dotenv import load_dotenv
 from security import bcrypt
@@ -13,6 +13,9 @@ db_host = os.getenv('DB_HOST')
 db_port = os.getenv('DB_PORT')
 db_name = os.getenv('DB_NAME')
 app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{db_user}:{db_pass}@{db_host}:{db_port}/{db_name}'
+
+app.secret_key = os.getenv('APP_SECRET')
+
 db.init_app(app)
 api_key = os.getenv('API_KEY')
 
@@ -207,3 +210,35 @@ def register():
 
     return redirect('/login')
 
+@app.get('/view_user')
+def view_user():
+    if 'user' not in session:
+        return redirect('/login')
+    user = session['user']
+    return render_template('view_user.html', user=user)
+
+@app.post('/login')
+def user_login():
+    username = request.form.get('username')
+    password = request.form.get('password')
+
+    if not username or not password:
+        abort(400)
+
+    existing_user = Users.query.filter_by(username=username).first()
+
+    if not existing_user:
+        return redirect('/')
+
+    if bcrypt.check_password_hash(existing_user.password, password):
+        session['user'] = { 
+        'username': username
+        }
+        return redirect('/view_user')
+    
+    return render_template('login.html', login_active=True)
+
+@app.post('/logout')
+def logout():
+    del session['user']
+    return redirect('/login')
