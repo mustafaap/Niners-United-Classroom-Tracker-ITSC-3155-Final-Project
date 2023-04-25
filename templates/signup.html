@@ -12,7 +12,7 @@
                             <label for="fname" class="form-label">First name</label>
                             <div class="input-group">
                                 <span class="input-group-text">
-                                    <i class="fa-regular fa-user me-2"></i>   
+                                    <i class="fa-regular fa-user"></i>   
                                 </span>
                                 <input type="text" class="form-control" id="fname" name="fname" placeholder="First name" required>
                             </div>
@@ -21,7 +21,7 @@
                             <label for="lname" class="form-label">Last name</label>
                             <div class="input-group">
                                 <span class="input-group-text">
-                                    <i class="fa-regular fa-user me-2"></i> 
+                                    <i class="fa-regular fa-user"></i> 
                                 </span>
                                 <input type="text" class="form-control" id="lname" name="lname" placeholder="Last name" required>
                             </div>
@@ -31,7 +31,7 @@
                         <label for="email" class="form-label">Email</label>
                         <div class="input-group">
                             <span class="input-group-text">
-                                <i class="fa fa-envelope me-2"></i>
+                                <i class="fa fa-envelope"></i>
                             </span>
                             <input type="email" class="form-control" id="email" name="email" placeholder="Email" required>
                         </div>
@@ -40,7 +40,7 @@
                         <label for="username" class="form-label">Username</label>
                         <div class="input-group">
                             <span class="input-group-text">
-                                <i class="fa fa-user me-2"></i>  
+                                <i class="fa fa-user"></i>  
                             </span>
                             <input type="text" class="form-control" id="username" name="username" placeholder="Create username" required>
                         </div>
@@ -49,11 +49,11 @@
                         <label for="password" class="form-label">Password</label>
                         <div class="input-group">
                             <span class="input-group-text">
-                                <i class="fa fa-lock me-2"></i>
+                                <i class="fa fa-lock"></i>
                             </span>
                             <input type="password" class="form-control" id="password" name="password" placeholder="Create password" required>
                             <span class="input-group-text">
-                                <i id="eye" class="fa fa-eye-slash ms-2" onclick="togglePasswordVisibility('password', 'eye')" style="cursor: pointer"></i>
+                                <i id="eye" class="fa fa-eye-slash" onclick="togglePasswordVisibility('password', 'eye')" style="cursor: pointer"></i>
                             </span>
                         </div>
                     </div>
@@ -61,11 +61,11 @@
                         <label for="repassword" class="form-label">Re-enter password</label>
                         <div class="input-group">
                             <span class="input-group-text">
-                                <i class="fa fa-lock me-2"></i>
+                                <i class="fa fa-lock"></i>
                             </span>
-                            <input type="password" class="form-control" id="repassword" name="repassword" placeholder="Re-enter password" oninput="checkPasswordMatch()" required>
+                            <input type="password" class="form-control" id="repassword" name="repassword" placeholder="Confirm password" oninput="checkPasswordMatch()" required>
                             <span class="input-group-text">
-                                <i id="eye-repassword" class="fa fa-eye-slash ms-2" onclick="togglePasswordVisibility('repassword', 'eye-repassword')" style="cursor: pointer"></i>
+                                <i id="eye-repassword" class="fa fa-eye-slash" onclick="togglePasswordVisibility('repassword', 'eye-repassword')" style="cursor: pointer"></i>
                             </span>
                         </div>
                         <div id="passwordMatchError" style="display:none;color:red;">Passwords do not match</div>
