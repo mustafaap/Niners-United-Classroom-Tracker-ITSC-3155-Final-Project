@@ -9,5 +9,5 @@
 <p id="closest" class="d-flex justify-content-center my-3"></p>
 
 <script src="{{ url_for('static', filename='script.js') }}"></script>
-<script src="https://maps.googleapis.com/maps/api/js?key={{ api_key }}&callback=initMap&libraries=geometry" async defer></script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{ api_key }}&callback=initMap&libraries=geometry,places" async defer></script>
 {% endblock %}
