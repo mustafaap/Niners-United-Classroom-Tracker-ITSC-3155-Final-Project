@@ -102,7 +102,7 @@ def view_single_restroom(rating_id):
 def addcomment(rating_id):
     rating = Rating.query.get(rating_id)
     comment_body = request.form.get('comment')
-    new_comment = Comments(comment_body=comment_body)
+    new_comment = Comments(comment_body=comment_body, rating_id=rating_id)
     db.session.add(new_comment)
     db.session.commit()
 

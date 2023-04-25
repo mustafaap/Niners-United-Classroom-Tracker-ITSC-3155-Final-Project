@@ -36,15 +36,17 @@ CREATE TABLE IF NOT EXISTS comments(
     user_id INT,
     rating_id INT,
     total_votes INT,
+    comment_id_vote INT,
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
-    FOREIGN KEY (rating_id) REFERENCES rating(rating_id) ON DELETE CASCADE
+    FOREIGN KEY (rating_id) REFERENCES rating(rating_id) ON DELETE CASCADE,
+    FOREIGN KEY (comment_id_vote) REFERENCES comments(comment_id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS rating_votes(
     vote_id INT PRIMARY KEY, --New primary key
     rating_id INT,
-    upvotes INT,
-    downvotes INT,
+    upvotes INT, --Add default = 0
+    downvotes INT, --Add default = 0
     user_id INT,
     rating_id_vote INT,
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
