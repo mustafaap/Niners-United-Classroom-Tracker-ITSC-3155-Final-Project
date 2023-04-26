@@ -58,6 +58,11 @@
                 <div class="card-body">
                   <h5 class="card-title">{{ rating.restroom_name }}</h5>
                   <p class="card-text">{{ rating.rating_body }}</p>
+                  <div>
+                    <button class="upvote" id="upvote-{{ rating.rating_id }}" data-rating_id="{{ rating.rating_id }}"><i class="fa fa-light fa-circle-up up"></i></button>
+                    <p class="numVotes" id="num-{{ rating.rating_id }}" data-num_votes="{{rating.votes}}" data-rating_id="{{ rating.rating_id }}" >{{ rating.votes }}</p>
+                    <button class="downvote" id="downvote-{{ rating.rating_id }}" data-rating_id="{{ rating.rating_id }}"><i class="fa fa-light fa-circle-down down"></i></button>
+                  </div>
                 </div>
               </div></a>
             </div>
@@ -71,7 +76,7 @@
 
     <div class="col-sm-3 p-0">
       <div class="d-flex justify-content-center">
-        <div class="position-fixed">
+        <div class="position-absolute">
           <form class="bg-body-secondary mt-5" id="index-leave-rating" action="/leaverating" method="post">
             <h4 class="text-center">Leave a Rating!</h4>
             <div class="form-group">
@@ -126,5 +131,89 @@
   let overallValue = document.querySelector('.overall-value');
   overallValue.textContent = overallSlider.value;
   overallSlider.oninput = function() {overallValue.textContent = this.value;}
+
+  ////////////////////////
+  //upvotes/downvotes JS
+  const upvote = document.querySelectorAll('.upvote');
+  const downvote = document.querySelectorAll('.downvote');
+
+  const up = document.querySelectorAll('.up');
+  const down = document.querySelectorAll('.down');
+
+  const numVotes = document.querySelectorAll('.numVotes')
+
+  upvote.forEach(element => element.addEventListener('click', like));
+  downvote.forEach(element => element.addEventListener('click', dislike));
+    
+  function like(e) {
+    like = e.currentTarget;
+    rating_id = like.getAttribute('data-rating_id');
+
+    numVotes.forEach(element => {
+    if (element.getAttribute('data-rating_id') === rating_id) {
+      let new_num = parseInt(element.getAttribute('data-num_votes')) + 1;
+      element.textContent = new_num;
+    }});
+
+    $(document).on('click', `#upvote-${rating_id}`, function(event) {
+      let id = $(event.currentTarget).attr('data-rating_id');
+      $.ajax({
+        url : `/upvote/${id}`,
+        type : "post",
+        contentType: 'application/json;charset=UTF-8',
+        dataType: "json",
+        data : JSON.stringify({'rating_id' : $(`#upvote-${rating_id}`).data('rating_id')}),
+        success : function(response) {
+          console.log(response);	
+        },
+        error : function(xhr) {
+          console.log(xhr);
+        }
+      });
+      event.preventDefault();
+    });
+  }
+    
+  function dislike(e) {
+    dislike = e.currentTarget;
+    rating_id = dislike.getAttribute('data-rating_id');
+
+    numVotes.forEach(element => {
+    if (element.getAttribute('data-rating_id') === rating_id) {
+      let new_num = parseInt(element.getAttribute('data-num_votes')) - 1;
+      element.textContent = new_num;
+    }});
+
+    $(document).on('click', `#downvote-${rating_id}`, function(event) {
+    let id = $(event.currentTarget).attr('data-rating_id');
+    $.ajax({
+      url : `/downvote/${id}`,
+      type : "post",
+      contentType: 'application/json;charset=UTF-8',
+      dataType: "json",
+      data : JSON.stringify({'rating_id' : $(`#downvote-${rating_id}`).data('rating_id')}),
+      success : function(response) {
+        console.log(response);	
+      },
+      error : function(xhr) {
+        console.log(xhr);
+      }
+    });
+    event.preventDefault();
+  });
+  }
+
+up.forEach(element => element.addEventListener('click', uclick));
+down.forEach(element => element.addEventListener('click', dclick));
+
+function uclick(e) {
+  let upvote = e.target;
+  upvote.classList.toggle('clickedUpvote');
+}
+
+function dclick(e) {
+  let downvote = e.target;
+  downvote.classList.toggle('clickedDownvote');
+}
 </script>
 {% endblock %}
