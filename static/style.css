@@ -54,3 +54,16 @@
     -webkit-box-shadow: 5px -5px 15px 0px var(--light-blue-1); 
     box-shadow: 5px -5px 15px 0px var(--light-blue-1);
 }
+
+.upvote, .downvote {
+    border: none;
+    background: none;
+}
+
+.clickedUpvote {
+    color: green;
+}
+
+.clickedDownvote {
+    color: red;
+}

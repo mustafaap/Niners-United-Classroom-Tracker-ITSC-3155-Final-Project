@@ -1,5 +1,6 @@
+import json
 from flask import Flask, render_template, url_for, request, redirect, abort
-from src.models import db, Rating, Users
+from src.models import Rating_votes, db, Rating, Users
 from dotenv import load_dotenv
 from security import bcrypt
 import os
@@ -178,3 +179,37 @@ def register():
 
     return redirect('/login')
 
+
+@app.post('/upvote/<int:rating_id>')
+def upvote(rating_id: int):
+    print('upvoting')
+    if request.method == 'POST':
+        data = json.loads(request.data)
+        print(data)
+        rating = Rating.query.filter_by(rating_id = data['rating_id']).first()
+        print(rating.votes)
+
+        if rating:
+            if rating.votes:
+                setattr(rating, 'votes', int(rating.votes) + 1)
+            else:
+                setattr(rating, 'votes', 1)
+            db.session.commit()
+    return redirect(url_for('index'))
+
+
+@app.post('/downvote/<int:rating_id>')
+def downvote(rating_id: int):
+    if request.method == 'POST':
+        data = json.loads(request.data)
+        print(data['rating_id'])
+        rating = Rating.query.filter_by(rating_id = data['rating_id']).first()
+        print(rating.votes)
+
+        if rating:
+            if rating.votes:
+                setattr(rating, 'votes', int(rating.votes) - 1)
+            else:
+                setattr(rating, 'votes', -1)
+            db.session.commit()
+    return redirect(url_for('index'))
