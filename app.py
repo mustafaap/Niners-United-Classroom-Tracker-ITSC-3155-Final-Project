@@ -117,6 +117,15 @@ def addcomment(rating_id):
     return redirect(url_for('view_single_restroom', rating_id=rating_id))
 
 
+@app.post('/restroom/<int:rating_id>/comment/<int:comment_id>/delete')
+def deletecomment(rating_id, comment_id):
+    comment = Comments.query.get(comment_id)
+    db.session.delete(comment)
+    db.session.commit()
+
+    return redirect(url_for('view_single_restroom', rating_id=rating_id))
+
+
 @app.get('/login')
 def login():
     return render_template('login.html', login_active=True)
