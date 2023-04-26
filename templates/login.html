@@ -7,6 +7,9 @@
         <div class="col-md-4 col-11 mt-3">
             <form action="/login" method="POST" class="bg-body-secondary my-4 p-5 box-shadow" style="border-radius: 4rem;">
                 <h1 class="d-flex justify-content-center fw-bold">Login</h1>
+                {% if message %}
+                    <div class="alert alert-danger mt-3 alert-dismissible fade show"><i class="fa-solid fa-circle-exclamation fa-bounce me-1" style="color:red;"></i>{{ message }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
+                {% endif %}
                 <div class="mb-3">
                     <label for="username" class="form-label">Username</label>
                     <div class="input-group">

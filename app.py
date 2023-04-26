@@ -271,8 +271,9 @@ def user_login():
 
     existing_user = Users.query.filter_by(username=username).first()
 
-    if not existing_user:
-        return redirect('/login')
+    if not existing_user or not bcrypt.check_password_hash(existing_user.password, password):
+        message = "Incorrect username or password"
+        return render_template('login.html', login_active=True, message=message)
 
     if bcrypt.check_password_hash(existing_user.password, password):
         session['user'] = { 

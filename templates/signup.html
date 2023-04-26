@@ -5,7 +5,7 @@
 <div class="container-fluid">
     <div class="row justify-content-center align-items-center">
         <div class="col-md-4 col-11 mt-3">
-            <form action="/register" method="post" class="bg-body-secondary my-4 p-5 box-shadow" style="border-radius: 4rem;"  onsubmit="return checkPasswordMatch()">
+            <form action="/register" method="post" class="bg-body-secondary my-4 p-4 box-shadow" style="border-radius: 4rem;"  onsubmit="return validatePassword()">
                 <h1 class="d-flex justify-content-center fw-bold mb-3">Sign Up</h1>
                     <div class="mb-3 row">
                         <div class="col">
@@ -51,11 +51,12 @@
                             <span class="input-group-text">
                                 <i class="fa fa-lock"></i>
                             </span>
-                            <input type="password" class="form-control" id="password" name="password" placeholder="Create password" required>
+                            <input type="password" class="form-control" id="password" name="password" placeholder="Create password" oninput="checkPasswordLength()" required>
                             <span class="input-group-text">
                                 <i id="eye" class="fa fa-eye-slash" onclick="togglePasswordVisibility('password', 'eye')" style="cursor: pointer"></i>
                             </span>
                         </div>
+                        <div id="passwordLengthError" style="display:none;color:red;"><i class="fa-solid fa-circle-exclamation fa-bounce mx-2" style="color:red;"></i>Password is too short</div>
                     </div>
                     <div class="mb-3">
                         <label for="repassword" class="form-label">Re-enter password</label>
@@ -68,7 +69,7 @@
                                 <i id="eye-repassword" class="fa fa-eye-slash" onclick="togglePasswordVisibility('repassword', 'eye-repassword')" style="cursor: pointer"></i>
                             </span>
                         </div>
-                        <div id="passwordMatchError" style="display:none;color:red;">Passwords do not match</div>
+                        <div id="passwordMatchError" style="display:none;color:red;"><i class="fa-solid fa-circle-exclamation fa-bounce mx-2" style="color:red;"></i>Passwords do not match</div>
                     </div>
                     <div class="d-flex flex-column align-items-center">
                         <button type="submit" class="btn" style="background-color: rgba(98,241,210,0.5);">Create Account</button>

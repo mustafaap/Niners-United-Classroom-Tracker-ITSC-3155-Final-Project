@@ -86,3 +86,22 @@ function togglePasswordVisibility(inputId, iconId) {
     icon.classList.add("fa-eye-slash");
   }
 }
+
+function checkPasswordLength() {
+  var password = document.getElementById("password").value;
+  var error = document.getElementById("passwordLengthError");
+  if (password.length < 8) {
+    error.style.display = "block";
+    return false;
+  } else {
+    error.style.display = "none";
+    return true;
+  }
+}
+
+function validatePassword() {
+  if (checkPasswordLength() && checkPasswordMatch()) {
+    return true;
+  }
+  return false;
+}
