@@ -1,6 +1,7 @@
-from flask import Flask, render_template, url_for, request, redirect
-from src.models import db, Rating
+from flask import Flask, render_template, session, url_for, request, redirect, abort
+from src.models import db, Rating, Users, Comments, Rating_votes, Comment_votes
 from dotenv import load_dotenv
+from security import bcrypt
 import os
 
 load_dotenv()
@@ -12,9 +13,13 @@ db_host = os.getenv('DB_HOST')
 db_port = os.getenv('DB_PORT')
 db_name = os.getenv('DB_NAME')
 app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{db_user}:{db_pass}@{db_host}:{db_port}/{db_name}'
+
+app.secret_key = os.getenv('APP_SECRET')
+
 db.init_app(app)
 api_key = os.getenv('API_KEY')
 
+bcrypt.init_app(app)
 
 @app.get('/')
 def index():
@@ -47,11 +52,11 @@ def sortby():
 @app.post('/leaverating')
 def indexrating():
     location = request.form.get('location')
-    comments = request.form.get('comments')
+    rating_body = request.form.get('rating_body')
     cleanliness = request.form.get('cleanliness')
     overall = request.form.get('overall')
 
-    new_rating = Rating(restroom_name=location, cleanliness=cleanliness, accessibility="temp", functionality=True, overall=overall, comments=comments)
+    new_rating = Rating(restroom_name=location, cleanliness=cleanliness, overall=overall, rating_body=rating_body)
     db.session.add(new_rating)
     db.session.commit()
 
@@ -92,7 +97,24 @@ def load_maps():
 @app.get('/singlerestroom/<int:rating_id>')
 def view_single_restroom(rating_id):
     rating = Rating.query.get(rating_id)
-    return render_template('single_restroom.html', rating=rating)
+    comments = Comments.query.filter(Comments.comment_id.in_(rating.comments)).all()
+    return render_template('single_restroom.html', rating=rating, comments=comments)
+
+
+@app.post('/restroom/<int:rating_id>/comment')
+def addcomment(rating_id):
+    rating = Rating.query.get(rating_id)
+    comment_body = request.form.get('comment')
+    new_comment = Comments(comment_body=comment_body, rating_id=rating_id)
+    db.session.add(new_comment)
+    db.session.commit()
+
+    rating.comments.append(new_comment.comment_id)
+    db.session.commit()
+
+    rating = Rating.query.get(rating_id)
+
+    return redirect(url_for('view_single_restroom', rating_id=rating_id))
 
 
 @app.get('/login')
@@ -114,7 +136,6 @@ def about():
 def search():
     term = (request.args.get('searchbox'))
     ratings = db.session.query(Rating).filter(Rating.restroom_name.ilike('%' + term + '%')).all()
-    # print(ratings)
     return render_template('index.html', ratings=ratings)
 
 
@@ -138,22 +159,34 @@ def update_restroom(rating_id: int):
         functionality = False
 
     overall = request.form.get('overall_rating')
-    comments = request.form.get('comment')
+    # comments = request.form.get('comment')
 
     rating.restroom_name = restroom_name
     rating.cleanliness = cleanliness
     rating.accessibility = accessibility
     rating.functionality = functionality
     rating.overall = overall
-    rating.comments = comments
+    # rating.comments = comments
 
     db.session.commit()
 
     return redirect(url_for('view_single_restroom', rating_id=rating_id))
 
-@app.post('/<int:rating_id>/delete')
+
+@app.post('/restroom/<int:rating_id>/delete')
 def delete_rating(rating_id: int):
     rating = Rating.query.get(rating_id)
+
+    # Delete comments
+    comments = Comments.query.filter(Comments.rating_id == rating_id).all()
+    for comment in comments:
+        db.session.delete(comment)
+
+    # Delete rating_votes
+    rating_votes = Rating_votes.query.filter(Rating_votes.rating_id_vote == rating_id).all()
+    for vote in rating_votes:
+        db.session.delete(vote)
+
     db.session.delete(rating)
     db.session.commit()
     return redirect('/')
@@ -161,3 +194,55 @@ def delete_rating(rating_id: int):
 @app.get('/profile')
 def profile():
     return render_template('profile.html', profile_active = True)
+
+@app.post('/register')
+def register():
+    username = request.form.get('username')
+    password = request.form.get('password')
+    fname = request.form.get('fname')
+    lname = request.form.get('lname')
+    email = request.form.get('email')
+
+    if not username or not password or not fname or not lname or not email:
+        abort(400)
+
+    hashed_password = bcrypt.generate_password_hash(password).decode()
+
+    new_user = Users(username, hashed_password, fname, lname, email)
+    db.session.add(new_user)
+    db.session.commit()
+
+    return redirect('/login')
+
+@app.get('/view_user')
+def view_user():
+    if 'user' not in session:
+        return redirect('/login')
+    user = session['user']
+    return render_template('view_user.html', user=user)
+
+@app.post('/login')
+def user_login():
+    username = request.form.get('username')
+    password = request.form.get('password')
+
+    if not username or not password:
+        abort(400)
+
+    existing_user = Users.query.filter_by(username=username).first()
+
+    if not existing_user:
+        return redirect('/login')
+
+    if bcrypt.check_password_hash(existing_user.password, password):
+        session['user'] = { 
+        'username': username
+        }
+        return redirect('/view_user')
+    
+    return render_template('login.html', login_active=True)
+
+@app.post('/logout')
+def logout():
+    del session['user']
+    return redirect('/login')
