@@ -201,6 +201,10 @@ def delete_rating(rating_id: int):
     db.session.commit()
     return redirect('/')
 
+@app.get('/profile')
+def profile():
+    return render_template('profile.html', profile_active = True)
+
 @app.post('/register')
 def register():
     username = request.form.get('username')
