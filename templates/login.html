@@ -16,7 +16,7 @@
                         <span class="input-group-text">
                             <i class="fa fa-user"></i>
                         </span>
-                        <input type="text" class="form-control" id="username" name="username" placeholder="Username" required>
+                        <input type="text" class="form-control" id="username" name="username" placeholder="Username" oninput="checkInputRequired('username')" required>
                     </div>
                 </div>
                 <div class="mb-3">
@@ -25,7 +25,7 @@
                         <span class="input-group-text">
                             <i class="fa fa-lock"></i>
                         </span>
-                        <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Password" oninput="checkInputRequired('password')" required>
                         <span class="input-group-text">
                             <i id="eye" class="fa fa-eye-slash" onclick="togglePasswordVisibility('password', 'eye')" style="cursor: pointer"></i>
                         </span>
