@@ -201,9 +201,11 @@ def delete_rating(rating_id: int):
     db.session.commit()
     return redirect('/')
 
+
 @app.get('/profile')
 def profile():
     return render_template('profile.html', profile_active = True)
+
 
 @app.post('/register')
 def register():
@@ -223,6 +225,7 @@ def register():
     db.session.commit()
 
     return redirect('/login')
+
 
 @app.post('/upvote/<int:rating_id>')
 def upvote(rating_id: int):
@@ -258,12 +261,14 @@ def downvote(rating_id: int):
             db.session.commit()
     return redirect(url_for('index'))
 
+
 @app.get('/view_user')
 def view_user():
     if 'user' not in session:
         return redirect('/login')
     user = session['user']
     return render_template('view_user.html', user=user)
+
 
 @app.post('/login')
 def user_login():
@@ -287,8 +292,8 @@ def user_login():
     
     return render_template('login.html', login_active=True)
 
+
 @app.post('/logout')
 def logout():
     del session['user']
     return redirect('/login')
-

@@ -1,0 +1,274 @@
+{
+    "buildings": [
+        {
+            "name": "Student Union",
+            "lat": 35.308671725940975,
+            "lng": -80.73374042281684
+        },
+        {
+            "name": "University Recreation Center",
+            "lat": 35.308303958559485,
+            "lng": -80.73539396790838
+        },
+        {
+            "name": "Science Building",
+            "lat": 35.308459183567294,
+            "lng": -80.73016872265613
+        },
+        {
+            "name": "Student Health Center",
+            "lat": 35.310575217978226,
+            "lng": -80.72955350417377
+        },
+        {
+            "name": "Counseling & Psychological Services",
+            "lat": 35.31012415408449,
+            "lng": -80.72991482681289
+        },
+        {
+            "name": "Hauser Alumni Pavillion",
+            "lat": 35.30856996103155,
+            "lng": -80.73689670210385
+        },
+        {
+            "name": "Cedar Hall",
+            "lat": 35.309570385175164,
+            "lng": -80.72897135470444
+        },
+        {
+            "name": "Hickory Hall",
+            "lat": 35.30924895860378,
+            "lng": -80.7290024508479
+        },
+        {
+            "name": "Sycamore Hall",
+            "lat": 35.308862681122164,
+            "lng": -80.72901972648314
+        },
+        {
+            "name": "Cafeteria Activities Building",
+            "lat": 35.30910234255058,
+            "lng": -80.72822850238866
+        },
+        {
+            "name": "Woodward Hall",
+            "lat": 35.3073328849012,
+            "lng": -80.73546014346663
+        },
+        {
+            "name": "College of Education",
+            "lat": 35.307592671965544,
+            "lng": -80.73409245119562
+        },
+        {
+            "name": "College of Health and Human Services",
+            "lat": 35.30745315679396,
+            "lng": -80.73336733848296
+        },
+        {
+            "name": "Burson Hall",
+            "lat": 35.307530130711484,
+            "lng": -80.732424102434
+        },
+        {
+            "name": "Cameron Hall",
+            "lat": 35.30772737604084,
+            "lng": -80.73120379079565
+        },
+        {
+            "name": "Auxiliary Services Building",
+            "lat": 35.307733788970495,
+            "lng": -80.73050683732902
+        },
+        {
+            "name": "McMillan Greenhouse",
+            "lat": 35.30779927039848,
+            "lng": -80.72974911742267
+        },
+        {
+            "name": "Miltimore-Wallis Center",
+            "lat": 35.30684517850905,
+            "lng": -80.73435443759033
+        },
+        {
+            "name": "Dale F. Halton Arena",
+            "lat": 35.30626041068725,
+            "lng": -80.73442434631211
+        },
+        {
+            "name": "Smith",
+            "lat": 35.306913153754195,
+            "lng": -80.73151650192192
+        },
+        {
+            "name": "Prospector",
+            "lat": 35.306818132946226,
+            "lng": -80.7308901494613
+        },
+        {
+            "name": "McEniry Hall",
+            "lat": 35.30720804519316,
+            "lng": -80.73013129940234
+        },
+        {
+            "name": "Friday Building",
+            "lat": 35.306357981718165,
+            "lng": -80.72993761831468
+        },
+        {
+            "name": "Fretwell Building",
+            "lat": 35.30610614771424,
+            "lng": -80.72906076588242
+        },
+        {
+            "name": "Belk Gym",
+            "lat": 35.30537853227945,
+            "lng": -80.73559617927074
+        },
+        {
+            "name": "Cone University Center",
+            "lat": 35.30535933590778,
+            "lng": -80.73314797730129
+        },
+        {
+            "name": "Atkins Library",
+            "lat": 35.30579591753006,
+            "lng": -80.73220873993282
+        },
+        {
+            "name": "Kennedy",
+            "lat": 35.30597522194733,
+            "lng": -80.73094346919736
+        },
+        {
+            "name": "Pierre Macy Building",
+            "lat": 35.305680764605455,
+            "lng": -80.73040213800398
+        },
+        {
+            "name": "Barnard Building",
+            "lat": 35.305807186152194,
+            "lng": -80.73000413015886
+        },
+        {
+            "name": "Denny Building",
+            "lat": 35.30538124199278,
+            "lng": -80.72979440144967
+        },
+        {
+            "name": "Garinger Building",
+            "lat": 35.305000029798485,
+            "lng": -80.73001604653709
+        },
+        {
+            "name": "Winningham Building",
+            "lat": 35.305112541102936,
+            "lng": -80.73038050246825
+        },
+        {
+            "name": "Cato Hall",
+            "lat": 35.305434096180356,
+            "lng": -80.72872813217607
+        },
+        {
+            "name": "Storrs School of Architecture",
+            "lat": 35.30455480423608,
+            "lng": -80.72913835457015
+        },
+        {
+            "name": "Robinson Hall",
+            "lat": 35.30384480187776,
+            "lng": -80.72991121798887
+        },
+        {
+            "name": "Rowe Arts Building",
+            "lat": 35.30453156102964,
+            "lng": -80.73074957212206
+        },
+        {
+            "name": "Colvard Building",
+            "lat": 35.304848647537554,
+            "lng": -80.73171248404671
+        },
+        {
+            "name": "King",
+            "lat": 35.30508990817542,
+            "lng": -80.7325571436334
+        },
+        {
+            "name": "Reese Hall",
+            "lat": 35.3047211237701,
+            "lng": -80.73251068735954
+        },
+        {
+            "name": "Housing and Residence Life",
+            "lat": 35.302103070690514,
+            "lng": -80.7336056260314
+        },
+        {
+            "name": "South Village Crossing",
+            "lat": 35.3028701073175,
+            "lng": -80.73485878097527
+        },
+        {
+            "name": "Jamil Niner Student Pantry",
+            "lat": 35.309958924859,
+            "lng": -80.72399090603218
+        },
+        {
+            "name": "Halton-Wagner Tennis Complex",
+            "lat": 35.30737483642338,
+            "lng": -80.73673928564382
+        },
+        {
+            "name": "Irwin Belk Track and Field Center",
+            "lat": 35.305494365480094,
+            "lng": -80.73738364451881
+        },
+        {
+            "name": "Robert and Mariam Hayes Stadium",
+            "lat": 35.30864536652371,
+            "lng": -80.73959826499129
+        },
+        {
+            "name": "EPIC",
+            "lat": 35.30906447187674,
+            "lng": -80.7416045182543
+        },
+        {
+            "name": "Rose Football Center",
+            "lat": 35.31002430057736,
+            "lng": -80.73938101493188
+        },
+        {
+            "name": "Grigg Hall",
+            "lat": 35.311334176647726,
+            "lng": -80.74191207789727
+        },
+        {
+            "name": "Duke Centennial Hall",
+            "lat": 35.311949928380564,
+            "lng": -80.7412193979385
+        },
+        {
+            "name": "Motorsports Research",
+            "lat": 35.312635972997306,
+            "lng": -80.74027025035997
+        },
+        {
+            "name": "Bioinformatics Building",
+            "lat": 35.31268033034595,
+            "lng": -80.74201467482177
+        },
+        {
+            "name": "PORTAL",
+            "lat": 35.311700024593264,
+            "lng": -80.7429655611441
+        },
+        {
+            "name": "UNC Charlotte Marriott Hotel",
+            "lat": 35.310416191132035,
+            "lng": -80.74450277697191
+        }
+    ]
+}
