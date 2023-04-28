@@ -105,3 +105,23 @@ function validatePassword() {
   }
   return false;
 }
+
+function checkInputCorrect(inputId) {
+  var input = document.getElementById(inputId);
+  if (input.value.length === 0) {
+    input.classList.add("is-invalid");
+    input.classList.remove("is-valid");
+  } else {
+    input.classList.add("is-valid");
+    input.classList.remove("is-invalid");
+  }
+}
+
+function checkInputRequired(inputId) {
+  var input = document.getElementById(inputId);
+  if (input.value.length === 0) {
+    input.classList.add("is-invalid");
+  } else {
+    input.classList.remove("is-invalid");
+  }
+}
