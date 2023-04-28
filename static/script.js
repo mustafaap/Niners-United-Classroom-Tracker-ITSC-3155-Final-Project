@@ -1,6 +1,6 @@
 function initMap() {
   if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(position => {
+    navigator.geolocation.watchPosition(position => {
       let currentLocation = { lat: position.coords.latitude, lng: position.coords.longitude };
       // let currentLocation = { lat: 35.30560154079038, lng: -80.73442849115179 };
 
