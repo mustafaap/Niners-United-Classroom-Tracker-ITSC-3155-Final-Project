@@ -60,14 +60,16 @@ function initMap() {
 
 
 function checkPasswordMatch() {
-  var password = document.getElementById("password").value;
-  var repassword = document.getElementById("repassword").value;
+  var password = document.getElementById("password");
+  var repassword = document.getElementById("repassword");
   var error = document.getElementById("passwordMatchError");
-  if (password != repassword) {
+  if (password.value != repassword.value) {
     error.style.display = "block";
+    repassword.classList.add("is-invalid");
     return false;
   } else {
     error.style.display = "none";
+    repassword.classList.remove("is-invalid");
     return true;
   }
 }
@@ -88,13 +90,15 @@ function togglePasswordVisibility(inputId, iconId) {
 }
 
 function checkPasswordLength() {
-  var password = document.getElementById("password").value;
+  var password = document.getElementById("password");
   var error = document.getElementById("passwordLengthError");
-  if (password.length < 8) {
+  if (password.value.length < 8) {
     error.style.display = "block";
+    password.classList.add("is-invalid");
     return false;
   } else {
     error.style.display = "none";
+    password.classList.remove("is-invalid");
     return true;
   }
 }
