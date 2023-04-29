@@ -74,15 +74,14 @@ def create_restroom():
     restroom_name = request.form.get('restroom')
     cleanliness = request.form.get('clean_rating')
     accessibility = request.form.getlist('accessibility')
-    functionality = request.form['func']
+    functionality = request.form.get('func')
+    overall = request.form.get('overall_rating')
+    rating_body = request.form.get('comment')
 
     if functionality == 'Open':
         functionality = True
     else:
         functionality = False
-
-    overall = request.form.get('overall_rating')
-    rating_body = request.form.get('comment')
 
     new_restroom = Rating(restroom_name=restroom_name, cleanliness=cleanliness, accessibility=accessibility, functionality=functionality, overall=overall, rating_body=rating_body)
     db.session.add(new_restroom)
@@ -169,14 +168,14 @@ def update_restroom(rating_id: int):
         functionality = False
 
     overall = request.form.get('overall_rating')
-    # comments = request.form.get('comment')
+    rating_body = request.form.get('comment')
 
     rating.restroom_name = restroom_name
     rating.cleanliness = cleanliness
     rating.accessibility = accessibility
     rating.functionality = functionality
     rating.overall = overall
-    # rating.comments = comments
+    rating.rating_body = rating_body
 
     db.session.commit()
 
