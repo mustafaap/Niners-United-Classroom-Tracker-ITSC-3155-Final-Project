@@ -1,6 +1,6 @@
 /* Theme: Silver, white, blue, maybe cream. Representation of cleanliness */
 :root {
-    --light-blue-1: rgba(98,241,210,0.5);
+    --light-blue-1: rgba(98,241,210,1.0);
 }
 
 .fixed-stay {
