@@ -19,7 +19,28 @@
             <button type="submit" class="btn" style="background-color: rgba(98,241,210,1.0);">Edit</button>
           </form>
           <form action="/restroom/{{ rating.rating_id }}/delete" method="POST">
-            <button type="submit" class="btn btn-danger">Delete</button>
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+              Delete
+            </button>
+            <!-- Modal -->
+            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Confirm delete?</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <p>The rating will be permanently deleted!</p>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-danger" >Delete</button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </form>
         </div>
       </div>
@@ -43,7 +64,28 @@
                   <button type="submit" class="btn" style="background-color: rgba(98,241,210,1.0);">Edit</button>
                 </form>
                 <form action="/restroom/{{ rating.rating_id }}/comment/{{ comment.comment_id }}/delete" method="POST">
-                  <button type="submit" class="btn btn-danger">Delete</button>
+                  <!-- Button trigger modal -->
+                  <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop1">
+                    Delete
+                  </button>
+                  <!-- Modal -->
+                  <div class="modal fade" id="staticBackdrop1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h1 class="modal-title fs-5" id="staticBackdropLabe1l">Confirm delete?</h1>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                          <p>The comment will be permanently deleted!</p>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                          <button type="submit" class="btn btn-danger">Delete</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </form>
               </div>
             </div>
