@@ -20,17 +20,23 @@ function initMap() {
           let minDist = Number.MAX_VALUE;
 
           buildings.forEach(building => {
-            let dist = google.maps.geometry.spherical.computeDistanceBetween(
-              new google.maps.LatLng(currentLocation),
-              new google.maps.LatLng(building.lat, building.lng)
-            );
-  
-            console.log(`Distance to ${building.name} is ${dist}`);
-  
-            if (dist < minDist) {
-              closestBuilding = building;
-              minDist = dist;
-            }
+            building.coordinates.forEach(coord => {
+              let dist = google.maps.geometry.spherical.computeDistanceBetween(
+                new google.maps.LatLng(currentLocation),
+                new google.maps.LatLng(coord.lat, coord.lng)
+              );
+
+              // let newMarker = new google.maps.Marker(
+              //   { position: new google.maps.LatLng(coord.lat, coord.lng), map: map }
+              // )
+
+              console.log(`Distance to ${building.name} is ${dist}`);
+
+              if (dist < minDist) {
+                closestBuilding = building;
+                minDist = dist;
+              }
+            });
           });
 
           document.querySelector('#closest').textContent = `The closest building to your location is: ${closestBuilding.name}.`;
