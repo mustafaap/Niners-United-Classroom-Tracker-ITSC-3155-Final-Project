@@ -168,7 +168,7 @@ def update_restroom(rating_id: int):
         functionality = False
 
     overall = request.form.get('overall_rating')
-    rating_body = request.form.get('comment')
+    rating_body = request.form.get('rating_body')
 
     rating.restroom_name = restroom_name
     rating.cleanliness = cleanliness

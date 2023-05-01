@@ -18,9 +18,9 @@
           {% endif %}
           <li class="list-group-item">Overall experience: {{ rating.overall }}</li>
         </ul>
-        {% if rating.feedback %}
+        {% if rating.rating_body %}
         <h3>Feedback:</h3>
-        <p>{{ rating.feedback }}</p>
+        <p>{{ rating.rating_body }}</p>
         {% endif %}
         <div class="d-flex justify-content-between">
           <form action="/restroom/{{ rating.rating_id }}/edit" method="GET">
