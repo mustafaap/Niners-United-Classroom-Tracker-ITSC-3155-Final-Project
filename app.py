@@ -8,11 +8,6 @@ import os
 load_dotenv()
 app = Flask(__name__)
 
-# db_user = os.getenv('DB_USER')
-# db_pass = os.getenv('DB_PASS')
-# db_host = os.getenv('DB_HOST')
-# db_port = os.getenv('DB_PORT')
-# db_name = os.getenv('DB_NAME')
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 
 app.secret_key = os.getenv('APP_SECRET')
@@ -52,6 +47,11 @@ def sortby():
 
 @app.post('/leaverating')
 def indexrating():
+    if 'user' not in session:
+        session['message'] = "You must be logged in to leave a rating!"
+        
+        return redirect(url_for('user_login'))
+    
     location = request.form.get('location')
     rating_body = request.form.get('rating_body')
     cleanliness = request.form.get('cleanliness')
@@ -71,12 +71,17 @@ def create_restroom_form():
 
 @app.post('/create')
 def create_restroom():
+    if 'user' not in session:
+        session['message'] = "You must be logged in to leave a rating!"
+        
+        return redirect(url_for('user_login'))
+    
     restroom_name = request.form.get('restroom')
     cleanliness = request.form.get('clean_rating')
     accessibility = request.form.getlist('accessibility')
     functionality = request.form.get('func')
     overall = request.form.get('overall_rating')
-    rating_body = request.form.get('comment')
+    rating_body = request.form.get('rating_body')
 
     if functionality == 'Open':
         functionality = True
@@ -128,7 +133,8 @@ def deletecomment(rating_id, comment_id):
 
 @app.get('/login')
 def login():
-    return render_template('login.html', login_active=True)
+    message = session.pop('message', None)
+    return render_template('login.html', login_active=True, message=message)
 
 
 @app.get('/signup')
