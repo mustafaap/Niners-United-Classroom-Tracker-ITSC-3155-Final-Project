@@ -10,10 +10,18 @@
         <h1 class="text-center fw-bold">{{ rating.restroom_name }}</h1>
         <ul class="list-group mb-3">
           <li class="list-group-item">Cleanliness: {{ rating.cleanliness }}</li>
+          {% if rating.accessibility %}
           <li class="list-group-item">Accessibility: {{ rating.accessibility }}</li>
+          {% endif %}
+          {% if rating.functionality %}
           <li class="list-group-item">Functionality: {% if rating.functionality %}Open{% else %}Closed{% endif %}</li>
+          {% endif %}
           <li class="list-group-item">Overall experience: {{ rating.overall }}</li>
         </ul>
+        {% if rating.rating_body %}
+        <h3>Feedback:</h3>
+        <p>{{ rating.rating_body }}</p>
+        {% endif %}
         <div class="d-flex justify-content-between">
           <form action="/restroom/{{ rating.rating_id }}/edit" method="GET">
             <button type="submit" class="btn" style="background-color: rgba(98,241,210,1.0);">Edit</button>
