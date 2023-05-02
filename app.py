@@ -17,6 +17,7 @@ api_key = os.getenv('API_KEY')
 
 bcrypt.init_app(app)
 
+# os.remove(filename) to remove from static folder
 
 # Index page
 @app.get('/')
@@ -54,7 +55,7 @@ def indexrating():
     if 'user' not in session:
         session['message'] = "You must be logged in to leave a rating!"
         
-        return redirect(url_for('user_login'))
+        return redirect(url_for('login'))
     
     location = request.form.get('location')
     rating_body = request.form.get('rating_body')
@@ -71,6 +72,7 @@ def indexrating():
 # NUTT Map
 @app.get('/maps')
 def load_maps():
+    # Carousel for cards
     return render_template('maps.html', maps_active=True, api_key=api_key)
 
 
@@ -86,7 +88,7 @@ def create_restroom():
     if 'user' not in session:
         session['message'] = "You must be logged in to leave a rating!"
         
-        return redirect(url_for('user_login'))
+        return redirect(url_for('login'))
     
     restroom_name = request.form.get('restroom')
     cleanliness = request.form.get('clean_rating')
