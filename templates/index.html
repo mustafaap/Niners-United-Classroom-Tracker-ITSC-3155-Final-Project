@@ -41,6 +41,11 @@
     </div>
     
     <div class="col-sm-7 p-0">
+      {% if message %}
+      <div class="d-flex justify-content-center">
+        <div class="alert alert-success mt-3 alert-dismissible fade show d-flex justify-content-center" style="width: 300px;">{{ message }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
+      </div>
+      {% endif %}
       <div class="mx-4 mt-4">
       {% if(ratings | length > 0) %}
         {% for rating in ratings %}

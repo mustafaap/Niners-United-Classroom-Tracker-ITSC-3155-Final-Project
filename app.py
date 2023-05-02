@@ -295,7 +295,8 @@ def user_login():
         'username': username
         }
         session['logged_in'] = True
-        return redirect('/')
+        message = "Success! you are logged in"
+        return render_template('index.html', login_active=True, message=message)
     
     return render_template('login.html', login_active=True)
 
@@ -327,4 +328,5 @@ def logout():
     if 'user' in session:
         del session['user']
     session.pop('logged_in', None)
-    return redirect('/login')
+    logged_out_message = "You've been logged out!"
+    return render_template('login.html', login_active=True, logged_out_message=logged_out_message)
