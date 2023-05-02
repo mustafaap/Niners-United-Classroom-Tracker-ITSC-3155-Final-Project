@@ -16,6 +16,7 @@ db_name = os.getenv('DB_NAME')
 app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{db_user}:{db_pass}@{db_host}:{db_port}/{db_name}'
 
 app.secret_key = os.getenv('APP_SECRET')
+app.config['SESSION_TYPE'] = 'filesystem'
 
 db.init_app(app)
 api_key = os.getenv('API_KEY')
@@ -253,6 +254,42 @@ def downvote(rating_id: int):
                 setattr(rating, 'votes', -1)
             db.session.commit()
     return redirect(url_for('index'))
+
+
+@app.post('/commentUpvote/<int:rating_id>')
+def comment_upvote(rating_id: int):
+    rating = Rating.query.get(rating_id)
+    print(rating)
+    print('upvoting')
+    if request.method == 'POST':
+        data = json.loads(request.data)
+        print(data['comment_id'])
+        comment = Comments.query.filter_by(comment_id = data['comment_id']).first()
+
+        if comment:
+            if comment.total_votes:
+                setattr(comment, 'total_votes', int(comment.total_votes) + 1)
+            else:
+                setattr(comment, 'total_votes', + 1)
+            db.session.commit()
+    return redirect(url_for('view_single_restroom', rating_id=rating_id))
+
+
+@app.post('/commentDownvote/<int:rating_id>')
+def comment_downvote(rating_id: int):
+    rating = Rating.query.get(rating_id)
+    if request.method == 'POST':
+        data = json.loads(request.data)
+        print(data['comment_id'])
+        comment = Comments.query.filter_by(comment_id = data['comment_id']).first()
+
+        if comment:
+            if comment.total_votes:
+                setattr(comment, 'total_votes', int(comment.total_votes) - 1)
+            else:
+                setattr(comment, 'total_votes', -1)
+            db.session.commit()
+    return redirect(url_for('view_single_restroom', rating_id=rating_id))
 
 @app.get('/view_user')
 def view_user():
