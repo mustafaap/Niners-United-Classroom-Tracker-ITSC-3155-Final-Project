@@ -8,11 +8,6 @@ import os
 load_dotenv()
 app = Flask(__name__)
 
-# db_user = os.getenv('DB_USER')
-# db_pass = os.getenv('DB_PASS')
-# db_host = os.getenv('DB_HOST')
-# db_port = os.getenv('DB_PORT')
-# db_name = os.getenv('DB_NAME')
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 
 app.secret_key = os.getenv('APP_SECRET')
@@ -22,6 +17,8 @@ api_key = os.getenv('API_KEY')
 
 bcrypt.init_app(app)
 
+
+# Index page
 @app.get('/')
 def index():
     # Default sort is most recent
@@ -29,6 +26,7 @@ def index():
     return render_template('index.html', index_active=True, ratings=ratings)
 
 
+# Sort index page by
 @app.post('/')
 def sortby():
     sort_by = request.form.get('sort-by', 'Most Recent')
@@ -50,8 +48,14 @@ def sortby():
     return render_template('index.html', index_active=True, ratings=ratings)
 
 
+# Shorthand create rating
 @app.post('/leaverating')
 def indexrating():
+    if 'user' not in session:
+        session['message'] = "You must be logged in to leave a rating!"
+        
+        return redirect(url_for('user_login'))
+    
     location = request.form.get('location')
     rating_body = request.form.get('rating_body')
     cleanliness = request.form.get('cleanliness')
@@ -64,19 +68,32 @@ def indexrating():
     return redirect('/')
 
 
+# NUTT Map
+@app.get('/maps')
+def load_maps():
+    return render_template('maps.html', maps_active=True, api_key=api_key)
+
+
+# View new detailed rating page
 @app.get('/new')
 def create_restroom_form():
     return render_template('create_restroom.html', create_restroom_active=True)
 
 
+# Create detailed rating
 @app.post('/create')
 def create_restroom():
+    if 'user' not in session:
+        session['message'] = "You must be logged in to leave a rating!"
+        
+        return redirect(url_for('user_login'))
+    
     restroom_name = request.form.get('restroom')
     cleanliness = request.form.get('clean_rating')
     accessibility = request.form.getlist('accessibility')
     functionality = request.form.get('func')
     overall = request.form.get('overall_rating')
-    rating_body = request.form.get('comment')
+    rating_body = request.form.get('rating_body')
 
     if functionality == 'Open':
         functionality = True
@@ -89,71 +106,22 @@ def create_restroom():
     return redirect('/')
 
 
-@app.get('/maps')
-def load_maps():
-    return render_template('maps.html', maps_active=True, api_key=api_key)
-
-
-@app.get('/singlerestroom/<int:rating_id>')
+# View single rating
+@app.get('/restroom/<int:rating_id>')
 def view_single_restroom(rating_id):
     rating = Rating.query.get(rating_id)
     comments = Comments.query.filter(Comments.comment_id.in_(rating.comments)).all()
     return render_template('single_restroom.html', rating=rating, comments=comments)
 
 
-@app.post('/restroom/<int:rating_id>/comment')
-def addcomment(rating_id):
-    rating = Rating.query.get(rating_id)
-    comment_body = request.form.get('comment')
-    new_comment = Comments(comment_body=comment_body, rating_id=rating_id)
-    db.session.add(new_comment)
-    db.session.commit()
-
-    rating.comments.append(new_comment.comment_id)
-    db.session.commit()
-
-    rating = Rating.query.get(rating_id)
-
-    return redirect(url_for('view_single_restroom', rating_id=rating_id))
-
-
-@app.post('/restroom/<int:rating_id>/comment/<int:comment_id>/delete')
-def deletecomment(rating_id, comment_id):
-    comment = Comments.query.get(comment_id)
-    db.session.delete(comment)
-    db.session.commit()
-
-    return redirect(url_for('view_single_restroom', rating_id=rating_id))
-
-
-@app.get('/login')
-def login():
-    return render_template('login.html', login_active=True)
-
-
-@app.get('/signup')
-def display_sign_up_page():
-    return render_template("signup.html", signup_active=True)
-
-
-@app.get('/about')
-def about():
-    return render_template('about.html', about_active=True)
-
-
-@app.get('/search')
-def search():
-    term = (request.args.get('searchbox'))
-    ratings = db.session.query(Rating).filter(Rating.restroom_name.ilike('%' + term + '%')).all()
-    return render_template('index.html', ratings=ratings)
-
-
+# View edit rating page
 @app.get('/restroom/<int:rating_id>/edit')
 def get_edit_restroom_page(rating_id: int):
     rating = Rating.query.get(rating_id)
     return render_template('edit_restroom.html', rating=rating)
 
 
+# Edit rating info
 @app.post('/restroom/<int:rating_id>')
 def update_restroom(rating_id: int):
     rating = Rating.query.get(rating_id)
@@ -161,14 +129,13 @@ def update_restroom(rating_id: int):
     cleanliness = request.form.get('clean_rating')
     accessibility = request.form.getlist('accessibility')
     functionality = request.form.get('func')
+    overall = request.form.get('overall_rating')
+    rating_body = request.form.get('rating_body')
 
     if functionality == 'Open':
         functionality = True
     else:
         functionality = False
-
-    overall = request.form.get('overall_rating')
-    rating_body = request.form.get('comment')
 
     rating.restroom_name = restroom_name
     rating.cleanliness = cleanliness
@@ -182,6 +149,7 @@ def update_restroom(rating_id: int):
     return redirect(url_for('view_single_restroom', rating_id=rating_id))
 
 
+# Delete rating
 @app.post('/restroom/<int:rating_id>/delete')
 def delete_rating(rating_id: int):
     rating = Rating.query.get(rating_id)
@@ -201,11 +169,138 @@ def delete_rating(rating_id: int):
     return redirect('/')
 
 
+# Comment on rating
+@app.post('/restroom/<int:rating_id>/comment')
+def addcomment(rating_id):
+    rating = Rating.query.get(rating_id)
+    comment_body = request.form.get('comment')
+    new_comment = Comments(comment_body=comment_body, rating_id=rating_id)
+    db.session.add(new_comment)
+    db.session.commit()
+
+    rating.comments.append(new_comment.comment_id)
+    db.session.commit()
+
+    rating = Rating.query.get(rating_id)
+
+    return redirect(url_for('view_single_restroom', rating_id=rating_id))
+
+
+# Delete comment on rating
+@app.post('/restroom/<int:rating_id>/comment/<int:comment_id>/delete')
+def deletecomment(rating_id, comment_id):
+    comment = Comments.query.get(comment_id)
+    db.session.delete(comment)
+    db.session.commit()
+
+    return redirect(url_for('view_single_restroom', rating_id=rating_id))
+
+
+# About page
+@app.get('/about')
+def about():
+    return render_template('about.html', about_active=True)
+
+
+# Search rating titles by keyword
+@app.get('/search')
+def search():
+    term = request.args.get('searchbox')
+    ratings = db.session.query(Rating).filter(Rating.restroom_name.ilike('%' + term + '%')).all()
+    return render_template('index.html', ratings=ratings)
+
+
+# Cat pic (temporary, view_user should actually be this, and then this can be deleted)
 @app.get('/profile')
 def profile():
     return render_template('profile.html', profile_active = True)
 
 
+# Upvote rating
+@app.post('/upvote/<int:rating_id>')
+def upvote(rating_id: int):
+    print('upvoting')
+    if request.method == 'POST':
+        data = json.loads(request.data)
+        print(data)
+        rating = Rating.query.filter_by(rating_id = data['rating_id']).first()
+        print(rating.votes)
+
+        if rating:
+            if rating.votes:
+                setattr(rating, 'votes', int(rating.votes) + 1)
+            else:
+                setattr(rating, 'votes', 1)
+            db.session.commit()
+    return redirect(url_for('index'))
+
+
+# Downvote rating
+@app.post('/downvote/<int:rating_id>')
+def downvote(rating_id: int):
+    if request.method == 'POST':
+        data = json.loads(request.data)
+        print(data['rating_id'])
+        rating = Rating.query.filter_by(rating_id = data['rating_id']).first()
+        print(rating.votes)
+
+        if rating:
+            if rating.votes:
+                setattr(rating, 'votes', int(rating.votes) - 1)
+            else:
+                setattr(rating, 'votes', -1)
+            db.session.commit()
+    return redirect(url_for('index'))
+
+
+# Login page
+@app.get('/login')
+def login():
+    message = session.pop('message', None)
+    return render_template('login.html', login_active=True, message=message)
+
+
+# Signup page
+@app.get('/signup')
+def display_sign_up_page():
+    return render_template("signup.html", signup_active=True)
+
+
+# View profile
+@app.get('/view_user')
+def view_user():
+    if 'user' not in session:
+        return redirect('/login')
+    user = session['user']
+    return render_template('view_user.html', user=user)
+
+
+# Log in to session
+@app.post('/login')
+def user_login():
+    username = request.form.get('username')
+    password = request.form.get('password')
+
+    if not username or not password:
+        abort(400)
+
+    existing_user = Users.query.filter_by(username=username).first()
+
+    if not existing_user or not bcrypt.check_password_hash(existing_user.password, password):
+        message = "Incorrect username or password"
+        return render_template('login.html', login_active=True, message=message)
+
+    if bcrypt.check_password_hash(existing_user.password, password):
+        session['user'] = { 
+        'username': username
+        }
+        session['logged_in'] = True
+        return redirect('/')
+    
+    return render_template('login.html', login_active=True)
+
+
+# Sign up for account
 @app.post('/register')
 def register():
     username = request.form.get('username')
@@ -226,73 +321,10 @@ def register():
     return redirect('/login')
 
 
-@app.post('/upvote/<int:rating_id>')
-def upvote(rating_id: int):
-    print('upvoting')
-    if request.method == 'POST':
-        data = json.loads(request.data)
-        print(data)
-        rating = Rating.query.filter_by(rating_id = data['rating_id']).first()
-        print(rating.votes)
-
-        if rating:
-            if rating.votes:
-                setattr(rating, 'votes', int(rating.votes) + 1)
-            else:
-                setattr(rating, 'votes', 1)
-            db.session.commit()
-    return redirect(url_for('index'))
-
-
-@app.post('/downvote/<int:rating_id>')
-def downvote(rating_id: int):
-    if request.method == 'POST':
-        data = json.loads(request.data)
-        print(data['rating_id'])
-        rating = Rating.query.filter_by(rating_id = data['rating_id']).first()
-        print(rating.votes)
-
-        if rating:
-            if rating.votes:
-                setattr(rating, 'votes', int(rating.votes) - 1)
-            else:
-                setattr(rating, 'votes', -1)
-            db.session.commit()
-    return redirect(url_for('index'))
-
-
-@app.get('/view_user')
-def view_user():
-    if 'user' not in session:
-        return redirect('/login')
-    user = session['user']
-    return render_template('view_user.html', user=user)
-
-
-@app.post('/login')
-def user_login():
-    username = request.form.get('username')
-    password = request.form.get('password')
-
-    if not username or not password:
-        abort(400)
-
-    existing_user = Users.query.filter_by(username=username).first()
-
-    if not existing_user or not bcrypt.check_password_hash(existing_user.password, password):
-        message = "Incorrect username or password"
-        return render_template('login.html', login_active=True, message=message)
-
-    if bcrypt.check_password_hash(existing_user.password, password):
-        session['user'] = { 
-        'username': username
-        }
-        return redirect('/view_user')
-    
-    return render_template('login.html', login_active=True)
-
-
+# Log out of session
 @app.post('/logout')
 def logout():
-    del session['user']
+    if 'user' in session:
+        del session['user']
+    session.pop('logged_in', None)
     return redirect('/login')

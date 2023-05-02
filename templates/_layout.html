@@ -34,26 +34,64 @@
           <li class="nav-item">
             <a class="nav-link {% if maps_active %} active{% endif %}" href="/maps">Maps</a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link {% if about_active %} active{% endif %}" href="/about">About</a>
+          </li>
         </ul>
-        <form class="d-flex mx-auto ms-5.5" role="search" action="/search" method="get">
+        <form class="d-flex mx-auto ms-5" role="search" action="/search" method="get">
           <input class="form-control me-2" name="searchbox" type="search" placeholder="Search" aria-label="Search">
           <button class="btn btn-outline-success" type="submit">Search</button>
         </form>
         <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          {% if session.get('logged_in') %}
+            {% else %}
           <li class="nav-item">
             <a class="nav-link {% if login_active %} active{% endif %}" href="/login">Login</a>
           </li>
           <li class="nav-item">
             <a class="nav-link {% if signup_active %} active{% endif %}" href="/signup">Sign Up</a>
           </li>
+          {% endif %}
+          {% if session.get('logged_in') %}
           <li class="nav-item">
-            <a class="nav-link {% if about_active %} active{% endif %}" href="/about">About</a>
+            <div class="dropdown text-center me-2 py-2">
+              <a type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <img src="/static/cat.jpg" style="width:45px;height:45px;" class="rounded-circle">
+              </a>
+              <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
+                <li><a class="dropdown-item" href="/view_user">View profile</a></li>
+                <li><a class="dropdown-item" href="#">View your posts</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <form action="/logout" method="post">
+                
+                <li>
+                <button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                  Logout
+                </button>
+                </li>
+                <!-- Modal -->
+                <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Confirm Logout?</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        <p>You will be returned to the login page</p>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit">Logout</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                </form>
+              </ul>
+            </div>
           </li>
-          <li class="nav-item">
-            <a class="nav-link {% if profile_active %} active{% endif %}" href="/profile">
-              <img src="/static/cat.jpg" style="width:42px;height:42px;" class="rounded-5">
-            </a>
-          </li>
+          {% endif %}
         </ul>
       </div>
     </div>
