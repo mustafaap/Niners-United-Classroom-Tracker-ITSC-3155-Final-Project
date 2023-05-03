@@ -211,12 +211,6 @@ def search():
     return render_template('index.html', ratings=ratings)
 
 
-# Cat pic (temporary, view_user should actually be this, and then this can be deleted)
-@app.get('/profile')
-def profile():
-    return render_template('profile.html', profile_active = True)
-
-
 # Upvote rating
 @app.post('/upvote/<int:rating_id>')
 def upvote(rating_id: int):
@@ -252,7 +246,6 @@ def downvote(rating_id: int):
                 setattr(rating, 'votes', -1)
             db.session.commit()
     return redirect(url_for('index'))
-
 
 
 @app.post('/commentUpvote/<int:rating_id>')
@@ -305,12 +298,12 @@ def display_sign_up_page():
 
 
 # View profile
-@app.get('/view_user')
-def view_user():
+@app.get('/view_profile')
+def view_profile():
     if 'user' not in session:
         return redirect('/login')
     user = session['user']
-    return render_template('view_user.html', user=user)
+    return render_template('view_profile.html', user=user)
 
 
 # Log in to session
@@ -330,9 +323,14 @@ def user_login():
 
     if bcrypt.check_password_hash(existing_user.password, password):
         session['user'] = { 
-        'username': username
+        'username': username,
+        'fname': existing_user.first_name,
+        'lname': existing_user.last_name,
+        'email': existing_user.email
         }
-        return redirect('/view_user')
+        session['logged_in'] = True
+        message = "Success! you are logged in"
+        return render_template('index.html', login_active=True, message=message)
     
     return render_template('login.html', login_active=True)
 
@@ -361,5 +359,8 @@ def register():
 # Log out of session
 @app.post('/logout')
 def logout():
-    del session['user']
-    return redirect('/login')
+    if 'user' in session:
+        del session['user']
+    session.pop('logged_in', None)
+    logged_out_message = "You've been logged out!"
+    return render_template('login.html', login_active=True, logged_out_message=logged_out_message)

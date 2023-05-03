@@ -6,7 +6,7 @@
   <div class="row">
 
     <div class="col-md-8 mt-3">
-      <div class="bg-body-secondary my-4 p-5 box-shadow" style="border-radius: 4rem;">
+      <div class="bg-body-secondary mx-4 my-4 p-5 box-shadow" style="border-radius: 4rem;">
         <h1 class="text-center fw-bold">{{ rating.restroom_name }}</h1>
         <ul class="list-group mb-3">
           <li class="list-group-item">Cleanliness: {{ rating.cleanliness }}</li>
@@ -44,7 +44,7 @@
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-danger" >Delete</button>
+                    <button type="submit" class="btn btn-danger">Delete</button>
                   </div>
                 </div>
               </div>
@@ -105,7 +105,7 @@
     <div class="col-md-4 my-5">
       <div class="d-flex justify-content-center">
         <div class="position-absolute">
-          <form class="bg-body-secondary mt-4" id="index-leave-rating" action="/restroom/{{ rating.rating_id }}/comment" method="post">
+          <form class="bg-body-secondary my-4" id="index-leave-rating" action="/restroom/{{ rating.rating_id }}/comment" method="post">
             <h4 class="text-center">Leave a Comment</h4>
             <div class="form-group">
               <label for="comment">Comment</label>
