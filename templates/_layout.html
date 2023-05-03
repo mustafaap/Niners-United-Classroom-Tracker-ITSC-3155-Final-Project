@@ -52,13 +52,13 @@
                 <img src="/static/cat.jpg" style="width:45px;height:45px;" class="rounded-circle">
               </a>
               <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
-                <li><a class="dropdown-item" href="/view_user">View your profile</a></li>
+                <li><a class="dropdown-item" href="/view_profile">View your profile</a></li>
                 <li><a class="dropdown-item" href="#">View your posts</a></li>
-                <li><hr class="dropdown-divider"></li>
+                <hr class="my-2">
                 <li>              
                   <!-- Button trigger modal -->
                   <button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#logout">
-                    Logout
+                    <i class="fa-solid fa-right-from-bracket me-2" style="color: #ffffff;"></i>Logout
                   </button>
                 </li>
               </ul>
@@ -76,7 +76,7 @@
                     <div class="modal-footer">
                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                       <form action="/logout" method="post">
-                        <button type="submit" class="btn btn-danger">Logout</button>
+                        <button type="submit" class="btn btn-danger"><i class="fa-solid fa-right-from-bracket me-2" style="color: #ffffff;"></i>Logout</button>
                       </form>
                     </div>
                   </div>

@@ -267,12 +267,12 @@ def display_sign_up_page():
 
 
 # View profile
-@app.get('/view_user')
-def view_user():
+@app.get('/view_profile')
+def view_profile():
     if 'user' not in session:
         return redirect('/login')
     user = session['user']
-    return render_template('view_user.html', user=user)
+    return render_template('view_profile.html', user=user)
 
 
 # Log in to session
@@ -292,7 +292,10 @@ def user_login():
 
     if bcrypt.check_password_hash(existing_user.password, password):
         session['user'] = { 
-        'username': username
+        'username': username,
+        'fname': existing_user.first_name,
+        'lname': existing_user.last_name,
+        'email': existing_user.email
         }
         session['logged_in'] = True
         message = "Success! you are logged in"
