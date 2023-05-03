@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS rating(
     functionality BOOLEAN,
     overall DECIMAL(2,1),
     map_tag VARCHAR(255),
-    votes INTEGER,
+    votes INTEGER DEFAULT 0,
     rater_id INTEGER,
     comments INTEGER[] DEFAULT '{}',
     FOREIGN KEY (rater_id) REFERENCES users(user_id) ON DELETE CASCADE
@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS comments(
     comment_body TEXT,
     user_id INT,
     rating_id INT,
-    total_votes INT,
+    total_votes INT DEFAULT 0,
     comment_id_vote INT,
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
     FOREIGN KEY (rating_id) REFERENCES rating(rating_id) ON DELETE CASCADE,
