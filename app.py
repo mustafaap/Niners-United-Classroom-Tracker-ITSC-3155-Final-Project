@@ -289,8 +289,8 @@ def comment_downvote(rating_id: int):
 @app.get('/login')
 def login():
     message = session.pop('message', None)
-    logged_out_message = session.pop('logged_out_message', None)
-    return render_template('login.html', login_active=True, message=message, logged_out_message=logged_out_message)
+    success_message = session.pop('success_message', None)
+    return render_template('login.html', login_active=True, message=message, success_message=success_message)
 
 
 # Signup page
@@ -355,6 +355,8 @@ def register():
     db.session.add(new_user)
     db.session.commit()
 
+    session['success_message'] = "Account created successfully!"
+
     return redirect(url_for('login'))
 
 
@@ -364,5 +366,5 @@ def logout():
     if 'user' in session:
         del session['user']
     session.pop('logged_in', None)
-    session['logged_out_message'] = "You've been logged out!"
+    session['success_message'] = "You've been logged out!"
     return redirect(url_for('login'))
