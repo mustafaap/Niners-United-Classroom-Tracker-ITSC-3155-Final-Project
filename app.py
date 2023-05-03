@@ -24,7 +24,8 @@ bcrypt.init_app(app)
 def index():
     # Default sort is most recent
     ratings = Rating.query.order_by(Rating.rating_id.desc()).all()
-    return render_template('index.html', index_active=True, ratings=ratings)
+    logged_in_message = session.pop('logged_in_message', None)
+    return render_template('index.html', index_active=True, ratings=ratings, logged_in_message = logged_in_message)
 
 
 # Sort index page by
@@ -208,7 +209,7 @@ def about():
 def search():
     term = request.args.get('searchbox')
     ratings = db.session.query(Rating).filter(Rating.restroom_name.ilike('%' + term + '%')).all()
-    return render_template('index.html', ratings=ratings)
+    return render_template('index.html',index_active=True, ratings=ratings)
 
 
 # Upvote rating
@@ -288,7 +289,8 @@ def comment_downvote(rating_id: int):
 @app.get('/login')
 def login():
     message = session.pop('message', None)
-    return render_template('login.html', login_active=True, message=message)
+    logged_out_message = session.pop('logged_out_message', None)
+    return render_template('login.html', login_active=True, message=message, logged_out_message=logged_out_message)
 
 
 # Signup page
@@ -318,8 +320,8 @@ def user_login():
     existing_user = Users.query.filter_by(username=username).first()
 
     if not existing_user or not bcrypt.check_password_hash(existing_user.password, password):
-        message = "Incorrect username or password"
-        return render_template('login.html', login_active=True, message=message)
+        session['message'] = "Incorrect username or password!"
+        return redirect(url_for('login'))
 
     if bcrypt.check_password_hash(existing_user.password, password):
         session['user'] = { 
@@ -329,10 +331,10 @@ def user_login():
         'email': existing_user.email
         }
         session['logged_in'] = True
-        message = "Success! you are logged in"
-        return render_template('index.html', login_active=True, message=message)
+        session['logged_in_message'] = "Success! you are logged in"
+        return redirect(url_for('index'))
     
-    return render_template('login.html', login_active=True)
+    return redirect(url_for('login'))
 
 
 # Sign up for account
@@ -353,7 +355,7 @@ def register():
     db.session.add(new_user)
     db.session.commit()
 
-    return redirect('/login')
+    return redirect(url_for('login'))
 
 
 # Log out of session
@@ -362,5 +364,5 @@ def logout():
     if 'user' in session:
         del session['user']
     session.pop('logged_in', None)
-    logged_out_message = "You've been logged out!"
-    return render_template('login.html', login_active=True, logged_out_message=logged_out_message)
+    session['logged_out_message'] = "You've been logged out!"
+    return redirect(url_for('login'))
