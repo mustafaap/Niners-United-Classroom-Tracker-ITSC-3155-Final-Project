@@ -3,7 +3,7 @@
 
 {% block body %}
 <div class="container-fluid">
-  <div class="row">
+  <div class="row justify-content-center">
 
     <div class="col-md-8 mt-3">
       <div class="bg-body-secondary mx-4 my-4 p-5 box-shadow" style="border-radius: 4rem;">
@@ -23,40 +23,63 @@
         <p>{{ rating.rating_body }}</p>
         {% endif %}
         <div class="d-flex justify-content-between">
-          <form action="/restroom/{{ rating.rating_id }}/edit" method="GET">
-            <button type="submit" class="btn" style="background-color: rgba(98,241,210,1.0);">Edit</button>
-          </form>
-          <form action="/restroom/{{ rating.rating_id }}/delete" method="POST">
-            <!-- Button trigger modal -->
-            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-              Delete
-            </button>
+          <form action="/restroom/{{ rating.rating_id }}/comment" method="post">
+            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#staticBackdrop2">Add Comment</button>
             <!-- Modal -->
-            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal fade" id="staticBackdrop2" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel2" aria-hidden="true">
               <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Confirm delete?</h1>
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel2">Leave a Comment</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">
-                    <p>The rating will be permanently deleted!</p>
+                    <textarea name="comment" id="comment" cols="30" rows="6"></textarea>
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-danger">Delete</button>
+                    <button type="submit" class="btn btn-success">Submit</button>
                   </div>
                 </div>
               </div>
             </div>
           </form>
+          {% if user_id == rating.rater_id %}
+            <form action="/restroom/{{ rating.rating_id }}/edit" method="GET">
+              <button type="submit" class="btn" style="background-color: rgba(98,241,210,1.0);">Edit</button>
+            </form>
+            <form action="/restroom/{{ rating.rating_id }}/delete" method="POST">
+              <!-- Button trigger modal -->
+              <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                Delete
+              </button>
+              <!-- Modal -->
+              <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="staticBackdropLabel">Confirm delete?</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <p>The rating will be permanently deleted!</p>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <button type="submit" class="btn btn-danger">Delete</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          {% endif %}
         </div>
       </div>
 
       {% for comment in comments %}
         <div class="card mb-4 p-0">
           <div class="row m-0">
-            <div class="col-sm-1 sidebar">
+            <div class="col-sm-1 bg-body-tertiary">
               <div class="basic-column" id="rating-{{ rating.rating_id }}" data-rating_id="{{ rating.rating_id }}">
                 <button type="button" class="btn upvote" id="upvote-{{ comment.comment_id }}" data-comment_id="{{ comment.comment_id }}"><i class="fas fa-arrow-up up"></i></button>
                 <span class="total-votes numVotes" id="num-{{ comment.comment_id }}" data-num_votes="{{comment.total_votes}}" data-comment_id="{{ comment.comment_id }}">{{ comment.total_votes }}</span>
@@ -67,56 +90,41 @@
               <div class="card-body">
                 <p class="card-text">{{ comment.comment_body }}</p>
               </div>
-              <div class="d-flex justify-content-between mx-5 px-5">
-                <form action="" method="">
-                  <button type="submit" class="btn" style="background-color: rgba(98,241,210,1.0);">Edit</button>
-                </form>
-                <form action="/restroom/{{ rating.rating_id }}/comment/{{ comment.comment_id }}/delete" method="POST">
-                  <!-- Button trigger modal -->
-                  <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop1">
-                    Delete
-                  </button>
-                  <!-- Modal -->
-                  <div class="modal fade" id="staticBackdrop1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel1" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h1 class="modal-title fs-5" id="staticBackdropLabe1l">Confirm delete?</h1>
-                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                          <p>The comment will be permanently deleted!</p>
-                        </div>
-                        <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                          <button type="submit" class="btn btn-danger">Delete</button>
+              {% if user_id == comment.user_id %}
+                <div class="d-flex justify-content-between mx-5 px-5">
+                  <form action="" method="">
+                    <button type="submit" class="btn" style="background-color: rgba(98,241,210,1.0);">Edit</button>
+                  </form>
+                  <form action="/restroom/{{ rating.rating_id }}/comment/{{ comment.comment_id }}/delete" method="POST">
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop1">
+                      Delete
+                    </button>
+                    <!-- Modal -->
+                    <div class="modal fade" id="staticBackdrop1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel1" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="staticBackdropLabe1l">Confirm delete?</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                            <p>The comment will be permanently deleted!</p>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </form>
-              </div>
+                  </form>
+                </div>
+              {% endif %}
             </div>
           </div>
         </div>
       {% endfor %}
-    </div>
-
-    <div class="col-md-4 my-5">
-      <div class="d-flex justify-content-center">
-        <div class="position-absolute">
-          <form class="bg-body-secondary my-4" id="index-leave-rating" action="/restroom/{{ rating.rating_id }}/comment" method="post">
-            <h4 class="text-center">Leave a Comment</h4>
-            <div class="form-group">
-              <label for="comment">Comment</label>
-              <textarea class="form-control" cols="30" rows="6" name="comment" id="comment" oninput="checkInputRequired('comment')" required></textarea>
-            </div>
-            <div class="form-group mt-4 d-flex justify-content-center">
-              <button type="submit" class="btn btn-success">Submit Comment</button>
-            </div>
-          </form>
-        </div>
-      </div>
     </div>
 
   </div>

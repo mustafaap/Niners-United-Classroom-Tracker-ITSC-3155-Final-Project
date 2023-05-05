@@ -57,7 +57,7 @@
         {% for rating in ratings %}
           <div class="card mb-4 p-0">
             <div class="row m-0">
-              <div class="col-sm-1 sidebar">
+              <div class="col-sm-1 bg-body-tertiary">
                 <div class="basic-column">
                   <button type="button" class="btn upvote" id="upvote-{{ rating.rating_id }}" data-rating_id="{{ rating.rating_id }}"><i class="fas fa-arrow-up up"></i></button>
                   <span class="total-votes numVotes" id="num-{{ rating.rating_id }}" data-num_votes="{{rating.votes}}" data-rating_id="{{ rating.rating_id }}">{{ rating.votes }}</span>
