@@ -3,6 +3,12 @@
 
 {% block body %}
 <div class="container-fluid">
+
+  {% if already_commented %}
+    <div class="d-flex justify-content-center">
+      <div class="alert alert-danger mt-3 alert-dismissible fade show d-flex justify-content-center" style="width: 300px;">{{ already_commented }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
+    </div>
+  {% endif %}
   <div class="row justify-content-center">
 
     <div class="col-md-8 mt-3">
