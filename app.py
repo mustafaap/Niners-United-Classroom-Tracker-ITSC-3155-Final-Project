@@ -18,6 +18,7 @@ api_key = os.getenv('API_KEY')
 
 bcrypt.init_app(app)
 
+# os.remove(filename) to remove from static folder
 
 # Index page
 @app.get('/')
@@ -56,14 +57,15 @@ def indexrating():
     if 'user' not in session:
         session['message'] = "You must be logged in to leave a rating!"
         
-        return redirect(url_for('user_login'))
+        return redirect(url_for('login'))
     
     location = request.form.get('location')
     rating_body = request.form.get('rating_body')
     cleanliness = request.form.get('cleanliness')
     overall = request.form.get('overall')
+    rater_id = session['user']['user_id']
 
-    new_rating = Rating(restroom_name=location, cleanliness=cleanliness, overall=overall, rating_body=rating_body)
+    new_rating = Rating(restroom_name=location, cleanliness=cleanliness, overall=overall, rating_body=rating_body, rater_id=rater_id)
     db.session.add(new_rating)
     db.session.commit()
 
@@ -73,12 +75,18 @@ def indexrating():
 # NUTT Map
 @app.get('/maps')
 def load_maps():
+    # Carousel for cards
     return render_template('maps.html', maps_active=True, api_key=api_key)
 
 
 # View new detailed rating page
 @app.get('/new')
 def create_restroom_form():
+    if 'user' not in session:
+        session['message'] = "You must be logged in to leave a rating!"
+        
+        return redirect(url_for('login'))
+    
     return render_template('create_restroom.html', create_restroom_active=True)
 
 
@@ -88,7 +96,7 @@ def create_restroom():
     if 'user' not in session:
         session['message'] = "You must be logged in to leave a rating!"
         
-        return redirect(url_for('user_login'))
+        return redirect(url_for('login'))
     
     restroom_name = request.form.get('restroom')
     cleanliness = request.form.get('clean_rating')
@@ -96,13 +104,14 @@ def create_restroom():
     functionality = request.form.get('func')
     overall = request.form.get('overall_rating')
     rating_body = request.form.get('rating_body')
+    rater_id = session['user']['user_id']
 
     if functionality == 'Open':
         functionality = True
     else:
         functionality = False
 
-    new_restroom = Rating(restroom_name=restroom_name, cleanliness=cleanliness, accessibility=accessibility, functionality=functionality, overall=overall, rating_body=rating_body)
+    new_restroom = Rating(restroom_name=restroom_name, cleanliness=cleanliness, accessibility=accessibility, functionality=functionality, overall=overall, rating_body=rating_body, rater_id=rater_id)
     db.session.add(new_restroom)
     db.session.commit()
     return redirect('/')
@@ -112,8 +121,15 @@ def create_restroom():
 @app.get('/restroom/<int:rating_id>')
 def view_single_restroom(rating_id):
     rating = Rating.query.get(rating_id)
+
+    if 'user' in session:
+        user_id = session['user']['user_id']
+    else:
+        user_id = None
+
     comments = Comments.query.filter(Comments.comment_id.in_(rating.comments)).all()
-    return render_template('single_restroom.html', rating=rating, comments=comments)
+
+    return render_template('single_restroom.html', rating=rating, comments=comments, user_id=user_id)
 
 
 # View edit rating page
@@ -156,12 +172,10 @@ def update_restroom(rating_id: int):
 def delete_rating(rating_id: int):
     rating = Rating.query.get(rating_id)
 
-    # Delete comments
     comments = Comments.query.filter(Comments.rating_id == rating_id).all()
     for comment in comments:
         db.session.delete(comment)
-
-    # Delete rating_votes
+    
     rating_votes = Rating_votes.query.filter(Rating_votes.rating_id_vote == rating_id).all()
     for vote in rating_votes:
         db.session.delete(vote)
@@ -176,7 +190,8 @@ def delete_rating(rating_id: int):
 def addcomment(rating_id):
     rating = Rating.query.get(rating_id)
     comment_body = request.form.get('comment')
-    new_comment = Comments(comment_body=comment_body, rating_id=rating_id)
+    user_id = session['user']['user_id']
+    new_comment = Comments(comment_body=comment_body, rating_id=rating_id, user_id=user_id)
     db.session.add(new_comment)
     db.session.commit()
 
@@ -191,7 +206,9 @@ def addcomment(rating_id):
 # Delete comment on rating
 @app.post('/restroom/<int:rating_id>/comment/<int:comment_id>/delete')
 def deletecomment(rating_id, comment_id):
+    rating = Rating.query.get(rating_id)
     comment = Comments.query.get(comment_id)
+    rating.comments.remove(comment_id)
     db.session.delete(comment)
     db.session.commit()
 
@@ -249,6 +266,7 @@ def downvote(rating_id: int):
     return redirect(url_for('index'))
 
 
+# Upvote comment
 @app.post('/commentUpvote/<int:rating_id>')
 def comment_upvote(rating_id: int):
     rating = Rating.query.get(rating_id)
@@ -268,6 +286,7 @@ def comment_upvote(rating_id: int):
     return redirect(url_for('view_single_restroom', rating_id=rating_id))
 
 
+# Downvote comment
 @app.post('/commentDownvote/<int:rating_id>')
 def comment_downvote(rating_id: int):
     rating = Rating.query.get(rating_id)
@@ -325,10 +344,11 @@ def user_login():
 
     if bcrypt.check_password_hash(existing_user.password, password):
         session['user'] = { 
-        'username': username,
-        'fname': existing_user.first_name,
-        'lname': existing_user.last_name,
-        'email': existing_user.email
+            'username': username,
+            'fname': existing_user.first_name,
+            'lname': existing_user.last_name,
+            'email': existing_user.email,
+            'user_id': existing_user.user_id
         }
         session['logged_in'] = True
         session['logged_in_message'] = "Success! you are logged in"
