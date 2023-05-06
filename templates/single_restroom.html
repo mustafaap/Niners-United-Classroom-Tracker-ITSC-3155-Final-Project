@@ -98,8 +98,26 @@
               </div>
               {% if user_id == comment.user_id %}
                 <div class="d-flex justify-content-between mx-5 px-5">
-                  <form action="" method="">
-                    <button type="submit" class="btn" style="background-color: rgba(98,241,210,1.0);">Edit</button>
+                  <form action="/restroom/{{ rating.rating_id }}/comment/{{ comment.comment_id }}/edit" method="POST">
+                    <button type="button" class="btn" style="background-color: rgba(98,241,210,1.0);" data-bs-toggle="modal" data-bs-target="#staticBackdropEdit">Edit</button>
+                    <!-- Modal -->
+                    <div class="modal fade" id="staticBackdropEdit" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropEditLabel" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="staticBackdropEditLabel">Edit Your Comment</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                            <textarea name="edited_comment" id="edited_comment" cols="30" rows="6"></textarea>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-success">Submit</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </form>
                   <form action="/restroom/{{ rating.rating_id }}/comment/{{ comment.comment_id }}/delete" method="POST">
                     <!-- Button trigger modal -->

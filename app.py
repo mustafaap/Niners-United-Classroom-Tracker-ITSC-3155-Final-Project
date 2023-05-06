@@ -211,6 +211,17 @@ def addcomment(rating_id):
     return redirect(url_for('view_single_restroom', rating_id=rating_id))
 
 
+# Edit comment on rating
+@app.post('/restroom/<int:rating_id>/comment/<int:comment_id>/edit')
+def editcomment(rating_id, comment_id):
+    comment = Comments.query.get(comment_id)
+    comment_body = request.form.get('edited_comment')
+    comment.comment_body = comment_body
+    db.session.commit()
+
+    return redirect(url_for('view_single_restroom', rating_id=rating_id))
+
+
 # Delete comment on rating
 @app.post('/restroom/<int:rating_id>/comment/<int:comment_id>/delete')
 def deletecomment(rating_id, comment_id):
