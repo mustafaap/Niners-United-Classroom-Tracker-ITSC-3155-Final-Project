@@ -170,7 +170,7 @@ def update_restroom(rating_id: int):
 # Delete rating
 @app.post('/restroom/<int:rating_id>/delete')
 def delete_rating(rating_id: int):
-    rating = Rating.query.get(rating_id)
+    rating = db.session.get(Rating, rating_id)
 
     comments = Comments.query.filter(Comments.rating_id == rating_id).all()
     for comment in comments:
