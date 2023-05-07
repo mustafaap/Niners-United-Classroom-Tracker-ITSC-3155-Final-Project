@@ -12,7 +12,8 @@ CREATE TABLE IF NOT EXISTS users(
     last_name VARCHAR(255),
     email VARCHAR(255),
     favorite VARCHAR(255),
-    picture VARCHAR(255)
+    picture VARCHAR(255),
+    commented_on INTEGER[] DEFAULT '{}'
 );
 
 CREATE TABLE IF NOT EXISTS rating(

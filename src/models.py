@@ -44,13 +44,15 @@ class Users(db.Model):
     email = db.Column(db.String(255))
     favorite = db.Column(db.String(255))
     picture = db.Column(db.String(255))
+    commented_on = db.Column(MutableList.as_mutable(db.ARRAY(db.Integer)), default=[])
 
-    def __init__(self, username: str, password: str, first_name: str, last_name: str, email: str):
+    def __init__(self, username: str, password: str, first_name: str, last_name: str, email: str, commented_on):
         self.username = username
         self.password = password
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
+        self.commented_on = commented_on
 
 
 class Comments(db.Model):
