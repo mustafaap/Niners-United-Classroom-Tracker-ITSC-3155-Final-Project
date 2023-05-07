@@ -21,10 +21,10 @@ def test_delete_rating(test_client):
     assert response.status_code == 302
 
     # Check that the rating was deleted from the database
-    rating1 = db.session.get(Rating, rating_id1)
+    rating1 = Rating.query.get( rating_id1)
     assert rating1 is None
     # Check that the rating was not deleted from the database
-    rating2 = db.session.get(Rating, rating_id2)
+    rating2 = Rating.query.get( rating_id2)
     assert rating2 is not None
     
     # Clear database
