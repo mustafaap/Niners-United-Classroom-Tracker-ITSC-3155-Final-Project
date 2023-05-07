@@ -1,27 +1,99 @@
 {% extends '_layout.html' %}
 {% block title %} NUTT | Profile {% endblock %}
-
-{% block body %}
-<div class="container-fluid">
-  <div class="row justify-content-center">
-    <div class="col-md-4 col-11 bg-body-secondary my-4 p-4 box-shadow" style="border-radius: 4rem;">
-      <h1 class="d-flex justify-content-center display-4 mb-4">My Profile</h1>
-      <img src="static/cat.jpg" class="img-thumbnail mx-auto d-block" style="width: 200px; height: 200px;">
-      <hr class="my-4">
-      <h1 class="d-flex justify-content-center fw-bold">{{ user.fname }} {{ user.lname }}</h1>
-      <hr class="my-4">
-      <div class="mb-3">
-        <p><strong>Username:</strong> {{ user.username }}</p>
-      </div>
-      <div class="mb-3">
-          <p><strong>Email:</strong> {{ user.email }}</p>
-      </div>
-      <div class="btn-group d-flex mt-5 mb-3" role="group">
-        <a href="#" class="btn w-100" style="background-color: rgba(98,241,210,1.0);">Edit profile</a>
-        <a href="#" class="btn btn-danger me-2 w-100">Delete account</a> 
-      </div>
-    </div>
-  </div>
-</div>
+{% block head %} 
+<style>
+    body {
+        background-color: #eee;
+    }
+</style>
 {% endblock %}
 
+{% block body %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            {% if success_message %}
+            <div class="d-flex justify-content-center">
+                <div class="alert alert-success mt-3 alert-dismissible fade show d-flex justify-content-center" style="width: 300px;">{{ success_message }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
+            </div>
+            {% endif %}
+            <div class="card mt-4 mb-5 box-shadow">
+                <div class="card-body text-center py-3">
+                    <h1 class="display-4">My Profile</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="card py-4 mb-4">
+                <div class="card-body text-center">
+                    <img src="/static/defaultUser.png" alt="avatar"
+                    class="rounded-circle img-fluid mb-4" style="width: 150px;">
+                    <h3 class="mb-3">{{ user.fname }} {{ user.lname }}</h3>
+                    <p class="mb-1" style="color:rgba(98,241,210,1.0);">NUTT Member</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card mb-1 box-shadow">
+                <div class="card-body text-center py-2">
+                    <h1 class="display-6">Profile Info</h1>
+                </div>
+            </div>
+            <div class="card mb-5">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0"><i class="fa-regular fa-user me-2"></i>First Name</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">{{ user.fname }}</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0"><i class="fa-regular fa-user me-2"></i>Last Name</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">{{ user.lname }}</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0"><i class="fa fa-user me-2"></i>Username</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">{{ user.username }}</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0"><i class="fa fa-envelope me-2"></i>Email</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">{{ user.email }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5>Settings</h5>
+                    <hr>
+                    <div class="d-grid gap-3 col-7 mx-auto my-3">
+                        <a class="btn btn-secondary" href="/profile/edit" role="button"><i class="fa-solid fa-pen-to-square me-2" style="color: #ffffff;"></i>Edit profile</a>
+                        <a class="btn btn-secondary" href="/changePassword" role="button">Change password</a>
+                        <a class="btn btn-danger" href="#" role="button"><i class="fa-solid fa-trash-can me-2" style="color: #ffffff;"></i>Delete account</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
