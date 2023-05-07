@@ -26,7 +26,7 @@ def index():
     # Default sort is most recent
     ratings = Rating.query.order_by(Rating.rating_id.desc()).all()
     logged_in_message = session.pop('logged_in_message', None)
-    return render_template('index.html', index_active=True, ratings=ratings, logged_in_message = logged_in_message)
+    return render_template('index.html', index_active=True, ratings=ratings, logged_in_message=logged_in_message)
 
 
 # Sort index page by
@@ -129,7 +129,9 @@ def view_single_restroom(rating_id):
 
     comments = Comments.query.filter(Comments.comment_id.in_(rating.comments)).all()
 
-    return render_template('single_restroom.html', rating=rating, comments=comments, user_id=user_id)
+    already_commented = session.pop('already_commented', None)
+
+    return render_template('single_restroom.html', rating=rating, comments=comments, user_id=user_id, already_commented=already_commented)
 
 
 # View edit rating page
@@ -189,16 +191,33 @@ def delete_rating(rating_id: int):
 @app.post('/restroom/<int:rating_id>/comment')
 def addcomment(rating_id):
     rating = Rating.query.get(rating_id)
-    comment_body = request.form.get('comment')
     user_id = session['user']['user_id']
-    new_comment = Comments(comment_body=comment_body, rating_id=rating_id, user_id=user_id)
-    db.session.add(new_comment)
-    db.session.commit()
+    user = Users.query.get(user_id)
 
-    rating.comments.append(new_comment.comment_id)
-    db.session.commit()
+    if rating_id not in user.commented_on:
+        comment_body = request.form.get('comment')
+        new_comment = Comments(comment_body=comment_body, rating_id=rating_id, user_id=user_id)
+        db.session.add(new_comment)
+        db.session.commit()
 
-    rating = Rating.query.get(rating_id)
+        rating.comments.append(new_comment.comment_id)
+        db.session.commit()
+
+        user.commented_on.append(rating_id)
+        db.session.commit()
+    else:
+        session['already_commented'] = "You cannot comment on a post you've already commented on!"
+
+    return redirect(url_for('view_single_restroom', rating_id=rating_id))
+
+
+# Edit comment on rating
+@app.post('/restroom/<int:rating_id>/comment/<int:comment_id>/edit')
+def editcomment(rating_id, comment_id):
+    comment = Comments.query.get(comment_id)
+    comment_body = request.form.get('edited_comment')
+    comment.comment_body = comment_body
+    db.session.commit()
 
     return redirect(url_for('view_single_restroom', rating_id=rating_id))
 
@@ -207,8 +226,10 @@ def addcomment(rating_id):
 @app.post('/restroom/<int:rating_id>/comment/<int:comment_id>/delete')
 def deletecomment(rating_id, comment_id):
     rating = Rating.query.get(rating_id)
-    comment = Comments.query.get(comment_id)
     rating.comments.remove(comment_id)
+    db.session.commit()
+
+    comment = Comments.query.get(comment_id)
     db.session.delete(comment)
     db.session.commit()
 
@@ -351,7 +372,7 @@ def user_login():
             'user_id': existing_user.user_id
         }
         session['logged_in'] = True
-        session['logged_in_message'] = "Success! you are logged in"
+        session['logged_in_message'] = "Success! You are logged in."
         return redirect(url_for('index'))
     
     return redirect(url_for('login'))
@@ -371,7 +392,7 @@ def register():
 
     hashed_password = bcrypt.generate_password_hash(password).decode()
 
-    new_user = Users(username, hashed_password, fname, lname, email)
+    new_user = Users(username, hashed_password, fname, lname, email, commented_on=[])
     db.session.add(new_user)
     db.session.commit()
 
