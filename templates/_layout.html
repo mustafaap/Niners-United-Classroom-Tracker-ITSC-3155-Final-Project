@@ -10,6 +10,8 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   <title>{% block title %}{% endblock %}</title>
+  {% block head %}
+  {% endblock %}
 </head>
 
 <body>
@@ -46,11 +48,12 @@
           <li class="nav-item">
             <div class="dropdown text-center">
               <a class="btn dropdown-toggle border-0" data-bs-toggle="dropdown" aria-expanded="false">
-                <img src="/static/cat.jpg" style="width:45px;height:45px;" class="rounded-circle">
+                <img src="/static/navbarDefaultUser.png" style="width:40px;height:40px;" class="rounded-circle">
               </a>  
               <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
-                <li><a class="dropdown-item" href="/view_profile">View your profile</a></li>
-                <li><a class="dropdown-item" href="#">View your posts</a></li>
+                <li><a class="dropdown-item" href="/profile">View your profile</a></li>
+                <li><a class="dropdown-item" href="/profile/edit">Edit your profile</a></li>
+                <li><a class="dropdown-item" href="/changePassword">Change your password</a></li>
                 <hr class="my-2">
                 <li>              
                   <!-- Button trigger modal -->

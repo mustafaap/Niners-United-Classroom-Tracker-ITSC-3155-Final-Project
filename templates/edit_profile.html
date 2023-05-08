@@ -1,0 +1,81 @@
+{% extends '_layout.html' %}
+{% block title %} NUTT | Edit Profile {% endblock %}
+{% block head %} 
+<style>
+    body {
+        background-color: #eee;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row d-flex justify-content-center">
+        <div class="col-lg-6">
+            <div class="card mt-4 mb-5 box-shadow">
+                <div class="card-body text-center py-3">
+                    <h1 class="display-4">Edit Profile</h1>
+                </div>
+            </div>
+            <form method="post" action="/profile/{{ user.user_id }}">
+                <div class="card mb-5 py-3">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-3 my-auto">
+                                <p class="mb-0"><i class="fa-regular fa-user me-2"></i>First Name</p>
+                            </div>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="fname" name="fname" placeholder="First name" value="{{ user.fname }}" oninput="checkInputRequired('fname')" required>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3 my-auto">
+                                <p class="mb-0"><i class="fa-regular fa-user me-2"></i>Last Name</p>
+                            </div>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="lname" name="lname" placeholder="Last name" value="{{ user.lname }}" oninput="checkInputRequired('lname')" required>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3 my-auto">
+                                <p class="mb-0"><i class="fa fa-user me-2"></i>Username</p>
+                            </div>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="username" name="username" placeholder="username" value="{{ user.username }}" oninput="checkInputRequired('username')" required>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3 my-auto">
+                                <p class="mb-0"><i class="fa fa-envelope me-2"></i>Email</p>
+                            </div>
+                            <div class="col-sm-9">
+                                <input type="email" class="form-control" id="email" name="email" placeholder="email@example.com" value="{{ user.email }}" oninput="checkInputRequired('email')" required>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3 my-auto">
+                                <p class="mb-0"><i class="fa-solid fa-image me-2"></i>Profile picture</p>
+                            </div>
+                            <div class="col-sm-9">
+                                <input class="form-control" type="file" id="formFile">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <div class="d-flex mb-3 col-4 me-5">
+                        <a class="btn col btn-secondary" href="/profile" role="button"><i class="fa-solid fa-arrow-left me-2"></i>Go back</a>
+                    </div>
+                    <div class="d-flex mb-3 col-4 ms-3">
+                        <button type="submit" class ="btn col box-shadow" style="background-color: rgba(98,241,210,1.0);"><i class="fa-solid fa-floppy-disk me-2"></i>Save</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
