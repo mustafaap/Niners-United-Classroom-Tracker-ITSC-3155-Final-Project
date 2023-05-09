@@ -40,7 +40,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">
-                    <textarea name="comment" id="comment" cols="30" rows="6"></textarea>
+                    <textarea name="comment" id="comment" class="w-100" rows="6"></textarea>
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -52,12 +52,12 @@
           </form>
           {% if user_id == rating.rater_id %}
             <form action="/restroom/{{ rating.rating_id }}/edit" method="GET">
-              <button type="submit" class="btn" style="background-color: rgba(98,241,210,1.0);">Edit</button>
+              <button type="submit" class="btn" style="background-color: rgba(98,241,210,1.0);"><i class="fa-solid fa-pen-to-square me-1"></i>Edit</button>
             </form>
             <form action="/restroom/{{ rating.rating_id }}/delete" method="POST">
               <!-- Button trigger modal -->
               <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                Delete
+                <i class="fa-solid fa-trash-can me-2"></i>Delete
               </button>
               <!-- Modal -->
               <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -72,7 +72,7 @@
                     </div>
                     <div class="modal-footer">
                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                      <button type="submit" class="btn btn-danger">Delete</button>
+                      <button type="submit" class="btn btn-danger"><i class="fa-solid fa-trash-can me-2"></i>Delete</button>
                     </div>
                   </div>
                 </div>
@@ -99,7 +99,7 @@
               {% if user_id == comment.user_id %}
                 <div class="d-flex justify-content-between mx-5 px-5">
                   <form action="/restroom/{{ rating.rating_id }}/comment/{{ comment.comment_id }}/edit" method="POST">
-                    <button type="button" class="btn" style="background-color: rgba(98,241,210,1.0);" data-bs-toggle="modal" data-bs-target="#staticBackdropEdit">Edit</button>
+                    <button type="button" class="btn" style="background-color: rgba(98,241,210,1.0);" data-bs-toggle="modal" data-bs-target="#staticBackdropEdit"><i class="fa-solid fa-pen-to-square me-1"></i>Edit</button>
                     <!-- Modal -->
                     <div class="modal fade" id="staticBackdropEdit" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropEditLabel" aria-hidden="true">
                       <div class="modal-dialog modal-dialog-centered">
@@ -122,7 +122,7 @@
                   <form action="/restroom/{{ rating.rating_id }}/comment/{{ comment.comment_id }}/delete" method="POST">
                     <!-- Button trigger modal -->
                     <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop1">
-                      Delete
+                      <i class="fa-solid fa-trash-can me-2"></i>Delete
                     </button>
                     <!-- Modal -->
                     <div class="modal fade" id="staticBackdrop1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel1" aria-hidden="true">
@@ -137,7 +137,7 @@
                           </div>
                           <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-danger">Delete</button>
+                            <button type="submit" class="btn btn-danger"><i class="fa-solid fa-trash-can me-2"></i>Delete</button>
                           </div>
                         </div>
                       </div>

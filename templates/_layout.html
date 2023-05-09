@@ -48,7 +48,11 @@
           <li class="nav-item">
             <div class="dropdown text-center">
               <a class="btn dropdown-toggle border-0" data-bs-toggle="dropdown" aria-expanded="false">
-                <img src="/static/navbarDefaultUser.png" style="width:40px;height:40px;" class="rounded-circle">
+                {% if session.get('user')['picture'] %}
+                <img src="/static/profile-pics/{{ session.get('user')['picture'] }}" alt="avatar" class="rounded-circle img-fluid" style="width:40px;height:40px;">
+                {% else %}
+                <img src="/static/navbarDefaultUser.png" alt="avatar" class="rounded-circle img-fluid" style="width:40px;height:40px;">
+                {% endif %}
               </a>  
               <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
                 <li><a class="dropdown-item" href="/profile">View your profile</a></li>
