@@ -3,6 +3,7 @@ from flask import Flask, render_template, session, url_for, request, redirect, a
 from src.models import db, Rating, Users, Comments, Rating_votes, Comment_votes
 from dotenv import load_dotenv
 from security import bcrypt
+from werkzeug.utils import secure_filename
 import os
 
 load_dotenv()
@@ -371,6 +372,22 @@ def updateProfile(user_id: int):
     username = request.form.get('username')
     email = request.form.get('email')
 
+    if not fname or not lname or not username or not email:
+        abort(400)
+
+    if 'profile' in request.files:
+        profile_pic = request.files['profile']
+        if profile_pic.filename:
+            if profile_pic.filename.rsplit('.', 1)[1] not in ['jpg', 'jpeg', 'png', 'gif']:
+                abort(400)
+            old_filename = user.picture
+            if old_filename:
+                os.remove(os.path.join('static', 'profile-pics', old_filename))
+            filename = f'{username}_{secure_filename(profile_pic.filename)}'
+            profile_pic.save(os.path.join('static', 'profile-pics', filename))
+            user.picture = filename
+            session['user']['picture'] = filename
+
     user.fname = fname
     user.lname = lname
     user.username = username
@@ -422,6 +439,27 @@ def updatePassword():
     return redirect(url_for('profile'))
 
 
+#Delete profile picture
+@app.post('/profile/deletePicture/<int:user_id>')
+def delete_profile_picture(user_id: int):
+    if 'user' not in session:
+        return redirect('/login')
+    
+    user = Users.query.get(user_id)
+    if not user:
+        abort(400)
+        
+    filename = user.picture
+    if filename:
+        os.remove(os.path.join('static', 'profile-pics', filename))
+        user.picture = None
+        db.session.commit()
+        session['user']['picture'] = None
+        session.modified = True
+
+    return redirect('/profile')
+
+
 # Log in to session
 @app.post('/login')
 def user_login():
@@ -444,7 +482,8 @@ def user_login():
         'password': existing_user.password,
         'fname': existing_user.first_name,
         'lname': existing_user.last_name,
-        'email': existing_user.email
+        'email': existing_user.email,
+        'picture': existing_user.picture
         }
         session['logged_in'] = True
         session['logged_in_message'] = "Success! You are logged in."
@@ -485,3 +524,27 @@ def logout():
     session.pop('logged_in', None)
     session['success_message'] = "You've been logged out!"
     return redirect(url_for('login'))
+
+
+# Delete user account
+@app.post('/user/<int:user_id>/delete')
+def delete_account(user_id: int):
+    if 'user' not in session:
+        return redirect('/login')
+    
+    user = Users.query.get(user_id)
+    
+    if user:
+        filename = user.picture
+        if filename:
+            os.remove(os.path.join('static', 'profile-pics', filename))
+        db.session.delete(user)
+        db.session.commit()
+        session.pop('user')
+        session.pop('logged_in')
+        session['success_message'] = "Your account has been successfully deleted!"
+        session.modified = True
+        return redirect('/login')
+    else:
+        abort(404)
+

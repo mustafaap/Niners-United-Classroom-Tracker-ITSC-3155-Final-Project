@@ -13,11 +13,11 @@
     <div class="row">
         <div class="col-lg-12">
             {% if success_message %}
-            <div class="d-flex justify-content-center">
-                <div class="alert alert-success mt-3 alert-dismissible fade show d-flex justify-content-center" style="width: 300px;">{{ success_message }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
+            <div class="d-flex justify-content-center mx-4">
+                <div class="alert alert-success mt-3 alert-dismissible fade show"d><i class="fa-solid fa-circle-check me-2" style="color: #198754;"></i>{{ success_message }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
             </div>
             {% endif %}
-            <div class="card mt-4 mb-5 box-shadow">
+            <div class="card mt-4 mb-4 box-shadow">
                 <div class="card-body text-center py-3">
                     <h1 class="display-4">My Profile</h1>
                 </div>
@@ -28,10 +28,40 @@
         <div class="col-lg-3">
             <div class="card py-4 mb-4">
                 <div class="card-body text-center">
-                    <img src="/static/defaultUser.png" alt="avatar"
-                    class="rounded-circle img-fluid mb-4" style="width: 150px;">
-                    <h3 class="mb-3">{{ user.fname }} {{ user.lname }}</h3>
-                    <p class="mb-1" style="color:rgba(98,241,210,1.0);">NUTT Member</p>
+                {% if user.picture %}
+                    <img src="/static/profile-pics/{{ user.picture }}" alt="avatar" class="rounded-circle img-fluid mb-3" style="width: 250px;">
+                {% else %}
+                    <img src="/static/defaultUser.png" alt="avatar" class="rounded-circle img-fluid mb-3" style="width: 150px;">
+                {% endif %}
+                    <div class="d-flex justify-content-center">
+                        <a class="btn btn-secondary" href="/profile/edit" role="button"><i class="fa-solid fa-pen-to-square mx-1"></i></a>
+                        {% if user.picture %}
+                        <form action="/profile/deletePicture/{{ user.user_id }}" method="post">
+                            <!-- Button trigger modal -->
+                            <button type="button" class="btn btn-danger ms-5" data-bs-toggle="modal" data-bs-target="#staticBackdrop"><i class="fa-solid fa-trash-can mx-1"></i></button>
+                            <!-- Modal -->
+                            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Delete profile picture?</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                    <p>Your profile picture will be permanently deleted!</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-danger"><i class="fa-solid fa-trash-can me-2"></i>Delete</button>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                        </form>
+                        {% endif %}
+                    </div>
+                    <h3 class="mb-3 mt-4">{{ user.fname }} {{ user.lname }}</h3>
+                    <p class="mb-1 h6" style="color:rgba(98,241,210,1.0);">NUTT Member</p>
                 </div>
             </div>
         </div>
@@ -89,7 +119,28 @@
                     <div class="d-grid gap-3 col-7 mx-auto my-3">
                         <a class="btn btn-secondary" href="/profile/edit" role="button"><i class="fa-solid fa-pen-to-square me-2" style="color: #ffffff;"></i>Edit profile</a>
                         <a class="btn btn-secondary" href="/changePassword" role="button">Change password</a>
-                        <a class="btn btn-danger" href="#" role="button"><i class="fa-solid fa-trash-can me-2" style="color: #ffffff;"></i>Delete account</a>
+                        <form action="/user/{{ user.user_id }}/delete" method="post">
+                            <!-- Button trigger modal -->
+                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop1"><i class="fa-solid fa-trash-can me-2" style="color: #ffffff;"></i>Delete account</button>
+                            <!-- Modal -->
+                            <div class="modal fade" id="staticBackdrop1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel1" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="staticBackdropLabel1">Delete account?</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                    <p>Your account and data will be permanently deleted!</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-danger"><i class="fa-solid fa-trash-can me-2"></i>Confirm</button>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>

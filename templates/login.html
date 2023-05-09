@@ -3,8 +3,8 @@
 
 {% block body %}
 {% if success_message %}
-<div class="d-flex justify-content-center">
-  <div class="alert alert-success mt-3 alert-dismissible fade show d-flex justify-content-center" style="width: 300px;">{{ success_message }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
+<div class="d-flex justify-content-center mx-4">
+  <div class="alert alert-success mt-3 alert-dismissible fade show"><i class="fa-solid fa-circle-check me-2" style="color: #198754;"></i>{{ success_message }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
 </div>
 {% endif %}
 <div class="container-fluid">
