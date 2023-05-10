@@ -9,16 +9,18 @@
     integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="{{ url_for('static', filename='script.js') }}"></script>
   <title>{% block title %}{% endblock %}</title>
+  {% block head %}
+  {% endblock %}
 </head>
 
 <body>
   <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <nav class="navbar navbar-expand-lg" style="background-color: #e3f2fd;">
     <div class="container-fluid">
-      <a class="navbar-brand" href="/">NUTT</a>
+      <a class="navbar-brand" href="/">
+        <img src="/static/NUTT_logo.png" width="50" height="50" class="ms-3">
+      </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -28,32 +30,72 @@
           <li class="nav-item">
             <a class="nav-link {% if index_active %} active{% endif %}" aria-current="page" href="/">Home</a>
           </li>
+          {% if session.get('logged_in') %}
           <li class="nav-item">
             <a class="nav-link {% if create_restroom_active %} active{% endif %}" href="/new">Create</a>
           </li>
+          {% endif %}
           <li class="nav-item">
             <a class="nav-link {% if maps_active %} active{% endif %}" href="/maps">Maps</a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link {% if about_active %} active{% endif %}" href="/about">About</a>
+          </li>
         </ul>
-        <form class="d-flex mx-auto ms-5.5" role="search" action="/search" method="get">
-          <input class="form-control me-2" name="searchbox" type="search" placeholder="Search" aria-label="Search">
-          <button class="btn btn-outline-success" type="submit">Search</button>
-        </form>
+        <hr>
         <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          {% if session.get('logged_in') %}
+          <li class="nav-item">
+            <div class="dropdown text-center">
+              <a class="btn dropdown-toggle border-0" data-bs-toggle="dropdown" aria-expanded="false">
+                {% if session.get('user')['picture'] %}
+                <img src="/static/profile-pics/{{ session.get('user')['picture'] }}" alt="avatar" class="rounded-circle img-fluid" style="width:40px;height:40px;">
+                {% else %}
+                <img src="/static/navbarDefaultUser.png" alt="avatar" class="rounded-circle img-fluid" style="width:40px;height:40px;">
+                {% endif %}
+              </a>  
+              <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
+                <li><a class="dropdown-item" href="/profile">View your profile</a></li>
+                <li><a class="dropdown-item" href="/profile/edit">Edit your profile</a></li>
+                <li><a class="dropdown-item" href="/changePassword">Change your password</a></li>
+                <hr class="my-2">
+                <li>              
+                  <!-- Button trigger modal -->
+                  <button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#logout">
+                    <i class="fa-solid fa-right-from-bracket me-2" style="color: #ffffff;"></i>Logout
+                  </button>
+                </li>
+              </ul>
+              <!-- Modal -->
+              <div class="modal fade" id="logout" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="logout" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="logout">Confirm logout?</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <p>You will be logged out and returned to the login page</p>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <form action="/logout" method="post">
+                        <button type="submit" class="btn btn-danger"><i class="fa-solid fa-right-from-bracket me-2" style="color: #ffffff;"></i>Logout</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </li>
+          {% else %}
           <li class="nav-item">
             <a class="nav-link {% if login_active %} active{% endif %}" href="/login">Login</a>
           </li>
           <li class="nav-item">
             <a class="nav-link {% if signup_active %} active{% endif %}" href="/signup">Sign Up</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link {% if about_active %} active{% endif %}" href="/about">About</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link {% if profile_active %} active{% endif %}" href="/profile">
-              <img src="static/cat.jpg" style="width:42px;height:42px;" class="rounded-5">
-            </a>
-          </li>
+          {% endif %}
         </ul>
       </div>
     </div>
@@ -61,7 +103,7 @@
   {% block body %}
   {% endblock %}
   <!-- Footer -->
-  <footer class="bg-dark text-white py-3 fixed-bottom">
+  <!-- <footer class="footer bg-dark text-white py-3">
     <div class="container-fluid d-flex justify-content-center align-items-center">
       <div class="row">
         <div class="col-12 col-md-6 text-center text-md-start">
@@ -74,7 +116,9 @@
         </div>
       </div>
     </div>
-  </footer>
+  </footer> -->
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
     crossorigin="anonymous"></script>

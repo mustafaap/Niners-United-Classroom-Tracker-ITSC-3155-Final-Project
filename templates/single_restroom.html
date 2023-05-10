@@ -3,72 +3,255 @@
 
 {% block body %}
 <div class="container-fluid">
-  <div class="row">
+
+  {% if already_commented %}
+    <div class="d-flex justify-content-center">
+      <div class="alert alert-danger mt-3 alert-dismissible fade show d-flex justify-content-center" style="width: 300px;">{{ already_commented }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
+    </div>
+  {% endif %}
+  <div class="row justify-content-center">
 
     <div class="col-md-8 mt-3">
-      <div class="bg-body-secondary my-4 p-5 box-shadow" style="border-radius: 4rem;">
+      <div class="bg-body-secondary mx-4 my-4 p-5 box-shadow" style="border-radius: 4rem;">
         <h1 class="text-center fw-bold">{{ rating.restroom_name }}</h1>
         <ul class="list-group mb-3">
           <li class="list-group-item">Cleanliness: {{ rating.cleanliness }}</li>
+          {% if rating.accessibility %}
           <li class="list-group-item">Accessibility: {{ rating.accessibility }}</li>
+          {% endif %}
+          {% if rating.functionality %}
           <li class="list-group-item">Functionality: {% if rating.functionality %}Open{% else %}Closed{% endif %}</li>
+          {% endif %}
           <li class="list-group-item">Overall experience: {{ rating.overall }}</li>
         </ul>
+        {% if rating.rating_body %}
+        <h3>Feedback:</h3>
+        <p>{{ rating.rating_body }}</p>
+        {% endif %}
         <div class="d-flex justify-content-between">
-          <form action="/restroom/{{ rating.rating_id }}/edit" method="GET">
-            <button type="submit" class="btn" style="background-color: rgba(98,241,210,0.5);">Edit</button>
+          <form action="/restroom/{{ rating.rating_id }}/comment" method="post">
+            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#staticBackdrop2">Add Comment</button>
+            <!-- Modal -->
+            <div class="modal fade" id="staticBackdrop2" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel2" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel2">Leave a Comment</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <textarea name="comment" id="comment" class="w-100" rows="6"></textarea>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-success">Submit</button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </form>
-          <form action="/restroom/{{ rating.rating_id }}/delete" method="POST">
-            <button type="submit" class="btn btn-danger">Delete</button>
-          </form>
+          {% if user_id == rating.rater_id %}
+            <form action="/restroom/{{ rating.rating_id }}/edit" method="GET">
+              <button type="submit" class="btn" style="background-color: rgba(98,241,210,1.0);"><i class="fa-solid fa-pen-to-square me-1"></i>Edit</button>
+            </form>
+            <form action="/restroom/{{ rating.rating_id }}/delete" method="POST">
+              <!-- Button trigger modal -->
+              <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                <i class="fa-solid fa-trash-can me-2"></i>Delete
+              </button>
+              <!-- Modal -->
+              <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="staticBackdropLabel">Confirm delete?</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <p>The rating will be permanently deleted!</p>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <button type="submit" class="btn btn-danger"><i class="fa-solid fa-trash-can me-2"></i>Delete</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          {% endif %}
         </div>
       </div>
 
       {% for comment in comments %}
         <div class="card mb-4 p-0">
           <div class="row m-0">
-            <div class="col-sm-1 sidebar">
-              <div class="basic-column">
-                <button type="button" class="btn"><i class="fas fa-arrow-up"></i></button>
-                <span class="total-votes">123</span>
-                <button type="button" class="btn"><i class="fas fa-arrow-down"></i></button>
+            <div class="col-sm-1 bg-body-tertiary">
+              <div class="basic-column" id="rating-{{ rating.rating_id }}" data-rating_id="{{ rating.rating_id }}">
+                <button type="button" class="btn upvote" id="upvote-{{ comment.comment_id }}" data-comment_id="{{ comment.comment_id }}"><i class="fas fa-arrow-up up"></i></button>
+                <span class="total-votes numVotes" id="num-{{ comment.comment_id }}" data-num_votes="{{comment.total_votes}}" data-comment_id="{{ comment.comment_id }}">{{ comment.total_votes }}</span>
+                <button type="button" class="btn downvote" id="downvote-{{ comment.comment_id }}" data-comment_id="{{ comment.comment_id }}"><i class="fas fa-arrow-down down"></i></button>
               </div>
             </div>
             <div class="col-sm-11 p-0">
               <div class="card-body">
                 <p class="card-text">{{ comment.comment_body }}</p>
               </div>
-              <div class="d-flex justify-content-between mx-5 px-5">
-                <form action="" method="">
-                  <button type="submit" class="btn" style="background-color: rgba(98,241,210,0.5);">Edit</button>
-                </form>
-                <form action="/restroom/{{ rating.rating_id }}/comment/{{ comment.comment_id }}/delete" method="POST">
-                  <button type="submit" class="btn btn-danger">Delete</button>
-                </form>
-              </div>
+              {% if user_id == comment.user_id %}
+                <div class="d-flex justify-content-between mx-5 px-5">
+                  <form action="/restroom/{{ rating.rating_id }}/comment/{{ comment.comment_id }}/edit" method="POST">
+                    <button type="button" class="btn" style="background-color: rgba(98,241,210,1.0);" data-bs-toggle="modal" data-bs-target="#staticBackdropEdit"><i class="fa-solid fa-pen-to-square me-1"></i>Edit</button>
+                    <!-- Modal -->
+                    <div class="modal fade" id="staticBackdropEdit" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropEditLabel" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="staticBackdropEditLabel">Edit Your Comment</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                            <textarea name="edited_comment" id="edited_comment" cols="30" rows="6"></textarea>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-success">Submit</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                  <form action="/restroom/{{ rating.rating_id }}/comment/{{ comment.comment_id }}/delete" method="POST">
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop1">
+                      <i class="fa-solid fa-trash-can me-2"></i>Delete
+                    </button>
+                    <!-- Modal -->
+                    <div class="modal fade" id="staticBackdrop1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel1" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="staticBackdropLabe1l">Confirm delete?</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                            <p>The comment will be permanently deleted!</p>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-danger"><i class="fa-solid fa-trash-can me-2"></i>Delete</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              {% endif %}
             </div>
           </div>
         </div>
       {% endfor %}
     </div>
 
-    <div class="col-md-4 my-5">
-      <div class="d-flex justify-content-center">
-        <div class="position-absolute">
-          <form class="bg-body-secondary mt-4" id="index-leave-rating" action="/restroom/{{ rating.rating_id }}/comment" method="post">
-            <h4 class="text-center">Leave a Comment</h4>
-            <div class="form-group">
-              <label for="comment">Comment</label>
-              <textarea class="form-control" cols="30" rows="6" name="comment"></textarea>
-            </div>
-            <div class="form-group mt-4 d-flex justify-content-center">
-              <button type="submit" class="btn btn-success">Submit Comment</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-
   </div>
 </div>
+
+<script>
+  ////////////////////////
+  //upvotes/downvotes JS
+  const _upvote = document.querySelectorAll('.upvote');
+  const _downvote = document.querySelectorAll('.downvote');
+
+  const up = document.querySelectorAll('.up');
+  const down = document.querySelectorAll('.down');
+
+  const numVotes = document.querySelectorAll('.numVotes')
+
+  up.forEach(element => element.addEventListener('click', uclick));
+  down.forEach(element => element.addEventListener('click', dclick));
+
+  function uclick(e) {
+    let upvote = e.target;
+    if(upvote.classList.contains('clickedUpvote')) {
+      upvote.classList.remove('clickedUpvote')
+      _upvote.forEach(element => element.addEventListener('click', dislike));
+    } else {
+      upvote.classList.add('clickedUpvote')
+      _upvote.forEach(element => element.addEventListener('click', like));
+    }
+  }
+
+  function dclick(e) {
+    let downvote = e.target;
+    if(downvote.classList.contains('clickedDownvote')) {
+      downvote.classList.remove('clickedDownvote');
+      _downvote.forEach(element => element.addEventListener('click', like));
+    } else {
+      downvote.classList.add('clickedDownvote');
+      _downvote.forEach(element => element.addEventListener('click', dislike));
+    }
+  }
+    
+  function like(e) {
+    like = e.currentTarget;
+    previous = like.parentElement;
+    comment_id = like.getAttribute('data-comment_id');
+
+    numVotes.forEach(element => {
+    if (element.getAttribute('data-comment_id') === comment_id) {
+      console.log('inside comment num votes');
+      let new_num = parseInt(element.getAttribute('data-num_votes')) + 1;
+      element.textContent = new_num;
+    }});
+
+    $(document).on('click', `#upvote-${comment_id}`, function(event) {
+      let id = $(event.currentTarget).attr('data-comment_id');
+      let rating_id = $(previous).attr('data-rating_id');
+      $.ajax({
+        url : `/commentUpvote/${rating_id}`,
+        type : "post",
+        contentType: 'application/json;charset=UTF-8',
+        dataType: "json",
+        data : JSON.stringify({'comment_id' : $(`#upvote-${comment_id}`).data('comment_id')}),
+        success : function(response) {
+          console.log(response);
+        },
+        error : function(xhr) {
+          console.log(xhr);
+        }
+      });
+      event.preventDefault();
+    });
+  }
+    
+  function dislike(e) {
+    dislike = e.currentTarget;
+    comment_id = dislike.getAttribute('data-comment_id');
+    previous = dislike.parentElement;
+
+    numVotes.forEach(element => {
+    if (element.getAttribute('data-comment_id') === comment_id) {
+      let new_num = parseInt(element.getAttribute('data-num_votes')) - 1;
+      element.textContent = new_num;
+    }});
+
+    $(document).on('click', `#downvote-${comment_id}`, function(event) {
+    let id = $(event.currentTarget).attr('data-comment_id');
+    let rating_id = $(previous).attr('data-rating_id');
+    $.ajax({
+      url : `/commentDownvote/${rating_id}`,
+      type : "post",
+      contentType: 'application/json;charset=UTF-8',
+      dataType: "json",
+      data : JSON.stringify({'comment_id' : $(`#downvote-${comment_id}`).data('comment_id')}),
+      success : function(response) {
+        console.log(response);	
+      },
+      error : function(xhr) {
+        console.log(xhr);
+      }
+    });
+    event.preventDefault();
+  });
+  }
+</script>
+
 {% endblock %}

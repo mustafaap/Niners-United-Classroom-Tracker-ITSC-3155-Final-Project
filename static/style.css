@@ -1,6 +1,6 @@
 /* Theme: Silver, white, blue, maybe cream. Representation of cleanliness */
 :root {
-    --light-blue-1: rgba(98,241,210,0.5);
+    --light-blue-1: rgba(98,241,210,1.0);
 }
 
 .fixed-stay {
@@ -10,22 +10,11 @@
     bottom: 0;
 }
 
-.sidebar {
-    border-right: 1px solid grey;
-}
-
 .basic-column {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
-
-/* .list-group-item {
-    margin-bottom: 10px;
-    background-color: #f5f5f5;
-    border: none;
-    border-radius: 5px;
-} */
 
 .to-post {
     text-decoration: none;

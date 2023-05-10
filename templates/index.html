@@ -6,7 +6,7 @@
   <div class="row">
 
     <div class="col-sm-2 p-0">
-      <div class="basic-column my-5">
+      <div class="basic-column my-4">
         <form class="bg-body-secondary" id="index-sort-by" action="/" method="post">
           <h4>Sort By:</h4>
           <div class="form-check">
@@ -33,24 +33,35 @@
             <input class="form-check-input" type="radio" name="sort-by" value="Overall">
             <label class="form-check-label" for="sort-by">Overall Experience</label>
           </div>
-          <div class="form-group">
-            <button type="submit" class="btn btn-primary">Sort</button>
+          <div class="form-group text-center">
+            <button type="submit" class="btn mt-2" style="background-color: rgba(98,241,210,1.0);"><i class="fa-solid fa-filter me-1" style="color: #000000;"></i>Sort</button>
           </div>
         </form>
       </div>
     </div>
     
     <div class="col-sm-7 p-0">
+      {% if logged_in_message %}
+      <div class="d-flex justify-content-center mx-5">
+        <div class="alert alert-success mt-3 alert-dismissible fade show"><i class="fa-solid fa-circle-check me-2" style="color: #198754;"></i>{{ logged_in_message }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
+      </div>
+      {% endif %}
       <div class="mx-4 mt-4">
+        <form class="d-flex" role="search" action="/search" method="get">
+          <input class="form-control me-2" name="searchbox" type="search" placeholder="Search for a rating" aria-label="Search">
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+      </div>
+      <div class="mx-4 my-4">
       {% if(ratings | length > 0) %}
         {% for rating in ratings %}
           <div class="card mb-4 p-0">
             <div class="row m-0">
-              <div class="col-sm-1 sidebar">
+              <div class="col-sm-1 bg-body-tertiary">
                 <div class="basic-column">
-                  <button type="button" class="btn"><i class="fas fa-arrow-up"></i></button>
-                  <span class="total-votes">123</span>
-                  <button type="button" class="btn"><i class="fas fa-arrow-down"></i></button>
+                  <button type="button" class="btn upvote" id="upvote-{{ rating.rating_id }}" data-rating_id="{{ rating.rating_id }}"><i class="fas fa-arrow-up up"></i></button>
+                  <span class="total-votes numVotes" id="num-{{ rating.rating_id }}" data-num_votes="{{rating.votes}}" data-rating_id="{{ rating.rating_id }}">{{ rating.votes }}</span>
+                  <button type="button" class="btn downvote" id="downvote-{{ rating.rating_id }}" data-rating_id="{{ rating.rating_id }}"><i class="fas fa-arrow-down down"></i></button>
                 </div>
               </div>
               <div class="col-sm-11 p-0"><a href="{{ url_for('view_single_restroom', rating_id=rating.rating_id) }}" class="to-post">
@@ -58,11 +69,6 @@
                 <div class="card-body">
                   <h5 class="card-title">{{ rating.restroom_name }}</h5>
                   <p class="card-text">{{ rating.rating_body }}</p>
-                  <div>
-                    <button class="upvote" id="upvote-{{ rating.rating_id }}" data-rating_id="{{ rating.rating_id }}"><i class="fa fa-light fa-circle-up up"></i></button>
-                    <p class="numVotes" id="num-{{ rating.rating_id }}" data-num_votes="{{rating.votes}}" data-rating_id="{{ rating.rating_id }}" >{{ rating.votes }}</p>
-                    <button class="downvote" id="downvote-{{ rating.rating_id }}" data-rating_id="{{ rating.rating_id }}"><i class="fa fa-light fa-circle-down down"></i></button>
-                  </div>
                 </div>
               </div></a>
             </div>
@@ -77,11 +83,11 @@
     <div class="col-sm-3 p-0">
       <div class="d-flex justify-content-center">
         <div class="position-absolute">
-          <form class="bg-body-secondary mt-5" id="index-leave-rating" action="/leaverating" method="post">
+          <form class="bg-body-secondary my-4" id="index-leave-rating" action="/leaverating" method="post">
             <h4 class="text-center">Leave a Rating!</h4>
             <div class="form-group">
               <label for="location">Location</label>
-              <input type="text" class="form-control" name="location" placeholder="Woodward 1st Floor (Elevator)" required>
+              <input type="text" class="form-control" name="location" id="location" placeholder="Woodward 1st Floor (Elevator)" oninput="checkInputRequired('location')" required>
             </div>
             <div class="form-group">
               <label for="rating_body">Feedback</label>
@@ -110,8 +116,8 @@
               </div>
             </div>
             <div class="form-group mt-4">
-              <button type="button" class="btn btn-info">Add More Info</button>
-              <button type="submit" class="btn btn-success">Submit Rating</button>
+              <a class="btn" href="/new" role="button" style="background-color: rgba(98,241,210,1.0);">Add More Info</a>
+              <button type="submit" class="btn btn-dark">Submit Rating</button>
             </div>
           </form>
         </div>
@@ -134,17 +140,40 @@
 
   ////////////////////////
   //upvotes/downvotes JS
-  const upvote = document.querySelectorAll('.upvote');
-  const downvote = document.querySelectorAll('.downvote');
+  const _upvote = document.querySelectorAll('.upvote');
+  const _downvote = document.querySelectorAll('.downvote');
 
   const up = document.querySelectorAll('.up');
   const down = document.querySelectorAll('.down');
 
   const numVotes = document.querySelectorAll('.numVotes')
 
-  upvote.forEach(element => element.addEventListener('click', like));
-  downvote.forEach(element => element.addEventListener('click', dislike));
-    
+  up.forEach(element => element.addEventListener('click', uclick));
+  down.forEach(element => element.addEventListener('click', dclick));
+
+  function uclick(e) {
+    let upvote = e.target;
+    if(upvote.classList.contains('clickedUpvote')) {
+      upvote.classList.remove('clickedUpvote');
+      _upvote.forEach(element => element.addEventListener('click', dislike));
+    } else {
+      upvote.classList.add('clickedUpvote');
+      _upvote.forEach(element => element.addEventListener('click', like));
+      
+    }
+  }
+
+  function dclick(e) {
+    let downvote = e.target;
+    if(downvote.classList.contains('clickedDownvote')) {
+      downvote.classList.remove('clickedDownvote');
+      _downvote.forEach(element => element.addEventListener('click', like));
+    } else {
+      downvote.classList.add('clickedDownvote');
+      _downvote.forEach(element => element.addEventListener('click', dislike));
+    }
+  }
+
   function like(e) {
     like = e.currentTarget;
     rating_id = like.getAttribute('data-rating_id');
@@ -164,7 +193,7 @@
         dataType: "json",
         data : JSON.stringify({'rating_id' : $(`#upvote-${rating_id}`).data('rating_id')}),
         success : function(response) {
-          console.log(response);	
+          console.log(response);
         },
         error : function(xhr) {
           console.log(xhr);
@@ -202,18 +231,5 @@
     event.preventDefault();
   });
   }
-
-up.forEach(element => element.addEventListener('click', uclick));
-down.forEach(element => element.addEventListener('click', dclick));
-
-function uclick(e) {
-  let upvote = e.target;
-  upvote.classList.toggle('clickedUpvote');
-}
-
-function dclick(e) {
-  let downvote = e.target;
-  downvote.classList.toggle('clickedDownvote');
-}
 </script>
 {% endblock %}

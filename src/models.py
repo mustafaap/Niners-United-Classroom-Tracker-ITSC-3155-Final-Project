@@ -15,7 +15,7 @@ class Rating(db.Model):
     functionality = db.Column(db.Boolean)
     overall = db.Column(db.Numeric(2,1))
     map_tag = db.Column(db.String(255))
-    votes = db.Column(db.Integer)
+    votes = db.Column(db.Integer, default=0)
     rater_id = db.Column(db.Integer, db.ForeignKey('users.user_id', ondelete='CASCADE'), nullable=True)
     comments = db.Column(MutableList.as_mutable(db.ARRAY(db.Integer)), default=[])
     # rater = db.relationship('Users', backref='rating_user')
@@ -44,13 +44,15 @@ class Users(db.Model):
     email = db.Column(db.String(255))
     favorite = db.Column(db.String(255))
     picture = db.Column(db.String(255))
+    commented_on = db.Column(MutableList.as_mutable(db.ARRAY(db.Integer)), default=[])
 
-    def __init__(self, username: str, password: str, first_name: str, last_name: str, email: str):
+    def __init__(self, username: str, password: str, first_name: str, last_name: str, email: str, commented_on):
         self.username = username
         self.password = password
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
+        self.commented_on = commented_on
 
 
 class Comments(db.Model):
@@ -62,7 +64,7 @@ class Comments(db.Model):
     # user = db.relationship('Users', backref='user_comment')
     rating_id = db.Column(db.Integer, db.ForeignKey('rating.rating_id', ondelete='CASCADE'), nullable=True)
     # rating = db.relationship('Rating', backref='rating_comment', cascade='all, delete')
-    total_votes = db.Column(db.Integer)
+    total_votes = db.Column(db.Integer, default=0)
     comment_id_vote = db.Column(db.Integer, db.ForeignKey('comments.comment_id', ondelete='CASCADE'), nullable=True)
     # comment = db.relationship('Comments', foreign_keys=[comment_id_vote])
 
