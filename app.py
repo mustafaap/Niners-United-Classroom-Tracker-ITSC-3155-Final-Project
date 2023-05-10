@@ -253,76 +253,84 @@ def search():
 # Upvote rating
 @app.post('/upvote/<int:rating_id>')
 def upvote(rating_id: int):
-    print('upvoting')
-    if request.method == 'POST':
-        data = json.loads(request.data)
-        print(data)
-        rating = Rating.query.filter_by(rating_id = data['rating_id']).first()
-        print(rating.votes)
+    rating = Rating.query.get(rating_id)
+    user_id = session['user']['user_id']
+    user = Users.query.get(user_id)
 
-        if rating:
-            if rating.votes:
-                setattr(rating, 'votes', int(rating.votes) + 1)
-            else:
-                setattr(rating, 'votes', 1)
+    if rating:
+        if rating_id not in user.voted_on:
+            setattr(rating, 'votes', int(rating.votes) + 1)
+            user.voted_on.append(rating_id)
             db.session.commit()
-    return redirect(url_for('index'))
+        else: 
+            setattr(rating, 'votes', int(rating.votes) - 1)
+            user.voted_on.remove(rating_id)
+            db.session.commit()
+        db.session.commit()
 
+    return str(rating.votes)
 
 # Downvote rating
 @app.post('/downvote/<int:rating_id>')
 def downvote(rating_id: int):
-    if request.method == 'POST':
-        data = json.loads(request.data)
-        print(data['rating_id'])
-        rating = Rating.query.filter_by(rating_id = data['rating_id']).first()
-        print(rating.votes)
+    rating = Rating.query.get(rating_id)
+    user_id = session['user']['user_id']
+    user = Users.query.get(user_id)
 
-        if rating:
-            if rating.votes:
-                setattr(rating, 'votes', int(rating.votes) - 1)
-            else:
-                setattr(rating, 'votes', -1)
+    if rating:
+        if rating_id not in user.voted_on:
+            setattr(rating, 'votes', int(rating.votes) - 1)
+            user.voted_on.append(rating_id)
             db.session.commit()
-    return redirect(url_for('index'))
+        else: 
+            setattr(rating, 'votes', int(rating.votes) + 1)
+            user.voted_on.remove(rating_id)
+            db.session.commit()
+        db.session.commit()
 
+    return str(rating.votes)
 
 # Upvote comment
-@app.post('/commentUpvote/<int:rating_id>')
-def comment_upvote(rating_id: int):
+@app.post('/commentupvote/<int:rating_id>/<int:comment_id>')
+def comment_upvote(rating_id, comment_id):
     rating = Rating.query.get(rating_id)
-    print(rating)
-    print('upvoting')
-    if request.method == 'POST':
-        data = json.loads(request.data)
-        print(data['comment_id'])
-        comment = Comments.query.filter_by(comment_id = data['comment_id']).first()
+    comment = Comments.query.get(comment_id)
+    user_id = session['user']['user_id']
+    user = Users.query.get(user_id)
 
-        if comment:
-            if comment.total_votes:
-                setattr(comment, 'total_votes', int(comment.total_votes) + 1)
-            else:
-                setattr(comment, 'total_votes', + 1)
+    if comment and rating:
+        if comment_id not in user.voted_on:
+            setattr(comment, 'total_votes', int(comment.total_votes) + 1)
+            user.voted_on.append(comment_id)
             db.session.commit()
-    return redirect(url_for('view_single_restroom', rating_id=rating_id))
+        else: 
+            setattr(comment, 'total_votes', int(comment.total_votes) - 1)
+            user.voted_on.remove(comment_id)
+            db.session.commit()
+        db.session.commit()
 
+    return str(comment.total_votes)
 
 # Downvote comment
-@app.post('/commentDownvote/<int:rating_id>')
-def comment_downvote(rating_id: int):
+@app.post('/commentdownvote/<int:rating_id>/<int:comment_id>')
+def comment_downvote(rating_id, comment_id):
     rating = Rating.query.get(rating_id)
-    if request.method == 'POST':
-        data = json.loads(request.data)
-        print(data['comment_id'])
-        comment = Comments.query.filter_by(comment_id = data['comment_id']).first()
+    comment = Comments.query.get(comment_id)
+    user_id = session['user']['user_id']
+    user = Users.query.get(user_id)
 
-        if comment:
-            if comment.total_votes:
-                setattr(comment, 'total_votes', int(comment.total_votes) - 1)
-            else:
-                setattr(comment, 'total_votes', -1)
+    if comment and rating:
+        if comment_id not in user.voted_on:
+            setattr(comment, 'total_votes', int(comment.total_votes) - 1)
+            user.voted_on.append(comment_id)
             db.session.commit()
-    return redirect(url_for('view_single_restroom', rating_id=rating_id))
+        else: 
+            setattr(comment, 'total_votes', int(comment.total_votes) + 1)
+            user.voted_on.remove(comment_id)
+            db.session.commit()
+        db.session.commit()
+
+    return str(comment.total_votes)
 
 
 # Login page
@@ -468,7 +476,7 @@ def register():
 
     hashed_password = bcrypt.generate_password_hash(password).decode()
 
-    new_user = Users(username, hashed_password, fname, lname, email, commented_on=[])
+    new_user = Users(username, hashed_password, fname, lname, email, commented_on=[], voted_on=[])
     db.session.add(new_user)
     db.session.commit()
 

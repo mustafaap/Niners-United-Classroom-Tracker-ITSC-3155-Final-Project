@@ -49,10 +49,10 @@
     background: none;
 }
 
-.clickedUpvote {
+.clickedupvote {
     color: green;
 }
 
-.clickedDownvote {
+.clickedownvote {
     color: red;
 }
