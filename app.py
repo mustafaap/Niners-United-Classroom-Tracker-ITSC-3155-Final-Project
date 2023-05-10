@@ -26,7 +26,8 @@ def index():
     # Default sort is most recent
     ratings = Rating.query.order_by(Rating.rating_id.desc()).all()
     logged_in_message = session.pop('logged_in_message', None)
-    return render_template('index.html', index_active=True, ratings=ratings, logged_in_message=logged_in_message)
+    voting_message = session.pop('voting_message', None)
+    return render_template('index.html', index_active=True, ratings=ratings, logged_in_message=logged_in_message, voting_message=voting_message)
 
 
 # Sort index page by
@@ -130,8 +131,9 @@ def view_single_restroom(rating_id: int):
     comments = Comments.query.filter(Comments.comment_id.in_(rating.comments)).all()
 
     already_commented = session.pop('already_commented', None)
+    voting_message = session.pop('voting_message', None)
 
-    return render_template('single_restroom.html', rating=rating, comments=comments, user_id=user_id, already_commented=already_commented)
+    return render_template('single_restroom.html', rating=rating, comments=comments, user_id=user_id, already_commented=already_commented, voting_message=voting_message)
 
 
 # View edit rating page
@@ -254,40 +256,44 @@ def search():
 @app.post('/upvote/<int:rating_id>')
 def upvote(rating_id: int):
     rating = Rating.query.get(rating_id)
-    user_id = session['user']['user_id']
-    user = Users.query.get(user_id)
+    if session.get('user') is not None:
+        user_id = session['user']['user_id']
+        user = Users.query.get(user_id)
 
-    if rating:
-        if rating_id not in user.voted_on:
-            setattr(rating, 'votes', int(rating.votes) + 1)
-            user.voted_on.append(rating_id)
+        if rating and user_id:
+            if rating_id not in user.voted_on:
+                setattr(rating, 'votes', int(rating.votes) + 1)
+                user.voted_on.append(rating_id)
+                db.session.commit()
+            else: 
+                setattr(rating, 'votes', int(rating.votes) - 1)
+                user.voted_on.remove(rating_id)
+                db.session.commit()
             db.session.commit()
-        else: 
-            setattr(rating, 'votes', int(rating.votes) - 1)
-            user.voted_on.remove(rating_id)
-            db.session.commit()
-        db.session.commit()
-
+    else:
+        session['voting_message'] = "You must log in to interact with posts."
     return str(rating.votes)
 
 # Downvote rating
 @app.post('/downvote/<int:rating_id>')
 def downvote(rating_id: int):
     rating = Rating.query.get(rating_id)
-    user_id = session['user']['user_id']
-    user = Users.query.get(user_id)
+    if session.get('user') is not None:
+        user_id = session['user']['user_id']
+        user = Users.query.get(user_id)
 
-    if rating:
-        if rating_id not in user.voted_on:
-            setattr(rating, 'votes', int(rating.votes) - 1)
-            user.voted_on.append(rating_id)
+        if rating:
+            if rating_id not in user.voted_on:
+                setattr(rating, 'votes', int(rating.votes) - 1)
+                user.voted_on.append(rating_id)
+                db.session.commit()
+            else: 
+                setattr(rating, 'votes', int(rating.votes) + 1)
+                user.voted_on.remove(rating_id)
+                db.session.commit()
             db.session.commit()
-        else: 
-            setattr(rating, 'votes', int(rating.votes) + 1)
-            user.voted_on.remove(rating_id)
-            db.session.commit()
-        db.session.commit()
-
+    else:
+        session['voting_message'] = "You must log in to interact with posts."
     return str(rating.votes)
 
 # Upvote comment
@@ -295,20 +301,22 @@ def downvote(rating_id: int):
 def comment_upvote(rating_id, comment_id):
     rating = Rating.query.get(rating_id)
     comment = Comments.query.get(comment_id)
-    user_id = session['user']['user_id']
-    user = Users.query.get(user_id)
+    if session.get('user') is not None:
+        user_id = session['user']['user_id']
+        user = Users.query.get(user_id)
 
-    if comment and rating:
-        if comment_id not in user.voted_on:
-            setattr(comment, 'total_votes', int(comment.total_votes) + 1)
-            user.voted_on.append(comment_id)
+        if comment and rating:
+            if comment_id not in user.voted_on:
+                setattr(comment, 'total_votes', int(comment.total_votes) + 1)
+                user.voted_on.append(comment_id)
+                db.session.commit()
+            else: 
+                setattr(comment, 'total_votes', int(comment.total_votes) - 1)
+                user.voted_on.remove(comment_id)
+                db.session.commit()
             db.session.commit()
-        else: 
-            setattr(comment, 'total_votes', int(comment.total_votes) - 1)
-            user.voted_on.remove(comment_id)
-            db.session.commit()
-        db.session.commit()
-
+    else:
+        session['voting_message'] = "You must log in to interact with posts."
     return str(comment.total_votes)
 
 # Downvote comment
@@ -316,20 +324,22 @@ def comment_upvote(rating_id, comment_id):
 def comment_downvote(rating_id, comment_id):
     rating = Rating.query.get(rating_id)
     comment = Comments.query.get(comment_id)
-    user_id = session['user']['user_id']
-    user = Users.query.get(user_id)
+    if session.get('user') is not None:
+        user_id = session['user']['user_id']
+        user = Users.query.get(user_id)
 
-    if comment and rating:
-        if comment_id not in user.voted_on:
-            setattr(comment, 'total_votes', int(comment.total_votes) - 1)
-            user.voted_on.append(comment_id)
+        if comment and rating:
+            if comment_id not in user.voted_on:
+                setattr(comment, 'total_votes', int(comment.total_votes) - 1)
+                user.voted_on.append(comment_id)
+                db.session.commit()
+            else: 
+                setattr(comment, 'total_votes', int(comment.total_votes) + 1)
+                user.voted_on.remove(comment_id)
+                db.session.commit()
             db.session.commit()
-        else: 
-            setattr(comment, 'total_votes', int(comment.total_votes) + 1)
-            user.voted_on.remove(comment_id)
-            db.session.commit()
-        db.session.commit()
-
+    else:
+        session['voting_message'] = "You must log in to interact with posts."
     return str(comment.total_votes)
 
 
