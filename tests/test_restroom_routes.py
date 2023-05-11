@@ -145,7 +145,7 @@ def test_search_rating(test_client):
     res = test_client.get('/search?searchbox=Test')
     data = res.data.decode()
 
-    #assert res.status_code == 200
+    assert res.status_code == 200
     assert '<h5 class="card-title">Testroom1</h5>' in data
     assert '<h5 class="card-title">Testroom 2</h5>' in data
     assert '<div class="alert alert-danger" role="alert">No restrooms found!</div>' not in data
