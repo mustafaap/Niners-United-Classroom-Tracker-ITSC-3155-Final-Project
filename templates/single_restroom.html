@@ -9,6 +9,11 @@
       <div class="alert alert-danger mt-3 alert-dismissible fade show d-flex justify-content-center" style="width: 300px;">{{ already_commented }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
     </div>
   {% endif %}
+  {% if voting_message %}
+    <div class="d-flex justify-content-center">
+      <div class="alert alert-success mt-3 alert-dismissible fade show d-flex justify-content-center" style="width: 300px;">{{ voting_message }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
+    </div>
+  {% endif %}
   <div class="row justify-content-center">
 
     <div class="col-md-8 mt-3">
@@ -40,7 +45,10 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">
-                    <textarea name="comment" id="comment" class="w-100" rows="6"></textarea>
+                    <textarea name="comment" id="comment" class="w-100" rows="6" required></textarea>
+                    <small class="form-text text-muted">
+                      Enter a maximum of 250 characters
+                  </small>
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -87,9 +95,9 @@
           <div class="row m-0">
             <div class="col-sm-1 bg-body-tertiary">
               <div class="basic-column" id="rating-{{ rating.rating_id }}" data-rating_id="{{ rating.rating_id }}">
-                <button type="button" class="btn upvote" id="upvote-{{ comment.comment_id }}" data-comment_id="{{ comment.comment_id }}"><i class="fas fa-arrow-up up"></i></button>
+                <button type="button" class="btn upvote vote" id="upvote" data-comment_id="{{ comment.comment_id }}"><i class="fas fa-arrow-up up"></i></button>
                 <span class="total-votes numVotes" id="num-{{ comment.comment_id }}" data-num_votes="{{comment.total_votes}}" data-comment_id="{{ comment.comment_id }}">{{ comment.total_votes }}</span>
-                <button type="button" class="btn downvote" id="downvote-{{ comment.comment_id }}" data-comment_id="{{ comment.comment_id }}"><i class="fas fa-arrow-down down"></i></button>
+                <button type="button" class="btn downvote vote" id="downvote" data-comment_id="{{ comment.comment_id }}"><i class="fas fa-arrow-down down"></i></button>
               </div>
             </div>
             <div class="col-sm-11 p-0">
@@ -110,7 +118,10 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                           </div>
                           <div class="modal-body">
-                            <textarea name="edited_comment" id="edited_comment" class="w-100" cols="30" rows="6">{{ comment.comment_body }}</textarea>
+                            <textarea name="edited_comment" id="edited_comment" class="w-100" cols="30" rows="6" required>{{ comment.comment_body }}</textarea>
+                            <small class="form-text text-muted">
+                              Enter a maximum of 250 characters
+                          </small>
                           </div>
                           <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -166,93 +177,29 @@
 
   const numVotes = document.querySelectorAll('.numVotes')
 
-  up.forEach(element => element.addEventListener('click', uclick));
-  down.forEach(element => element.addEventListener('click', dclick));
 
-  function uclick(e) {
-    let upvote = e.target;
-    if(upvote.classList.contains('clickedUpvote')) {
-      upvote.classList.remove('clickedUpvote')
-      _upvote.forEach(element => element.addEventListener('click', dislike));
-    } else {
-      upvote.classList.add('clickedUpvote')
-      _upvote.forEach(element => element.addEventListener('click', like));
-    }
-  }
+  document.addEventListener('DOMContentLoaded', () => {
 
-  function dclick(e) {
-    let downvote = e.target;
-    if(downvote.classList.contains('clickedDownvote')) {
-      downvote.classList.remove('clickedDownvote');
-      _downvote.forEach(element => element.addEventListener('click', like));
-    } else {
-      downvote.classList.add('clickedDownvote');
-      _downvote.forEach(element => element.addEventListener('click', dislike));
-    }
-  }
+    document.querySelectorAll('.vote').forEach(vote => {
     
-  function like(e) {
-    like = e.currentTarget;
-    previous = like.parentElement;
-    comment_id = like.getAttribute('data-comment_id');
-
-    numVotes.forEach(element => {
-    if (element.getAttribute('data-comment_id') === comment_id) {
-      console.log('inside comment num votes');
-      let new_num = parseInt(element.getAttribute('data-num_votes')) + 1;
-      element.textContent = new_num;
-    }});
-
-    $(document).on('click', `#upvote-${comment_id}`, function(event) {
-      let id = $(event.currentTarget).attr('data-comment_id');
-      let rating_id = $(previous).attr('data-rating_id');
-      $.ajax({
-        url : `/commentUpvote/${rating_id}`,
-        type : "post",
-        contentType: 'application/json;charset=UTF-8',
-        dataType: "json",
-        data : JSON.stringify({'comment_id' : $(`#upvote-${comment_id}`).data('comment_id')}),
-        success : function(response) {
-          console.log(response);
-        },
-        error : function(xhr) {
-          console.log(xhr);
-        }
-      });
-      event.preventDefault();
+      vote.onclick = function(event){
+        console.log(event.currentTarget);
+        console.log(event.target);
+        console.log((event.currentTarget).parentElement);
+        previous = (event.currentTarget).parentElement;
+        const request = new XMLHttpRequest();
+        let rating_id = $(previous).attr('data-rating_id');
+        let comment_id = $(event.currentTarget).attr('data-comment_id');
+        request.open('POST', `/comment${vote.id}/${rating_id}/${comment_id}`);
+        request.onload = () => {
+          const response = request.responseText;
+          document.getElementById(`num-${comment_id}`).innerHTML = response;
+        }; 
+        request.send();
+      };
     });
-  }
-    
-  function dislike(e) {
-    dislike = e.currentTarget;
-    comment_id = dislike.getAttribute('data-comment_id');
-    previous = dislike.parentElement;
-
-    numVotes.forEach(element => {
-    if (element.getAttribute('data-comment_id') === comment_id) {
-      let new_num = parseInt(element.getAttribute('data-num_votes')) - 1;
-      element.textContent = new_num;
-    }});
-
-    $(document).on('click', `#downvote-${comment_id}`, function(event) {
-    let id = $(event.currentTarget).attr('data-comment_id');
-    let rating_id = $(previous).attr('data-rating_id');
-    $.ajax({
-      url : `/commentDownvote/${rating_id}`,
-      type : "post",
-      contentType: 'application/json;charset=UTF-8',
-      dataType: "json",
-      data : JSON.stringify({'comment_id' : $(`#downvote-${comment_id}`).data('comment_id')}),
-      success : function(response) {
-        console.log(response);	
-      },
-      error : function(xhr) {
-        console.log(xhr);
-      }
-    });
-    event.preventDefault();
   });
-  }
+
 </script>
 
 {% endblock %}

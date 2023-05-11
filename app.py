@@ -34,7 +34,8 @@ def index():
     ratings = Rating.query.order_by(Rating.rating_id.desc()).paginate(page=page, per_page=per_page)
 
     logged_in_message = session.pop('logged_in_message', None)
-    return render_template('index.html', index_active=True, ratings=ratings, logged_in_message=logged_in_message, Users=Users)
+    voting_message = session.pop('voting_message', None)
+    return render_template('index.html', index_active=True, ratings=ratings, logged_in_message=logged_in_message, voting_message=voting_message, Users=Users)
 
 
 # Sort index page by
@@ -138,8 +139,9 @@ def view_single_restroom(rating_id: int):
     comments = Comments.query.filter(Comments.comment_id.in_(rating.comments)).all()
 
     already_commented = session.pop('already_commented', None)
+    voting_message = session.pop('voting_message', None)
 
-    return render_template('single_restroom.html', rating=rating, comments=comments, user_id=user_id, already_commented=already_commented)
+    return render_template('single_restroom.html', rating=rating, comments=comments, user_id=user_id, already_commented=already_commented, voting_message=voting_message)
 
 
 # View edit rating page
@@ -266,76 +268,92 @@ def search():
 # Upvote rating
 @app.post('/upvote/<int:rating_id>')
 def upvote(rating_id: int):
-    print('upvoting')
-    if request.method == 'POST':
-        data = json.loads(request.data)
-        print(data)
-        rating = Rating.query.filter_by(rating_id = data['rating_id']).first()
-        print(rating.votes)
+    rating = Rating.query.get(rating_id)
+    if session.get('user') is not None:
+        user_id = session['user']['user_id']
+        user = Users.query.get(user_id)
 
         if rating:
-            if rating.votes:
+            if rating_id not in user.rupvoted_on and rating_id not in user.rdownvoted_on: #user has not voted at all
                 setattr(rating, 'votes', int(rating.votes) + 1)
-            else:
-                setattr(rating, 'votes', 1)
+                user.rupvoted_on.append(rating_id)
+                db.session.commit()
+            elif rating_id in user.rupvoted_on and rating_id not in user.rdownvoted_on: #user clicking upvote again (unvoting)
+                setattr(rating, 'votes', int(rating.votes) - 1)
+                user.rupvoted_on.remove(rating_id)
+                db.session.commit()
             db.session.commit()
-    return redirect(url_for('index'))
-
+    else:
+        session['voting_message'] = "You must log in to interact with posts."
+    return str(rating.votes)
 
 # Downvote rating
 @app.post('/downvote/<int:rating_id>')
 def downvote(rating_id: int):
-    if request.method == 'POST':
-        data = json.loads(request.data)
-        print(data['rating_id'])
-        rating = Rating.query.filter_by(rating_id = data['rating_id']).first()
-        print(rating.votes)
+    rating = Rating.query.get(rating_id)
+    if session.get('user') is not None:
+        user_id = session['user']['user_id']
+        user = Users.query.get(user_id)
 
         if rating:
-            if rating.votes:
+            if rating_id not in user.rupvoted_on and rating_id not in user.rdownvoted_on:
                 setattr(rating, 'votes', int(rating.votes) - 1)
-            else:
-                setattr(rating, 'votes', -1)
+                user.rdownvoted_on.append(rating_id)
+                db.session.commit()
+            elif rating_id in user.rdownvoted_on and rating_id not in user.rupvoted_on: 
+                setattr(rating, 'votes', int(rating.votes) + 1)
+                user.rdownvoted_on.remove(rating_id)
+                db.session.commit()
             db.session.commit()
-    return redirect(url_for('index'))
-
+    else:
+        session['voting_message'] = "You must log in to interact with posts."
+    return str(rating.votes)
 
 # Upvote comment
-@app.post('/commentUpvote/<int:rating_id>')
-def comment_upvote(rating_id: int):
+@app.post('/commentupvote/<int:rating_id>/<int:comment_id>')
+def comment_upvote(rating_id, comment_id):
     rating = Rating.query.get(rating_id)
-    print(rating)
-    print('upvoting')
-    if request.method == 'POST':
-        data = json.loads(request.data)
-        print(data['comment_id'])
-        comment = Comments.query.filter_by(comment_id = data['comment_id']).first()
+    comment = Comments.query.get(comment_id)
+    if session.get('user') is not None:
+        user_id = session['user']['user_id']
+        user = Users.query.get(user_id)
 
-        if comment:
-            if comment.total_votes:
+        if comment and rating:
+            if comment_id not in user.cupvoted_on and comment_id not in user.cdownvoted_on:
                 setattr(comment, 'total_votes', int(comment.total_votes) + 1)
-            else:
-                setattr(comment, 'total_votes', + 1)
+                user.cupvoted_on.append(comment_id)
+                db.session.commit()
+            elif comment_id in user.cupvoted_on and comment_id not in user.cdownvoted_on: 
+                setattr(comment, 'total_votes', int(comment.total_votes) - 1)
+                user.cupvoted_on.remove(comment_id)
+                db.session.commit()
             db.session.commit()
-    return redirect(url_for('view_single_restroom', rating_id=rating_id))
-
+    else:
+        session['voting_message'] = "You must log in to interact with posts."
+    return str(comment.total_votes)
 
 # Downvote comment
-@app.post('/commentDownvote/<int:rating_id>')
-def comment_downvote(rating_id: int):
+@app.post('/commentdownvote/<int:rating_id>/<int:comment_id>')
+def comment_downvote(rating_id, comment_id):
     rating = Rating.query.get(rating_id)
-    if request.method == 'POST':
-        data = json.loads(request.data)
-        print(data['comment_id'])
-        comment = Comments.query.filter_by(comment_id = data['comment_id']).first()
+    comment = Comments.query.get(comment_id)
+    if session.get('user') is not None:
+        user_id = session['user']['user_id']
+        user = Users.query.get(user_id)
 
-        if comment:
-            if comment.total_votes:
+        if comment and rating:
+            if comment_id not in user.cupvoted_on and comment_id not in user.cdownvoted_on:
                 setattr(comment, 'total_votes', int(comment.total_votes) - 1)
-            else:
-                setattr(comment, 'total_votes', -1)
+                user.cdownvoted_on.append(comment_id)
+                db.session.commit()
+            elif comment_id in user.cdownvoted_on and comment_id not in user.cupvoted_on: 
+                setattr(comment, 'total_votes', int(comment.total_votes) + 1)
+                user.cdownvoted_on.remove(comment_id)
+                db.session.commit()
             db.session.commit()
-    return redirect(url_for('view_single_restroom', rating_id=rating_id))
+    else:
+        session['voting_message'] = "You must log in to interact with posts."
+    return str(comment.total_votes)
 
 
 # Login page
@@ -532,7 +550,7 @@ def register():
 
     hashed_password = bcrypt.generate_password_hash(password).decode()
 
-    new_user = Users(username, hashed_password, fname, lname, email, commented_on=[])
+    new_user = Users(username, hashed_password, fname, lname, email, commented_on=[], rupvoted_on=[], rdownvoted_on=[], cupvoted_on=[], cdownvoted_on=[])
     db.session.add(new_user)
     db.session.commit()
 

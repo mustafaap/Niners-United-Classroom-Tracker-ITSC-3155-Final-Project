@@ -46,6 +46,11 @@
         <div class="alert alert-success mt-3 alert-dismissible fade show"><i class="fa-solid fa-circle-check me-2" style="color: #198754;"></i>{{ logged_in_message }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
       </div>
       {% endif %}
+      {% if voting_message %}
+      <div class="d-flex justify-content-center">
+        <div class="alert alert-success mt-3 alert-dismissible fade show d-flex justify-content-center" style="width: 300px;">{{ voting_message }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
+      </div>
+      {% endif %}
       <div class="mx-4 mt-4">
         <form class="d-flex" role="search" action="/search" method="get">
           <input class="form-control me-2" name="searchbox" type="search" placeholder="Search for a rating" aria-label="Search">
@@ -60,9 +65,9 @@
             <div class="row m-0">
               <div class="col-sm-1 bg-body-tertiary">
                 <div class="basic-column">
-                  <button type="button" class="btn upvote" id="upvote-{{ rating.rating_id }}" data-rating_id="{{ rating.rating_id }}"><i class="fas fa-arrow-up up"></i></button>
+                  <button type="button" class="btn upvote vote" id="upvote" data-rating_id="{{ rating.rating_id }}"><i class="fas fa-arrow-up up"></i></button>
                   <span class="total-votes numVotes" id="num-{{ rating.rating_id }}" data-num_votes="{{rating.votes}}" data-rating_id="{{ rating.rating_id }}">{{ rating.votes }}</span>
-                  <button type="button" class="btn downvote" id="downvote-{{ rating.rating_id }}" data-rating_id="{{ rating.rating_id }}"><i class="fas fa-arrow-down down"></i></button>
+                  <button type="button" class="btn downvote vote" id="downvote" data-rating_id="{{ rating.rating_id }}"><i class="fas fa-arrow-down down"></i></button>
                 </div>
               </div>
               <div class="col-sm-11 p-0"><a href="{{ url_for('view_single_restroom', rating_id=rating.rating_id) }}" class="to-post">
@@ -107,15 +112,21 @@
     <div class="col-sm-3 p-0">
       <div class="d-flex justify-content-center">
         <div class="position-absolute">
-          <form class="bg-body-secondary my-4" id="index-leave-rating" action="/leaverating" method="post">
+          <form class="bg-body-secondary my-4" id="index-leave-rating" action="/leaverating" method="post" onsubmit="return validateIndexRestroomForm()">
             <h4 class="text-center">Leave a Rating!</h4>
-            <div class="form-group">
+            <div class="form-group mb-3">
               <label for="location">Location</label>
-              <input type="text" class="form-control" name="location" id="location" placeholder="Woodward 1st Floor (Elevator)" oninput="checkInputRequired('location')" required>
+              <input type="text" class="form-control" name="location" id="location" placeholder="Woodward 1st Floor (Elevator)" oninput="checkLocationLength()" required>
+              <small class="form-text text-muted">
+                Enter a maximum of 32 characters
+              </small>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
               <label for="rating_body">Feedback</label>
-              <textarea class="form-control" rows="5" name="rating_body"></textarea>
+              <textarea class="form-control" rows="4" name="rating_body" id="rating_body" oninput="checkFeedbackLength()"></textarea>
+              <small class="form-text text-muted">
+                Enter a maximum of 250 characters
+              </small>
             </div>
             <div class="form-group">
               <label for="cleanliness">Cleanliness</label>
@@ -172,88 +183,21 @@
 
   const numVotes = document.querySelectorAll('.numVotes')
 
-  up.forEach(element => element.addEventListener('click', uclick));
-  down.forEach(element => element.addEventListener('click', dclick));
+  document.addEventListener('DOMContentLoaded', () => {
 
-  function uclick(e) {
-    let upvote = e.target;
-    if(upvote.classList.contains('clickedUpvote')) {
-      upvote.classList.remove('clickedUpvote');
-      _upvote.forEach(element => element.addEventListener('click', dislike));
-    } else {
-      upvote.classList.add('clickedUpvote');
-      _upvote.forEach(element => element.addEventListener('click', like));
+    document.querySelectorAll('.vote').forEach(vote => {
       
-    }
-  }
-
-  function dclick(e) {
-    let downvote = e.target;
-    if(downvote.classList.contains('clickedDownvote')) {
-      downvote.classList.remove('clickedDownvote');
-      _downvote.forEach(element => element.addEventListener('click', like));
-    } else {
-      downvote.classList.add('clickedDownvote');
-      _downvote.forEach(element => element.addEventListener('click', dislike));
-    }
-  }
-
-  function like(e) {
-    like = e.currentTarget;
-    rating_id = like.getAttribute('data-rating_id');
-
-    numVotes.forEach(element => {
-    if (element.getAttribute('data-rating_id') === rating_id) {
-      let new_num = parseInt(element.getAttribute('data-num_votes')) + 1;
-      element.textContent = new_num;
-    }});
-
-    $(document).on('click', `#upvote-${rating_id}`, function(event) {
-      let id = $(event.currentTarget).attr('data-rating_id');
-      $.ajax({
-        url : `/upvote/${id}`,
-        type : "post",
-        contentType: 'application/json;charset=UTF-8',
-        dataType: "json",
-        data : JSON.stringify({'rating_id' : $(`#upvote-${rating_id}`).data('rating_id')}),
-        success : function(response) {
-          console.log(response);
-        },
-        error : function(xhr) {
-          console.log(xhr);
-        }
-      });
-      event.preventDefault();
+      vote.onclick = function(event){
+        const request = new XMLHttpRequest();
+        let id = $(event.currentTarget).attr('data-rating_id');
+        request.open('POST', `/${vote.id}/${id}`);
+        request.onload = () => {
+          const response = request.responseText;
+          document.getElementById(`num-${id}`).innerHTML = response;
+        }; 
+         request.send();
+      };
     });
-  }
-    
-  function dislike(e) {
-    dislike = e.currentTarget;
-    rating_id = dislike.getAttribute('data-rating_id');
-
-    numVotes.forEach(element => {
-    if (element.getAttribute('data-rating_id') === rating_id) {
-      let new_num = parseInt(element.getAttribute('data-num_votes')) - 1;
-      element.textContent = new_num;
-    }});
-
-    $(document).on('click', `#downvote-${rating_id}`, function(event) {
-    let id = $(event.currentTarget).attr('data-rating_id');
-    $.ajax({
-      url : `/downvote/${id}`,
-      type : "post",
-      contentType: 'application/json;charset=UTF-8',
-      dataType: "json",
-      data : JSON.stringify({'rating_id' : $(`#downvote-${rating_id}`).data('rating_id')}),
-      success : function(response) {
-        console.log(response);	
-      },
-      error : function(xhr) {
-        console.log(xhr);
-      }
-    });
-    event.preventDefault();
   });
-  }
 </script>
 {% endblock %}

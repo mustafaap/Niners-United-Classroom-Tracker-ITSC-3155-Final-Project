@@ -138,6 +138,63 @@ function checkUsernameLength() {
   }
 }
 
+function checkRestroomLength() {
+  var input = document.getElementById('restroom');
+  if (input.value.length > 32 || input.value.length === 0) {
+    input.classList.add("is-invalid");
+    input.classList.remove("is-valid");
+    return false;
+  } else {
+    input.classList.add("is-valid");
+    input.classList.remove("is-invalid");
+    return true;
+  }
+}
+
+function checkLocationLength() {
+  var input = document.getElementById('location');
+  if (input.value.length > 32 || input.value.length === 0) {
+    input.classList.add("is-invalid");
+    input.classList.remove("is-valid");
+    return false;
+  } else {
+    input.classList.add("is-valid");
+    input.classList.remove("is-invalid");
+    return true;
+  }
+}
+
+function checkFeedbackLength() {
+  var input = document.getElementById('rating_body');
+  if (input.value.length > 250) {
+    input.classList.add("is-invalid");
+    input.classList.remove("is-valid");
+    return false;
+  } else if(input.value.length === 0){
+    input.classList.remove("is-valid");
+    return true;
+  }
+  else {
+    input.classList.add("is-valid");
+    input.classList.remove("is-invalid");
+    return true;
+  }
+}
+
+function validateCreateRestroomForm() {
+  if (checkRestroomLength() && checkFeedbackLength()) {
+    return true;
+  }
+  return false;
+}
+
+function validateIndexRestroomForm() {
+  if (checkLocationLength() && checkFeedbackLength()) {
+    return true;
+  }
+  return false;
+}
+
 function checkInputRequired(inputId) {
   var input = document.getElementById(inputId);
   if (input.value.length === 0) {
