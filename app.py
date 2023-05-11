@@ -4,6 +4,7 @@ from src.models import db, Rating, Users, Comments, Rating_votes, Comment_votes
 from dotenv import load_dotenv
 from security import bcrypt
 from werkzeug.utils import secure_filename
+from sqlalchemy import func
 import os
 
 load_dotenv()
@@ -27,7 +28,7 @@ def index():
     # Default sort is most recent
     ratings = Rating.query.order_by(Rating.rating_id.desc()).all()
     logged_in_message = session.pop('logged_in_message', None)
-    return render_template('index.html', index_active=True, ratings=ratings, logged_in_message=logged_in_message)
+    return render_template('index.html', index_active=True, ratings=ratings, logged_in_message=logged_in_message, Users=Users)
 
 
 # Sort index page by
@@ -39,17 +40,17 @@ def sortby():
     elif sort_by == 'Cleanliness':
         ratings = Rating.query.order_by(Rating.cleanliness.desc()).all()
     elif sort_by == 'Handicap':
-        ratings = Rating.query.filter(Rating.accessibility.ilike('%handicap%')).all()
+        ratings = Rating.query.filter(func.array_to_string(Rating.accessibility, ',').ilike('%handicap%')).all()
     elif sort_by == 'Functionality':
         ratings = Rating.query.filter(Rating.functionality == True).all()
     elif sort_by == 'Faculty Only':
-        ratings = Rating.query.filter(Rating.accessibility.ilike('%faculty%'), ~Rating.accessibility.ilike('%student%')).all()
+        ratings = Rating.query.filter(func.array_to_string(Rating.accessibility, ',').ilike('%faculty%'), ~func.array_to_string(Rating.accessibility, ',').ilike('%student%')).all()
     elif sort_by == 'Overall':
         ratings = Rating.query.order_by(Rating.overall.desc()).all()
     else:
         ratings = Rating.query.all()
     
-    return render_template('index.html', index_active=True, ratings=ratings)
+    return render_template('index.html', index_active=True, ratings=ratings, Users=Users)
 
 
 # Shorthand create rating

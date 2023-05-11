@@ -65,8 +65,8 @@
                 </div>
               </div>
               <div class="col-sm-11 p-0"><a href="{{ url_for('view_single_restroom', rating_id=rating.rating_id) }}" class="to-post">
-                <!-- <img class="card-img-top" src="..." alt="Card image cap"> -->
                 <div class="card-body">
+                  <h6 class="text-muted">Posted by: {{ Users.query.get(rating.rater_id).username }}</h6>
                   <h5 class="card-title">{{ rating.restroom_name }}</h5>
                   <p class="card-text">{{ rating.rating_body }}</p>
                 </div>
