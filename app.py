@@ -3,6 +3,7 @@ from flask import Flask, render_template, session, url_for, request, redirect, a
 from src.models import db, Rating, Users, Comments, Rating_votes, Comment_votes
 from dotenv import load_dotenv
 from security import bcrypt
+from werkzeug.utils import secure_filename
 import os
 
 load_dotenv()
@@ -119,7 +120,7 @@ def create_restroom():
 
 # View single rating
 @app.get('/restroom/<int:rating_id>')
-def view_single_restroom(rating_id):
+def view_single_restroom(rating_id: int):
     rating = Rating.query.get(rating_id)
 
     if 'user' in session:
@@ -189,7 +190,7 @@ def delete_rating(rating_id: int):
 
 # Comment on rating
 @app.post('/restroom/<int:rating_id>/comment')
-def addcomment(rating_id):
+def addcomment(rating_id: int):
     rating = Rating.query.get(rating_id)
     user_id = session['user']['user_id']
     user = Users.query.get(user_id)
@@ -228,7 +229,7 @@ def deletecomment(rating_id, comment_id):
     rating = Rating.query.get(rating_id)
     rating.comments.remove(comment_id)
     db.session.commit()
-
+    
     comment = Comments.query.get(comment_id)
     db.session.delete(comment)
     db.session.commit()
@@ -340,12 +341,123 @@ def display_sign_up_page():
 
 
 # View profile
-@app.get('/view_profile')
-def view_profile():
+@app.get('/profile')
+def profile():
     if 'user' not in session:
         return redirect('/login')
     user = session['user']
-    return render_template('view_profile.html', user=user)
+    success_message = session.pop('success_message', None)
+    return render_template('view_profile.html', user=user, success_message=success_message)
+
+
+#Get edit profile page
+@app.get('/profile/edit')
+def getEditProfile():
+    if 'user' not in session:
+        return redirect('/login')
+    user = session['user']
+    return render_template("edit_profile.html", user=user)
+
+
+#Update profile
+@app.post('/profile/<int:user_id>')
+def updateProfile(user_id: int):
+    if 'user' not in session:
+        return redirect('/login')
+    
+    user = Users.query.get(user_id)
+    
+    fname = request.form.get('fname')
+    lname = request.form.get('lname')
+    username = request.form.get('username')
+    email = request.form.get('email')
+
+    if not fname or not lname or not username or not email:
+        abort(400)
+
+    if 'profile' in request.files:
+        profile_pic = request.files['profile']
+        if profile_pic.filename:
+            if profile_pic.filename.rsplit('.', 1)[1] not in ['jpg', 'jpeg', 'png', 'gif']:
+                abort(400)
+            old_filename = user.picture
+            if old_filename:
+                os.remove(os.path.join('static', 'profile-pics', old_filename))
+            filename = f'{username}_{secure_filename(profile_pic.filename)}'
+            profile_pic.save(os.path.join('static', 'profile-pics', filename))
+            user.picture = filename
+            session['user']['picture'] = filename
+
+    user.fname = fname
+    user.lname = lname
+    user.username = username
+    user.email = email
+    db.session.commit()
+
+    session['user']['fname'] = fname
+    session['user']['lname'] = lname
+    session['user']['username'] = username
+    session['user']['email'] = email
+    session.modified = True
+
+    return redirect('/profile')
+
+#Get change password page
+@app.get('/changePassword')
+def getChangePassword():
+    if 'user' not in session:
+        return redirect('/login')
+    user = session['user']
+    message = session.pop('message', None)
+    return render_template("change_password.html", user=user, message=message)
+
+
+#Update password
+@app.post('/updatePassword')
+def updatePassword():
+    if 'user' not in session:
+        return redirect('/login')
+    
+    old_password = request.form.get('oldPassword')
+    new_password = request.form.get('password')
+    repassword = request.form.get('repassword')
+
+    user_id = session['user']['user_id']
+    user = Users.query.get(user_id)
+
+    if not old_password or not new_password or not repassword or not user:
+        abort(400)
+    
+    if not bcrypt.check_password_hash(user.password, old_password):
+        session['message'] = "Incorrect old password!"
+        return redirect(url_for('getChangePassword'))
+
+    user.password = bcrypt.generate_password_hash(new_password).decode()
+    db.session.commit()
+    session['success_message'] = "Password changed successfully!"
+
+    return redirect(url_for('profile'))
+
+
+#Delete profile picture
+@app.post('/profile/deletePicture/<int:user_id>')
+def delete_profile_picture(user_id: int):
+    if 'user' not in session:
+        return redirect('/login')
+    
+    user = Users.query.get(user_id)
+    if not user:
+        abort(400)
+        
+    filename = user.picture
+    if filename:
+        os.remove(os.path.join('static', 'profile-pics', filename))
+        user.picture = None
+        db.session.commit()
+        session['user']['picture'] = None
+        session.modified = True
+
+    return redirect('/profile')
 
 
 # Log in to session
@@ -364,12 +476,14 @@ def user_login():
         return redirect(url_for('login'))
 
     if bcrypt.check_password_hash(existing_user.password, password):
-        session['user'] = { 
-            'username': username,
-            'fname': existing_user.first_name,
-            'lname': existing_user.last_name,
-            'email': existing_user.email,
-            'user_id': existing_user.user_id
+        session['user'] = {
+        'user_id': existing_user.user_id, 
+        'username': existing_user.username,
+        'password': existing_user.password,
+        'fname': existing_user.first_name,
+        'lname': existing_user.last_name,
+        'email': existing_user.email,
+        'picture': existing_user.picture
         }
         session['logged_in'] = True
         session['logged_in_message'] = "Success! You are logged in."
@@ -383,11 +497,12 @@ def user_login():
 def register():
     username = request.form.get('username')
     password = request.form.get('password')
+    repassword = request.form.get('repassword')
     fname = request.form.get('fname')
     lname = request.form.get('lname')
     email = request.form.get('email')
 
-    if not username or not password or not fname or not lname or not email:
+    if not username or not password or not fname or not lname or not email or not repassword:
         abort(400)
 
     hashed_password = bcrypt.generate_password_hash(password).decode()
@@ -409,3 +524,27 @@ def logout():
     session.pop('logged_in', None)
     session['success_message'] = "You've been logged out!"
     return redirect(url_for('login'))
+
+
+# Delete user account
+@app.post('/user/<int:user_id>/delete')
+def delete_account(user_id: int):
+    if 'user' not in session:
+        return redirect('/login')
+    
+    user = Users.query.get(user_id)
+    
+    if user:
+        filename = user.picture
+        if filename:
+            os.remove(os.path.join('static', 'profile-pics', filename))
+        db.session.delete(user)
+        db.session.commit()
+        session.pop('user')
+        session.pop('logged_in')
+        session['success_message'] = "Your account has been successfully deleted!"
+        session.modified = True
+        return redirect('/login')
+    else:
+        abort(404)
+
