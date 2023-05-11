@@ -1,13 +1,19 @@
+import html
 from src.models import db, Rating, Users, Comments, Rating_votes, Comment_votes
+from flask_bcrypt import Bcrypt
+bcrypt = Bcrypt()
 
 def test_delete_rating(test_client):
-    # Clear database
-    Rating.query.delete()
-    db.session.commit()
+
+    # Add test users
+    temp_user1 = Users(username='testuser1', password='testpassword1', first_name='John1', last_name='Doe1', email='test1@example.com', commented_on=[])
+    temp_user2 = Users(username='testuser2', password='testpassword2', first_name='John2', last_name='Doe2', email='test2@example.com', commented_on=[])
+    db.session.add(temp_user1)
+    db.session.add(temp_user2)
 
     # Add test rating
-    temp_rating1 = Rating(rater_id=1, restroom_name="Testroom1", cleanliness=3.0, overall=3.5)
-    temp_rating2 = Rating(rater_id=2, restroom_name="Testroom 2", cleanliness=2.0, overall=2.5)
+    temp_rating1 = Rating(rater_id=temp_user1.user_id, restroom_name="Testroom1", cleanliness=3.0, overall=3.5)
+    temp_rating2 = Rating(rater_id=temp_user2.user_id, restroom_name="Testroom 2", cleanliness=2.0, overall=2.5)
     db.session.add(temp_rating1)
     db.session.add(temp_rating2)
     db.session.commit()
@@ -29,4 +35,123 @@ def test_delete_rating(test_client):
     
     # Clear database
     Rating.query.delete()
+    db.session.commit()
+
+def test_login(test_client):
+
+    # Creating a test user
+    pass_data = bcrypt.generate_password_hash('testpassword')
+    hash_password = pass_data.decode('utf-8')
+    test_user = Users(username='testuser', password=hash_password,
+                       first_name='John', last_name='Doe', email='test@example.com',
+                       commented_on=None)
+    db.session.add(test_user)
+    db.session.commit()
+
+    # Login with wrong password
+    resp1 = test_client.post('/login', data={
+        'username': 'testuser',
+        'password': 'wrongpassword'
+    }, follow_redirects=True)
+
+    resp_data1 = resp1.data.decode('utf-8')
+
+    assert "Incorrect username or password!" in resp_data1
+    assert '<h1 class="d-flex justify-content-center fw-bold">Login</h1>' in resp_data1
+
+    # Login with wrong user
+    resp2 = test_client.post('/login', data={
+        'username': 'wronguser',
+        'password': 'testpassword'
+        }, follow_redirects=True)
+
+    resp_data2 = resp2.data.decode('utf-8')
+
+
+    assert "Incorrect username or password!" in resp_data2
+    assert '<h1 class="d-flex justify-content-center fw-bold">Login</h1>' in resp_data2
+
+    # Successful login
+    resp3 = test_client.post('/login', data={
+        'username': 'testuser',
+        'password': 'testpassword'
+    }, follow_redirects=True)
+
+    resp_data3 = resp3.data.decode('utf-8')
+    print(resp_data3)
+    assert "Success! You are logged in." in resp_data3
+    assert '''<ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          
+          <li class="nav-item">
+            <div class="dropdown text-center">
+              <a class="btn dropdown-toggle border-0" data-bs-toggle="dropdown" aria-expanded="false">
+                
+                <img src="/static/navbarDefaultUser.png" alt="avatar" class="rounded-circle img-fluid" style="width:40px;height:40px;">
+                
+              </a>  
+              <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
+                <li><a class="dropdown-item" href="/profile">View your profile</a></li>
+                <li><a class="dropdown-item" href="/profile/edit">Edit your profile</a></li>
+                <li><a class="dropdown-item" href="/changePassword">Change your password</a></li>
+                <hr class="my-2">
+                <li>              
+                  <!-- Button trigger modal -->
+                  <button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#logout">
+                    <i class="fa-solid fa-right-from-bracket me-2" style="color: #ffffff;"></i>Logout
+                  </button>
+                </li>
+              </ul>
+              <!-- Modal -->
+              <div class="modal fade" id="logout" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="logout" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="logout">Confirm logout?</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <p>You will be logged out and returned to the login page</p>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <form action="/logout" method="post">
+                        <button type="submit" class="btn btn-danger"><i class="fa-solid fa-right-from-bracket me-2" style="color: #ffffff;"></i>Logout</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </li>
+          
+        </ul>''' in resp_data3
+
+def test_logout(test_client):
+    
+    # Creating a test user
+    pass_data = bcrypt.generate_password_hash('testpassword')
+    hash_password = pass_data.decode('utf-8')
+    test_user = Users(username='testuser', password=hash_password,
+                       first_name='John', last_name='Doe', email='test@example.com',
+                       commented_on=None)
+    db.session.add(test_user)
+    db.session.commit()
+
+    # Login
+    test_client.post('/login', data={
+        'username': 'testuser',
+        'password': 'testpassword'
+    }, follow_redirects=True)
+
+    # Logout
+    resp1 = test_client.post('/logout', follow_redirects=True)
+    resp_data = resp1.data.decode('utf-8')
+    #Decode &#39;
+    resp_data = html.unescape(resp_data)
+    #print(resp_data)
+    assert "You've been logged out!" in resp_data
+    assert '<h1 class="d-flex justify-content-center fw-bold">Login</h1>' in resp_data
+
+    # Clear database
+    Users.query.delete()
     db.session.commit()

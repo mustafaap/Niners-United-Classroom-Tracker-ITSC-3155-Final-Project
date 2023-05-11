@@ -8,8 +8,4 @@ def test_client():
 
         Rating.query.delete()
         db.session.commit()
-        # Add a test user
-        test_user = Users(username='testuser', email='test@example.com', first_name='John', last_name='Doe', password='testpassword', commented_on=[])
-        db.session.add(test_user)
-        db.session.commit()
         yield app.test_client()
