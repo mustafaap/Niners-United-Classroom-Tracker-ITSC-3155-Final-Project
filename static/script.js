@@ -100,6 +100,20 @@ function validatePassword() {
   return false;
 }
 
+function validateForm() {
+  if (checkPasswordLength() && checkPasswordMatch() && checkUsernameLength()) {
+    return true;
+  }
+  return false;
+}
+
+function validateEditForm() {
+  if (checkUsernameLength()) {
+    return true;
+  }
+  return false;
+}
+
 function checkInputCorrect(inputId) {
   var input = document.getElementById(inputId);
   if (input.value.length === 0) {
@@ -108,6 +122,19 @@ function checkInputCorrect(inputId) {
   } else {
     input.classList.add("is-valid");
     input.classList.remove("is-invalid");
+  }
+}
+
+function checkUsernameLength() {
+  var input = document.getElementById('username');
+  if (input.value.length < 8 || input.value.length > 32) {
+    input.classList.add("is-invalid");
+    input.classList.remove("is-valid");
+    return false;
+  } else {
+    input.classList.add("is-valid");
+    input.classList.remove("is-invalid");
+    return true;
   }
 }
 
