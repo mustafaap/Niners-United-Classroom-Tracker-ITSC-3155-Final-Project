@@ -31,7 +31,7 @@ def test_login(test_client):
     resp_data1 = resp1.data.decode('utf-8')
     assert resp1.status_code == 200
 
-    assert "Incorrect username or password!" in resp_data1
+    assert 'Incorrect username or password!' in resp_data1
     assert '<h1 class="d-flex justify-content-center fw-bold">Login</h1>' in resp_data1
 
     # Login with wrong user
@@ -43,7 +43,7 @@ def test_login(test_client):
     resp_data2 = resp2.data.decode('utf-8')
     assert resp2.status_code == 200
 
-    assert "Incorrect username or password!" in resp_data2
+    assert 'Incorrect username or password!' in resp_data2
     assert '<h1 class="d-flex justify-content-center fw-bold">Login</h1>' in resp_data2
 
     # Successful login
@@ -106,11 +106,57 @@ def test_logout(test_client):
     resp_data = html.unescape(resp_data)
     assert resp1.status_code == 200
     #print(resp_data)
-    assert "You've been logged out!" in resp_data
+    assert '''You've been logged out!''' in resp_data
     assert '<h1 class="d-flex justify-content-center fw-bold">Login</h1>' in resp_data
 
     # Clear database
     # Clear database
     Rating.query.delete()
+    Users.query.delete()
+    db.session.commit()
+
+def test_delete_account(test_client):
+    # Add test user
+    temp_user = Users(username='testuser', 
+                      password='testpassword', 
+                      first_name='John', 
+                      last_name='Doe', 
+                      email='test@example.com', 
+                      commented_on=[], 
+                      rupvoted_on=[], 
+                      rdownvoted_on=[], 
+                      cupvoted_on=[], 
+                      cdownvoted_on=[])
+    
+    db.session.add(temp_user)
+    db.session.commit()
+    
+    # Log in the user
+    with test_client.session_transaction() as session:
+        session['user'] = temp_user.user_id
+        session['logged_in'] = True
+
+        # Login
+    test_client.post('/login', data={
+        'username': 'testuser',
+        'password': 'testpassword'
+    }, follow_redirects=True)
+
+    # Delete test user
+    resp = test_client.post(f'/user/{temp_user.user_id}/delete')
+
+    assert resp.status_code == 302
+
+    # Checking if the user was deleted from the database
+    user = Users.query.get(temp_user.user_id)
+    assert user is None
+
+    # Checking the session variables
+    with test_client.session_transaction() as session:
+        assert 'user' not in session
+        assert 'logged_in' not in session
+        assert 'Your account has been successfully deleted!'
+
+    # Clear database
     Users.query.delete()
     db.session.commit()
