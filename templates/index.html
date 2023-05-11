@@ -83,15 +83,21 @@
     <div class="col-sm-3 p-0">
       <div class="d-flex justify-content-center">
         <div class="position-absolute">
-          <form class="bg-body-secondary my-4" id="index-leave-rating" action="/leaverating" method="post">
+          <form class="bg-body-secondary my-4" id="index-leave-rating" action="/leaverating" method="post" onsubmit="return validateIndexRestroomForm()">
             <h4 class="text-center">Leave a Rating!</h4>
-            <div class="form-group">
+            <div class="form-group mb-3">
               <label for="location">Location</label>
-              <input type="text" class="form-control" name="location" id="location" placeholder="Woodward 1st Floor (Elevator)" oninput="checkInputRequired('location')" required>
+              <input type="text" class="form-control" name="location" id="location" placeholder="Woodward 1st Floor (Elevator)" oninput="checkLocationLength()" required>
+              <small class="form-text text-muted">
+                Enter a maximum of 32 characters
+              </small>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
               <label for="rating_body">Feedback</label>
-              <textarea class="form-control" rows="5" name="rating_body"></textarea>
+              <textarea class="form-control" rows="4" name="rating_body" id="rating_body" oninput="checkFeedbackLength()"></textarea>
+              <small class="form-text text-muted">
+                Enter a maximum of 250 characters
+              </small>
             </div>
             <div class="form-group">
               <label for="cleanliness">Cleanliness</label>
