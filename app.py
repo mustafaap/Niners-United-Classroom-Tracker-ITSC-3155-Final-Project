@@ -336,8 +336,9 @@ def login():
 
 # Signup page
 @app.get('/signup')
-def display_sign_up_page():
-    return render_template("signup.html", signup_active=True)
+def signup():
+    error_message = session.pop('error_message', None)
+    return render_template("signup.html", signup_active=True, error_message = error_message)
 
 
 # View profile
@@ -504,6 +505,14 @@ def register():
 
     if not username or not password or not fname or not lname or not email or not repassword:
         abort(400)
+
+    if Users.query.filter_by(username=username).first():
+        session['error_message'] = "Username already taken!"
+        return redirect(url_for('signup'))
+
+    if password != repassword:
+        session['error_message'] = "Passwords do not match!"
+        return redirect(url_for('signup'))
 
     hashed_password = bcrypt.generate_password_hash(password).decode()
 
