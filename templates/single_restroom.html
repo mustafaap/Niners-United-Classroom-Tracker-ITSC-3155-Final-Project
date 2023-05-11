@@ -102,7 +102,7 @@
             </div>
             <div class="col-sm-11 d-flex justify-content-center">
               <div class="card-body">
-                <h6 class="text-muted">Posted by: {{ Users.query.get(rating.rater_id).username }}</h6>
+                <h6 class="text-muted">Posted by: {{ Users.query.filter(Users.user_id == comment.user_id).first().username }}</h6>
                 <p class="card-text">{{ comment.comment_body }}</p>
               </div>
               {% if user_id == comment.user_id %}
