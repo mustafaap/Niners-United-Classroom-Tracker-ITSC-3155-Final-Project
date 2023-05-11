@@ -78,9 +78,53 @@ def test_login(test_client):
     }, follow_redirects=True)
 
     resp_data3 = resp3.data.decode('utf-8')
-    #print(resp_data3)
+    print(resp_data3)
     assert "Success! You are logged in." in resp_data3
-    assert '<ul class="navbar-nav ms-auto mb-2 mb-lg-0">' in resp_data3
+    assert '''<ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          
+          <li class="nav-item">
+            <div class="dropdown text-center">
+              <a class="btn dropdown-toggle border-0" data-bs-toggle="dropdown" aria-expanded="false">
+                
+                <img src="/static/navbarDefaultUser.png" alt="avatar" class="rounded-circle img-fluid" style="width:40px;height:40px;">
+                
+              </a>  
+              <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
+                <li><a class="dropdown-item" href="/profile">View your profile</a></li>
+                <li><a class="dropdown-item" href="/profile/edit">Edit your profile</a></li>
+                <li><a class="dropdown-item" href="/changePassword">Change your password</a></li>
+                <hr class="my-2">
+                <li>              
+                  <!-- Button trigger modal -->
+                  <button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#logout">
+                    <i class="fa-solid fa-right-from-bracket me-2" style="color: #ffffff;"></i>Logout
+                  </button>
+                </li>
+              </ul>
+              <!-- Modal -->
+              <div class="modal fade" id="logout" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="logout" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="logout">Confirm logout?</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <p>You will be logged out and returned to the login page</p>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <form action="/logout" method="post">
+                        <button type="submit" class="btn btn-danger"><i class="fa-solid fa-right-from-bracket me-2" style="color: #ffffff;"></i>Logout</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </li>
+          
+        </ul>''' in resp_data3
 
 def test_logout(test_client):
     
