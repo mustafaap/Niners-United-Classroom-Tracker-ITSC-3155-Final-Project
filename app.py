@@ -514,6 +514,10 @@ def register():
     if Users.query.filter_by(username=username).first():
         session['error_message'] = "Username already taken!"
         return redirect(url_for('signup'))
+    
+    if Users.query.filter_by(email=email).first():
+        session['error_message'] = "Email already taken!"
+        return redirect(url_for('signup'))
 
     if password != repassword:
         session['error_message'] = "Passwords do not match!"
