@@ -21,13 +21,12 @@ api_key = os.getenv('API_KEY')
 
 bcrypt.init_app(app)
 
-# os.remove(filename) to remove from static folder
+per_page = 7
 
 # Index page
 @app.get('/')
 def index():
     page = request.args.get('page', 1, type=int)
-    per_page = 3
 
     # Default sort is most recent
     # ratings = Rating.query.order_by(Rating.rating_id.desc()).all()
@@ -35,29 +34,35 @@ def index():
 
     logged_in_message = session.pop('logged_in_message', None)
     voting_message = session.pop('voting_message', None)
+
     return render_template('index.html', index_active=True, ratings=ratings, logged_in_message=logged_in_message, voting_message=voting_message, Users=Users)
 
 
 # Sort index page by
 @app.post('/')
 def sortby():
+    page = request.args.get('page', 1, type=int)
+    
     sort_by = request.form.get('sort-by', 'Most Recent')
     if sort_by == 'Most Recent':
-        ratings = Rating.query.order_by(Rating.rating_id.desc()).all()
+        ratings = Rating.query.order_by(Rating.rating_id.desc()).paginate(page=page, per_page=per_page)
     elif sort_by == 'Cleanliness':
-        ratings = Rating.query.order_by(Rating.cleanliness.desc()).all()
+        ratings = Rating.query.order_by(Rating.cleanliness.desc()).paginate(page=page, per_page=per_page)
     elif sort_by == 'Handicap':
-        ratings = Rating.query.filter(func.array_to_string(Rating.accessibility, ',').ilike('%handicap%')).all()
+        ratings = Rating.query.filter(func.array_to_string(Rating.accessibility, ',').ilike('%handicap%')).paginate(page=page, per_page=per_page)
     elif sort_by == 'Functionality':
-        ratings = Rating.query.filter(Rating.functionality == True).all()
+        ratings = Rating.query.filter(Rating.functionality == True).paginate(page=page, per_page=per_page)
     elif sort_by == 'Faculty Only':
-        ratings = Rating.query.filter(func.array_to_string(Rating.accessibility, ',').ilike('%faculty%'), ~func.array_to_string(Rating.accessibility, ',').ilike('%student%')).all()
+        ratings = Rating.query.filter(func.array_to_string(Rating.accessibility, ',').ilike('%faculty%'), ~func.array_to_string(Rating.accessibility, ',').ilike('%student%')).paginate(page=page, per_page=per_page)
     elif sort_by == 'Overall':
-        ratings = Rating.query.order_by(Rating.overall.desc()).all()
+        ratings = Rating.query.order_by(Rating.overall.desc()).paginate(page=page, per_page=per_page)
     else:
-        ratings = Rating.query.all()
+        ratings = Rating.query.paginate(page=page, per_page=per_page)
     
-    return render_template('index.html', index_active=True, ratings=ratings, Users=Users)
+    logged_in_message = session.pop('logged_in_message', None)
+    voting_message = session.pop('voting_message', None)
+    
+    return render_template('index.html', index_active=True, ratings=ratings, logged_in_message=logged_in_message, voting_message=voting_message, Users=Users)
 
 
 # Shorthand create rating
@@ -260,9 +265,15 @@ def about():
 # Search rating titles by keyword
 @app.get('/search')
 def search():
+    page = request.args.get('page', 1, type=int)
+    
     term = request.args.get('searchbox')
-    ratings = db.session.query(Rating).filter(Rating.restroom_name.ilike('%' + term + '%')).all()
-    return render_template('index.html',index_active=True, ratings=ratings)
+    ratings = db.session.query(Rating).filter(Rating.restroom_name.ilike('%' + term + '%')).paginate(page=page, per_page=per_page)
+
+    logged_in_message = session.pop('logged_in_message', None)
+    voting_message = session.pop('voting_message', None)
+
+    return render_template('index.html',index_active=True, ratings=ratings, logged_in_message=logged_in_message, voting_message=voting_message, Users=Users)
 
 
 # Upvote rating
