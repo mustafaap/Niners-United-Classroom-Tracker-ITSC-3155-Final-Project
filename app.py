@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from security import bcrypt
 from werkzeug.utils import secure_filename
 from sqlalchemy import func
+from flask_sqlalchemy import Pagination
 import os
 
 load_dotenv()
@@ -25,8 +26,13 @@ bcrypt.init_app(app)
 # Index page
 @app.get('/')
 def index():
+    page = request.args.get('page', 1, type=int)
+    per_page = 3
+
     # Default sort is most recent
-    ratings = Rating.query.order_by(Rating.rating_id.desc()).all()
+    # ratings = Rating.query.order_by(Rating.rating_id.desc()).all()
+    ratings = Rating.query.order_by(Rating.rating_id.desc()).paginate(page=page, per_page=per_page)
+
     logged_in_message = session.pop('logged_in_message', None)
     return render_template('index.html', index_active=True, ratings=ratings, logged_in_message=logged_in_message, Users=Users)
 
