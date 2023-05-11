@@ -166,6 +166,9 @@ def view_single_restroom(rating_id: int):
 # View edit rating page
 @app.get('/restroom/<int:rating_id>/edit')
 def get_edit_restroom_page(rating_id: int):
+    user_id = session['user']['user_id']
+    if rating_id != user_id:
+        abort(403)
     rating = Rating.query.get(rating_id)
     return render_template('edit_restroom.html', rating=rating)
 
