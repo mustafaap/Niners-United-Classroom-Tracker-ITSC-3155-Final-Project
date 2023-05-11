@@ -191,6 +191,11 @@ def delete_rating(rating_id: int):
 # Comment on rating
 @app.post('/restroom/<int:rating_id>/comment')
 def addcomment(rating_id: int):
+    if 'user' not in session:
+        session['message'] = "You must be logged in to leave a comment!"
+        
+        return redirect(url_for('login'))
+    
     rating = Rating.query.get(rating_id)
     user_id = session['user']['user_id']
     user = Users.query.get(user_id)
