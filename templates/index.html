@@ -58,8 +58,9 @@
         </form>
       </div>
       <div class="mx-4 my-4">
-      {% if(ratings | length > 0) %}
-        {% for rating in ratings %}
+      {% if ratings.total > 0 %}
+
+        {% for rating in ratings.items %}
           <div class="card mb-4 p-0">
             <div class="row m-0">
               <div class="col-sm-1 bg-body-tertiary">
@@ -70,8 +71,8 @@
                 </div>
               </div>
               <div class="col-sm-11 p-0"><a href="{{ url_for('view_single_restroom', rating_id=rating.rating_id) }}" class="to-post">
-                <!-- <img class="card-img-top" src="..." alt="Card image cap"> -->
                 <div class="card-body">
+                  <h6 class="text-muted">Posted by: {{ Users.query.get(rating.rater_id).username }}</h6>
                   <h5 class="card-title">{{ rating.restroom_name }}</h5>
                   <p class="card-text">{{ rating.rating_body }}</p>
                 </div>
@@ -79,6 +80,29 @@
             </div>
           </div>
         {% endfor %}
+
+        <div class="pagination justify-content-center">
+          {% if ratings.has_prev %}
+            <a href="{{ url_for('index', page=ratings.prev_num) }}" class="btn btn-outline-secondary me-2">&laquo; Previous</a>
+          {% endif %}
+          {% for page_num in ratings.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+            {% if page_num %}
+              {% if page_num != ratings.page %}
+                <a href="{{ url_for('index', page=page_num) }}" class="btn btn-outline-secondary me-2">{{ page_num }}</a>
+              {% else %}
+                <button class="btn btn-primary me-2">{{ page_num }}</button>
+              {% endif %}
+            {% else %}
+              <span class="mx-2">...</span>
+            {% endif %}
+          {% endfor %}
+          {% if ratings.has_next %}
+            <a href="{{ url_for('index', page=ratings.next_num) }}" class="btn btn-outline-secondary">Next &raquo;</a>
+          {% endif %}
+        </div>
+
+        <!-- To fix next: sorting breaks with pagination -->
+
       {% else %}
         <div class="alert alert-danger" role="alert">No restrooms found!</div>
       {% endif %}
