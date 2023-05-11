@@ -17,7 +17,7 @@
                     <h1 class="display-4">Edit Profile</h1>
                 </div>
             </div>
-            <form method="post" action="/profile/{{ user.user_id }}" enctype="multipart/form-data">
+            <form method="post" action="/profile/{{ user.user_id }}" enctype="multipart/form-data" onsubmit="return validateEditForm()">
                 <div class="card mb-4">
                     <div class="card-body mb-4">
                         <div class="row">
@@ -43,8 +43,11 @@
                                 <p class="mb-0"><i class="fa fa-user me-2"></i>Username</p>
                             </div>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" id="username" name="username" placeholder="username" value="{{ user.username }}" oninput="checkInputRequired('username')" required>
+                                <input type="text" class="form-control" id="username" name="username" placeholder="username" value="{{ user.username }}" oninput="checkUsernameLength()" required>
                             </div>
+                            <small class="form-text text-muted col-sm-9 ms-auto">
+                                Your username must be a minimum length of 8 characters and a maximum of 32
+                            </small>
                         </div>
                         <hr>
                         <div class="row">
@@ -63,7 +66,7 @@
                             <div class="col-sm-9">
                                 <input class="form-control" type="file" name="profile" id="profile">
                             </div>
-                            <small id="passwordHelpBlock" class="form-text text-muted col-sm-9 ms-auto">
+                            <small class="form-text text-muted col-sm-9 ms-auto">
                                 Only files with the following extensions are allowed: jpg, jpeg, png, gif
                             </small>
                         </div>

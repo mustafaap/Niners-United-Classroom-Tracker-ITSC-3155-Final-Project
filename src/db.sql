@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS rating(
     restroom_name VARCHAR(255),
     rating_body TEXT,
     cleanliness DECIMAL(2,1),
-    accessibility VARCHAR(255),
+    accessibility VARCHAR[] DEFAULT '{}',
     functionality BOOLEAN,
     overall DECIMAL(2,1),
     map_tag VARCHAR(255),
