@@ -40,7 +40,10 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">
-                    <textarea name="comment" id="comment" class="w-100" rows="6"></textarea>
+                    <textarea name="comment" id="comment" class="w-100" rows="6" required></textarea>
+                    <small class="form-text text-muted">
+                      Enter a maximum of 250 characters
+                  </small>
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -110,7 +113,10 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                           </div>
                           <div class="modal-body">
-                            <textarea name="edited_comment" id="edited_comment" class="w-100" cols="30" rows="6">{{ comment.comment_body }}</textarea>
+                            <textarea name="edited_comment" id="edited_comment" class="w-100" cols="30" rows="6" required>{{ comment.comment_body }}</textarea>
+                            <small class="form-text text-muted">
+                              Enter a maximum of 250 characters
+                          </small>
                           </div>
                           <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

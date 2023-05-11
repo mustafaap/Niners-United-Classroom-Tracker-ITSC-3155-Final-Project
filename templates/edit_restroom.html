@@ -5,11 +5,14 @@
 <div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col-md-6 col-11 my-3">
-            <form method="post" action="/restroom/{{ rating.rating_id }}" class="bg-body-secondary my-4 p-5 box-shadow" style="border-radius: 4rem;">
+            <form method="post" action="/restroom/{{ rating.rating_id }}" class="bg-body-secondary my-4 p-5 box-shadow" style="border-radius: 4rem;" onsubmit="return validateCreateRestroomForm()">
                 <h1 class="text-center fw-bold">Edit Rating</h1>
                 <div class="form-group mb-3">
                     <label for="restroom" class="form-label fw-bold">Restroom location</label>
-                    <input type="text" name="restroom" id="restroom" value="{{ rating.restroom_name }}" class="form-control" oninput="checkInputRequired('restroom')" required>
+                    <input type="text" name="restroom" id="restroom" value="{{ rating.restroom_name }}" class="form-control" oninput="checkRestroomLength()" required>
+                    <small class="form-text text-muted">
+                        Enter a maximum of 32 characters
+                    </small>
                 </div>
                 <div class="form-group mb-3">
                     <label for="clean_rating" class="form-label fw-bold">Cleanliness</label>
@@ -61,7 +64,10 @@
                 </div>
                 <div class="form-group mb-3">
                     <label for="rating_body" class="form-label fw-bold">Feedback</label>
-                    <textarea name="rating_body" class="form-control" rows="4">{{ rating.rating_body }}</textarea>
+                    <textarea name="rating_body" id="rating_body" class="form-control" rows="4" oninput="checkFeedbackLength()">{{ rating.rating_body }}</textarea>
+                    <small class="form-text text-muted">
+                        Enter a maximum of 250 characters
+                    </small>
                 </div>
                 <div class="form-group mt-4 d-flex justify-content-center">
                     <button type="submit" class = "btn" style="background-color: rgba(98,241,210,1.0);">Update Rating</button>
