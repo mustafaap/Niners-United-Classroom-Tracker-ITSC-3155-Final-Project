@@ -11,7 +11,7 @@ class Rating(db.Model):
     restroom_name = db.Column(db.String(255))
     rating_body = db.Column(db.Text)
     cleanliness = db.Column(db.Numeric(2,1))
-    accessibility = db.Column(db.String(255))
+    accessibility = db.Column(MutableList.as_mutable(db.String(255)), default=[])
     functionality = db.Column(db.Boolean)
     overall = db.Column(db.Numeric(2,1))
     map_tag = db.Column(db.String(255))

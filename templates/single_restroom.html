@@ -17,7 +17,7 @@
         <ul class="list-group mb-3">
           <li class="list-group-item">Cleanliness: {{ rating.cleanliness }}</li>
           {% if rating.accessibility %}
-          <li class="list-group-item">Accessibility: {{ rating.accessibility }}</li>
+          <li class="list-group-item">Accessibility: {% for i in rating.accessibility %}{{i.capitalize()}}{% if not loop.last %}, {% endif %}{% endfor %}</li>
           {% endif %}
           {% if rating.functionality %}
           <li class="list-group-item">Functionality: {% if rating.functionality %}Open{% else %}Closed{% endif %}</li>
@@ -110,7 +110,7 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                           </div>
                           <div class="modal-body">
-                            <textarea name="edited_comment" id="edited_comment" cols="30" rows="6"></textarea>
+                            <textarea name="edited_comment" id="edited_comment" class="w-100" cols="30" rows="6">{{ comment.comment_body }}</textarea>
                           </div>
                           <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
