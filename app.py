@@ -78,8 +78,9 @@ def indexrating():
     cleanliness = request.form.get('cleanliness')
     overall = request.form.get('overall')
     rater_id = session['user']['user_id']
+    map_tag = request.form.get('map-tag')
 
-    new_rating = Rating(restroom_name=location, cleanliness=cleanliness, overall=overall, rating_body=rating_body, rater_id=rater_id)
+    new_rating = Rating(restroom_name=location, cleanliness=cleanliness, overall=overall, rating_body=rating_body, rater_id=rater_id, map_tag=map_tag)
     db.session.add(new_rating)
     db.session.commit()
 
@@ -90,7 +91,19 @@ def indexrating():
 @app.get('/maps')
 def load_maps():
     # Carousel for cards
-    return render_template('maps.html', maps_active=True, api_key=api_key)
+    return render_template('maps.html', maps_active=True, api_key=api_key, closest_ratings=None, Users=Users)
+
+
+# Map displays closest cards
+@app.post('/closest')
+def closestratings():
+    closest_building = request.form.get('closestBuilding')
+    # if closest_building is None:
+    #     closest_building = ''
+    
+    closest_ratings = Rating.query.filter(Rating.map_tag == closest_building).all()
+
+    return render_template('maps.html', maps_active=True, api_key=api_key, closest_ratings=closest_ratings, Users=Users)
 
 
 # View new detailed rating page
@@ -118,6 +131,7 @@ def create_restroom():
     functionality = request.form.get('func')
     overall = request.form.get('overall_rating')
     rating_body = request.form.get('rating_body')
+    map_tag = request.form.get('map-tag')
     rater_id = session['user']['user_id']
 
     if functionality == 'Open':
@@ -125,7 +139,7 @@ def create_restroom():
     else:
         functionality = False
 
-    new_restroom = Rating(restroom_name=restroom_name, cleanliness=cleanliness, accessibility=accessibility, functionality=functionality, overall=overall, rating_body=rating_body, rater_id=rater_id)
+    new_restroom = Rating(restroom_name=restroom_name, cleanliness=cleanliness, accessibility=accessibility, functionality=functionality, overall=overall, rating_body=rating_body, rater_id=rater_id, map_tag=map_tag)
     db.session.add(new_restroom)
     db.session.commit()
     return redirect('/')
@@ -166,6 +180,7 @@ def update_restroom(rating_id: int):
     functionality = request.form.get('func')
     overall = request.form.get('overall_rating')
     rating_body = request.form.get('rating_body')
+    map_tag = request.form.get('map-tag')
 
     if functionality == 'Open':
         functionality = True
@@ -178,6 +193,7 @@ def update_restroom(rating_id: int):
     rating.functionality = functionality
     rating.overall = overall
     rating.rating_body = rating_body
+    rating.map_tag = map_tag
 
     db.session.commit()
 
