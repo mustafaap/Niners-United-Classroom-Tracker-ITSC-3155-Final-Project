@@ -2,7 +2,7 @@ function initMap() {
   if (navigator.geolocation) {
     navigator.geolocation.watchPosition(position => {
       let currentLocation = { lat: position.coords.latitude, lng: position.coords.longitude };
-      // let currentLocation = { lat: 35.30560154079038, lng: -80.73442849115179 };
+      // let currentLocation = { lat: 35.308184972871636, lng: -80.73490518358146 };
 
       let map = new google.maps.Map(
         document.getElementById('map'), { center: currentLocation, zoom: 17 }
@@ -30,7 +30,7 @@ function initMap() {
               //   { position: new google.maps.LatLng(coord.lat, coord.lng), map: map }
               // )
 
-              console.log(`Distance to ${building.name} is ${dist}`);
+              // console.log(`Distance to ${building.name} is ${dist}`);
 
               if (dist < minDist) {
                 closestBuilding = building;
@@ -40,6 +40,8 @@ function initMap() {
           });
 
           document.querySelector('#closest').textContent = `The closest building to your location is: ${closestBuilding.name}.`;
+
+          document.getElementById('varName').value = closestBuilding.name;
         })
         .catch(error => console.log(error));
     });
