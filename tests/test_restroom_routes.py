@@ -157,8 +157,6 @@ def test_delete_account(test_client):
         assert 'logged_in' not in session
         assert 'Your account has been successfully deleted!'
 
-    # Clear database
-=======
 def test_search_rating(test_client):
 
     Rating.query.delete()
