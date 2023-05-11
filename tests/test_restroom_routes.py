@@ -1,3 +1,4 @@
+import html
 from src.models import db, Rating, Users, Comments, Rating_votes, Comment_votes
 from flask_bcrypt import Bcrypt
 bcrypt = Bcrypt()
@@ -101,10 +102,10 @@ def test_logout(test_client):
     # Logout
     resp1 = test_client.post('/logout', follow_redirects=True)
     resp_data = resp1.data.decode('utf-8')
-    
+    #Decode &#39;
+    resp_data = html.unescape(resp_data)
     #print(resp_data)
-
-    assert "You&#39;ve been logged out!" in resp_data
+    assert "You've been logged out!" in resp_data
     assert '<h1 class="d-flex justify-content-center fw-bold">Login</h1>' in resp_data
 
     # Clear database
