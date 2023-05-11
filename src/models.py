@@ -45,16 +45,22 @@ class Users(db.Model):
     favorite = db.Column(db.String(255))
     picture = db.Column(db.String(255))
     commented_on = db.Column(MutableList.as_mutable(db.ARRAY(db.Integer)), default=[])
-    voted_on = db.Column(MutableList.as_mutable(db.ARRAY(db.Integer)), default=[])
+    rupvoted_on = db.Column(MutableList.as_mutable(db.ARRAY(db.Integer)), default=[])
+    rdownvoted_on = db.Column(MutableList.as_mutable(db.ARRAY(db.Integer)), default=[])
+    cupvoted_on = db.Column(MutableList.as_mutable(db.ARRAY(db.Integer)), default=[])
+    cdownvoted_on = db.Column(MutableList.as_mutable(db.ARRAY(db.Integer)), default=[])
 
-    def __init__(self, username: str, password: str, first_name: str, last_name: str, email: str, commented_on, voted_on):
+    def __init__(self, username: str, password: str, first_name: str, last_name: str, email: str, commented_on, rupvoted_on, rdownvoted_on, cupvoted_on, cdownvoted_on):
         self.username = username
         self.password = password
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
         self.commented_on = commented_on
-        self.voted_on = voted_on
+        self.rupvoted_on = rupvoted_on
+        self.rdownvoted_on = rdownvoted_on
+        self.cupvoted_on = cupvoted_on
+        self.cdownvoted_on = cdownvoted_on
 
 
 class Comments(db.Model):

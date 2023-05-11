@@ -260,14 +260,14 @@ def upvote(rating_id: int):
         user_id = session['user']['user_id']
         user = Users.query.get(user_id)
 
-        if rating and user_id:
-            if rating_id not in user.voted_on:
+        if rating:
+            if rating_id not in user.rupvoted_on and rating_id not in user.rdownvoted_on: #user has not voted at all
                 setattr(rating, 'votes', int(rating.votes) + 1)
-                user.voted_on.append(rating_id)
+                user.rupvoted_on.append(rating_id)
                 db.session.commit()
-            else: 
+            elif rating_id in user.rupvoted_on and rating_id not in user.rdownvoted_on: #user clicking upvote again (unvoting)
                 setattr(rating, 'votes', int(rating.votes) - 1)
-                user.voted_on.remove(rating_id)
+                user.rupvoted_on.remove(rating_id)
                 db.session.commit()
             db.session.commit()
     else:
@@ -283,13 +283,13 @@ def downvote(rating_id: int):
         user = Users.query.get(user_id)
 
         if rating:
-            if rating_id not in user.voted_on:
+            if rating_id not in user.rupvoted_on and rating_id not in user.rdownvoted_on:
                 setattr(rating, 'votes', int(rating.votes) - 1)
-                user.voted_on.append(rating_id)
+                user.rdownvoted_on.append(rating_id)
                 db.session.commit()
-            else: 
+            elif rating_id in user.rdownvoted_on and rating_id not in user.rupvoted_on: 
                 setattr(rating, 'votes', int(rating.votes) + 1)
-                user.voted_on.remove(rating_id)
+                user.rdownvoted_on.remove(rating_id)
                 db.session.commit()
             db.session.commit()
     else:
@@ -306,13 +306,13 @@ def comment_upvote(rating_id, comment_id):
         user = Users.query.get(user_id)
 
         if comment and rating:
-            if comment_id not in user.voted_on:
+            if comment_id not in user.cupvoted_on and comment_id not in user.cdownvoted_on:
                 setattr(comment, 'total_votes', int(comment.total_votes) + 1)
-                user.voted_on.append(comment_id)
+                user.cupvoted_on.append(comment_id)
                 db.session.commit()
-            else: 
+            elif comment_id in user.cupvoted_on and comment_id not in user.cdownvoted_on: 
                 setattr(comment, 'total_votes', int(comment.total_votes) - 1)
-                user.voted_on.remove(comment_id)
+                user.cupvoted_on.remove(comment_id)
                 db.session.commit()
             db.session.commit()
     else:
@@ -329,13 +329,13 @@ def comment_downvote(rating_id, comment_id):
         user = Users.query.get(user_id)
 
         if comment and rating:
-            if comment_id not in user.voted_on:
+            if comment_id not in user.cupvoted_on and comment_id not in user.cdownvoted_on:
                 setattr(comment, 'total_votes', int(comment.total_votes) - 1)
-                user.voted_on.append(comment_id)
+                user.cdownvoted_on.append(comment_id)
                 db.session.commit()
-            else: 
+            elif comment_id in user.cdownvoted_on and comment_id not in user.cupvoted_on: 
                 setattr(comment, 'total_votes', int(comment.total_votes) + 1)
-                user.voted_on.remove(comment_id)
+                user.cdownvoted_on.remove(comment_id)
                 db.session.commit()
             db.session.commit()
     else:
@@ -486,7 +486,7 @@ def register():
 
     hashed_password = bcrypt.generate_password_hash(password).decode()
 
-    new_user = Users(username, hashed_password, fname, lname, email, commented_on=[], voted_on=[])
+    new_user = Users(username, hashed_password, fname, lname, email, commented_on=[], rupvoted_on=[], rdownvoted_on=[], cupvoted_on=[], cdownvoted_on=[])
     db.session.add(new_user)
     db.session.commit()
 

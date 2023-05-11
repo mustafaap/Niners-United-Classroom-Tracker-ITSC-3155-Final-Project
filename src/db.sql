@@ -14,7 +14,10 @@ CREATE TABLE IF NOT EXISTS users(
     favorite VARCHAR(255),
     picture VARCHAR(255),
     commented_on INTEGER[] DEFAULT '{}',
-    voted_on INTEGER[] DEFAULT '{}'
+    rupvoted_on INTEGER[] DEFAULT '{}',
+    rdownvoted_on INTEGER[] DEFAULT '{}',
+    cupvoted_on INTEGER[] DEFAULT '{}',
+    cdownvoted_on INTEGER[] DEFAULT '{}'
 );
 
 CREATE TABLE IF NOT EXISTS rating(
