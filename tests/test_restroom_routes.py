@@ -4,23 +4,10 @@ from app import db
 from flask_bcrypt import Bcrypt
 bcrypt = Bcrypt()
 
-def test_login(test_client):
+def test_login(test_client, test_login):
 
-    # Creating a test user
-    pass_data = bcrypt.generate_password_hash('testpassword')
-    hash_password = pass_data.decode('utf-8')
-    test_user = Users(username='testuser', 
-                      password=hash_password, 
-                      first_name='John', 
-                      last_name='Doe', 
-                      email='test@example.com', 
-                      commented_on=None, 
-                      rupvoted_on=None, 
-                       rdownvoted_on=None, 
-                       cupvoted_on=None, 
-                       cdownvoted_on=None)
-    db.session.add(test_user)
-    db.session.commit()
+    login_response = test_login
+    assert login_response.status_code == 200
 
     # Login with wrong password
     resp1 = test_client.post('/login', data={
@@ -74,29 +61,10 @@ def test_login(test_client):
     Users.query.delete()
     db.session.commit()
 
-def test_logout(test_client):
+def test_logout(test_client, test_login):
     
-    # Creating a test user
-    pass_data = bcrypt.generate_password_hash('testpassword')
-    hash_password = pass_data.decode('utf-8')
-    test_user = Users(username='testuser', 
-                      password=hash_password, 
-                      first_name='John', 
-                      last_name='Doe', 
-                      email='test@example.com', 
-                      commented_on=None, 
-                      rupvoted_on=None, 
-                       rdownvoted_on=None, 
-                       cupvoted_on=None, 
-                       cdownvoted_on=None)
-    db.session.add(test_user)
-    db.session.commit()
-
-    # Login
-    test_client.post('/login', data={
-        'username': 'testuser',
-        'password': 'testpassword'
-    }, follow_redirects=True)
+    login_response = test_login
+    assert login_response.status_code == 200
 
     # Logout
     resp1 = test_client.post('/logout', follow_redirects=True)
