@@ -203,3 +203,83 @@ def test_search_rating(test_client):
 
     Users.query.delete()
     db.session.commit()
+
+def test_delete_rating(test_client):
+    # Add test users
+    temp_user1 = Users(username='testuser1', 
+                       password='testpassword1', 
+                       first_name='John1', 
+                       last_name='Doe1', 
+                       email='test1@example.com', 
+                       commented_on=[], 
+                       rupvoted_on=[], 
+                       rdownvoted_on=[], 
+                       cupvoted_on=[], 
+                       cdownvoted_on=[])
+    
+    temp_user2 = Users(username='testuser2', 
+                       password='testpassword2', 
+                       first_name='John2', 
+                       last_name='Doe2', 
+                       email='test2@example.com', 
+                       commented_on=[], 
+                       rupvoted_on=[], 
+                       rdownvoted_on=[], 
+                       cupvoted_on=[], 
+                       cdownvoted_on=[])
+    
+    db.session.add(temp_user1)
+    db.session.add(temp_user2)
+
+    try:
+        db.session.commit()
+    except Exception :
+        db.session.rollback()
+        return
+
+    # Add test rating
+    temp_rating1 = Rating(rater_id=temp_user1.user_id, 
+                          restroom_name='Testroom1', 
+                          cleanliness=3.0,
+                          accessibility=['Faculty', 'Student'],
+                          functionality=True if 'Open' in ['Open', 'Closed'] else False, 
+                          overall=3.5
+                          )
+    
+    temp_rating2 = Rating(rater_id=temp_user2.user_id, 
+                          restroom_name='Testroom 2',
+                          accessibility=['Handicapped', 'Student'],
+                          functionality=True if 'Open' in ['Open', 'Closed'] else False,
+                          cleanliness=2.0, 
+                          overall=2.5
+                          )
+    
+    db.session.add(temp_rating1)
+    db.session.add(temp_rating2)
+
+    # Get the rating's ID
+    rating_id1 = temp_rating1.rating_id
+    rating_id2 = temp_rating2.rating_id
+
+    try:
+        db.session.commit()
+    except Exception:
+        db.session.rollback()
+        return
+    
+    # Delete the test rating
+    response = test_client.post(f'/restroom/{rating_id1}/delete')
+
+    assert response.status_code == 302
+
+    # Check that the rating was deleted from the database
+    rating1 = Rating.query.get(rating_id1)
+    assert rating1 is None
+    # Check that the rating was not deleted from the database
+    rating2 = Rating.query.get(rating_id2)
+    assert rating2 is not None
+
+    # Clear database
+    Rating.query.delete()
+    Users.query.delete()
+    db.session.commit()
