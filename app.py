@@ -160,12 +160,15 @@ def view_single_restroom(rating_id: int):
     already_commented = session.pop('already_commented', None)
     voting_message = session.pop('voting_message', None)
 
-    return render_template('single_restroom.html', rating=rating, comments=comments, user_id=user_id, already_commented=already_commented, voting_message=voting_message)
+    return render_template('single_restroom.html', rating=rating, comments=comments, user_id=user_id, already_commented=already_commented, voting_message=voting_message, Users=Users)
 
 
 # View edit rating page
 @app.get('/restroom/<int:rating_id>/edit')
 def get_edit_restroom_page(rating_id: int):
+    user_id = session['user']['user_id']
+    if rating_id != user_id:
+        abort(403)
     rating = Rating.query.get(rating_id)
     return render_template('edit_restroom.html', rating=rating)
 
@@ -267,6 +270,11 @@ def deletecomment(rating_id, comment_id):
     
     comment = Comments.query.get(comment_id)
     db.session.delete(comment)
+    db.session.commit()
+
+    user_id = session['user']['user_id']
+    user = Users.query.get(user_id)
+    user.commented_on.remove(rating_id)
     db.session.commit()
 
     return redirect(url_for('view_single_restroom', rating_id=rating_id))
