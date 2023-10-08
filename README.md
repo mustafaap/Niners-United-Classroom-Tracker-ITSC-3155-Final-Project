@@ -15,9 +15,9 @@ Niners United Classroom Tracker is a web application developed to allow UNC Char
 
 ## Project Features
 
-- **Restroom Rating:** Users can rate restrooms based on cleanliness, accessibility, functionality, and overall experience. This can then be sorted as per user requirements.
-- **Review System:** Users can leave comments and reviews for restrooms. These can be liked/disliked by other users
-- **User-Friendly Interface:** A well-designed user interface to enhance the user experience. Includes Google maps API for easy access of restrooms.
+- **Classroom Rating:** Users can rate classrooms based on cleanliness, accessibility, functionality, and overall experience. This can then be sorted as per user requirements.
+- **Review System:** Users can leave comments and reviews for classrooms. These can be liked/disliked by other users
+- **User-Friendly Interface:** A well-designed user interface to enhance the user experience. Includes Google maps API for easy access of classrooms.
 - **User Data:** Keeping a track of user posts and comments. Sign-in/sign-out functionality to maintain user profiles.
 
 ## Project Structure
