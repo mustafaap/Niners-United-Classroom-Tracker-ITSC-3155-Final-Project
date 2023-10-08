@@ -4,6 +4,10 @@
 
 Niners United Classroom Tracker is a web application developed to allow UNC Charlotte students to review and rate classrooms on campus, helping others find the closest and most useful facilities.
 
+
+![NUTT](https://github.com/mustafaap/Niners-United-Classroom-Tracker-ITSC-3155-Final-Project/assets/123131622/9f39bd85-647f-4fb8-941d-620d3000d4c0)
+
+
 ## Technologies Used
 
 - Python
