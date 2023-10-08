@@ -1,8 +1,8 @@
-# Niners-United-Toilet-Tracker-ITSC-3155-Final-Project
+# Niners-United-Classroom-Tracker-ITSC-3155-Final-Project
 
 ## Project Overview
 
-Niners United Toilet Tracker is a web application developed to allow UNC Charlotte students to review and rate restrooms on campus, helping others find the closest and cleanest facilities.
+Niners United Classroom Tracker is a web application developed to allow UNC Charlotte students to review and rate classrooms on campus, helping others find the closest and most useful facilities.
 
 ## Technologies Used
 
