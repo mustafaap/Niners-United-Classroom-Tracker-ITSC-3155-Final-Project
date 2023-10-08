@@ -16,6 +16,13 @@ Niners United Classroom Tracker is a web application developed to allow UNC Char
 - PostgreSQL
 - HTML/CSS
 - SQLAlchemy
+- Jinja
+- Pytest
+- Figma
+- RESTful architechture
+- Git/GitHUb
+- Trello
+- Render
 
 ## Project Features
 
